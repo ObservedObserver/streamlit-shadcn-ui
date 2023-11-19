@@ -25,6 +25,6 @@ export {
 } from "./StreamlitReact";
 export { ArrowTable } from "./ArrowTable";
 export { Streamlit } from "./streamlit";
-export type ComponentProps = ComponentProps_;
+export type ComponentProps<T> = ComponentProps_<T>;
 export type RenderData<ArgType=any> = RenderData_<ArgType>;
 export type Theme = Theme_;
