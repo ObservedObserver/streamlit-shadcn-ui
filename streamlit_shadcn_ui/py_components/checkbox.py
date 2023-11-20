@@ -28,7 +28,7 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def checkbox(checked, label=None, key=None):
+def checkbox(default_checked=False, label=None, key=None):
     """Create a new instance of "my_component".
 
     Parameters
@@ -55,8 +55,8 @@ def checkbox(checked, label=None, key=None):
     #
     # "default" is a special argument that specifies the initial return
     # value of the component before the user has interacted with it.
-    props = {"checked": checked, "label": label}
-    component_value = _component_func(comp="checkbox", props=props, key=key, default=0)
+    props = {"default_checked": default_checked, "label": label}
+    component_value = _component_func(comp="checkbox", props=props, key=key, default=default_checked)
 
     # We could modify the value returned from the component if we wanted.
     # There's no need to do this in our simple example - but it's an option.

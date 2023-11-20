@@ -10,5 +10,3 @@ st.header("Component with constant args")
 
 ui.button(text="Click me!", key="foo")
 
-ui.checkbox(checked=True, label="I am a Checkbox", key="bar")
-

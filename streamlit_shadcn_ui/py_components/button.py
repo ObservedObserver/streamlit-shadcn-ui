@@ -56,7 +56,7 @@ def button(text, key=None):
     # "default" is a special argument that specifies the initial return
     # value of the component before the user has interacted with it.
     props = {"text": text}
-    component_value = _component_func(comp="button", props=props, key=key, default=0)
+    component_value = _component_func(comp="button", props=props, key=key, default=None)
 
     # We could modify the value returned from the component if we wanted.
     # There's no need to do this in our simple example - but it's an option.
