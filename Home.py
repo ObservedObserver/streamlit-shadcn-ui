@@ -6,7 +6,9 @@ import streamlit_shadcn_ui as ui
 # During development, we can run this just as we would any other Streamlit
 # app: `$ streamlit run my_component/example.py`
 
-st.subheader("Component with constant args")
+st.header("Component with constant args")
 
 ui.button(text="Click me!", key="foo")
+
+ui.checkbox(checked=True, label="I am a Checkbox", key="bar")
 

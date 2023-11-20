@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=40.6.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "streamlit-shadcn-ui"
+version = "0.1.0"
+description = "Using shadcn components in Streamlit"
+authors = [{ name = "Observed Observer", email = "ooer@kanaries.net" }]
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "streamlit",
+]
+
+[project.license]
+file = "LICENSE"

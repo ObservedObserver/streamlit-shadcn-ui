@@ -149,8 +149,6 @@ export function withStreamlitConnection<ArgType=any>(
         );
       }
 
-      console.log(this.state.renderData)
-
       // Don't render until we've gotten our first RENDER_EVENT from Streamlit.
       if (this.state.renderData == null) {
         return null;

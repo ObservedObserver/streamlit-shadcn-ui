@@ -1,13 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import "./App.css";
 import {
     ComponentProps,
     Streamlit,
     withStreamlitConnection,
 } from "streamlit-component-lib";
-import { Button } from "./components/ui/button";
+import { StButton } from "./components/streamlit/button";
+import { StCheckbox } from "./components/streamlit/checkbox";
 
-function App(props: ComponentProps<{id: string; props: any; [key: string]: any}>) {
+function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;
     const container = useRef(null);
 
@@ -18,11 +19,14 @@ function App(props: ComponentProps<{id: string; props: any; [key: string]: any}>
         }
     }, []);
 
-    return (
-        <div ref={container}>
-            <Button {...args.props}>{args.text}</Button>
-        </div>
-    );
+    switch (args.comp) {
+        case "button":
+            return <StButton ref={container} {...args.props} />;
+        case "checkbox":
+            return <StCheckbox ref={container} {...args.props} />;
+        default:
+            return <div ref={container}>Unknown component</div>;
+    }
 }
 
 const WP = withStreamlitConnection(App);

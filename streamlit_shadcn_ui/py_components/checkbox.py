@@ -8,7 +8,7 @@ if not _RELEASE:
         # We give the component a simple, descriptive name ("my_component"
         # does not fit this bill, so please choose something better for your
         # own component :)
-        "button",
+        "checkbox",
         # Pass `url` here to tell Streamlit that the component will be served
         # by the local dev server that you run via `npm run start`.
         # (This is useful while your component is in development.)
@@ -20,7 +20,7 @@ else:
     # build directory:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
     build_dir = os.path.join(parent_dir, "frontend/dist")
-    _component_func = components.declare_component("button", path=build_dir)
+    _component_func = components.declare_component("checkbox", path=build_dir)
 
 
 # Create a wrapper function for the component. This is an optional
@@ -28,7 +28,7 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def button(text, key=None):
+def checkbox(checked, label=None, key=None):
     """Create a new instance of "my_component".
 
     Parameters
@@ -55,8 +55,8 @@ def button(text, key=None):
     #
     # "default" is a special argument that specifies the initial return
     # value of the component before the user has interacted with it.
-    props = {"text": text}
-    component_value = _component_func(comp="button", props=props, key=key, default=0)
+    props = {"checked": checked, "label": label}
+    component_value = _component_func(comp="checkbox", props=props, key=key, default=0)
 
     # We could modify the value returned from the component if we wanted.
     # There's no need to do this in our simple example - but it's an option.
