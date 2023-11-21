@@ -1,0 +1,1 @@
+from .tailwind import tailwind_container
