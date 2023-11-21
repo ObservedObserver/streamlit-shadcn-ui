@@ -5,14 +5,16 @@ import {
     SelectItem,
     SelectTrigger
 } from "@/components/ui/select";
-import { forwardRef, useEffect } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { Streamlit } from "streamlit-component-lib";
 
 interface StSelectOptionsProps {
     options: string[];
+    value?: string;
 }
 export const StSelectOptions = forwardRef<HTMLDivElement, StSelectOptionsProps>((props, ref) => {
-    const { options } = props;
+    const { options, value } = props;
+    const [selectedValue, setSelectedValue] = useState<string>(value);
     useEffect(() => {
         if (ref && typeof ref !== 'function') {
             Streamlit.setFrameHeight(ref.current.offsetHeight + 20);
@@ -28,14 +30,27 @@ export const StSelectOptions = forwardRef<HTMLDivElement, StSelectOptionsProps>(
             
         });
     }, []);
+
+    useEffect(() => {
+        setSelectedValue(value);
+    }, [value]);
     return (
-        <Select open={true} onValueChange={value => {
-            Streamlit.setComponentValue(value)
+        <Select open={true} onValueChange={newValue => {
+            setSelectedValue(newValue);
+            Streamlit.setComponentValue({
+                value: newValue,
+                open: false
+            })
         }}>
             <SelectTrigger className="hidden">
                 {/* <SelectValue placeholder="Select a fruit" /> */}
             </SelectTrigger>
-            <SelectContent ref={ref}>
+            <SelectContent ref={ref} onMouseLeave={() => {
+                Streamlit.setComponentValue({
+                    value: selectedValue,
+                    open: false
+                })
+            }}>
                 <SelectGroup>
                     {
                         options.map((option, index) => {

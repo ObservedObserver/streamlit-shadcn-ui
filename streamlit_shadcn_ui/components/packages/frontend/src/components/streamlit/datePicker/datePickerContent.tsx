@@ -1,17 +1,15 @@
-import * as React from "react";
-
 import { Calendar } from "@/components/ui/calendar";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { forwardRef, useEffect } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { Streamlit } from "streamlit-component-lib";
 
 
 export const StDatePickerContent = forwardRef<HTMLDivElement>((props, ref) => {
-    const [date, setDate] = React.useState<Date>();
+    const [date, setDate] = useState<Date>();
 
     useEffect(() => {
         if (ref && typeof ref !== 'function') {

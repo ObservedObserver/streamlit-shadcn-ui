@@ -1,42 +1,14 @@
-import * as React from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn, getPositionRelativeToTopDocument } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
     Popover,
-    PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { Streamlit } from "streamlit-component-lib";
-
-function getPositionRelativeToTopDocument(element) {
-    let topPosition = 0;
-    let leftPosition = 0;
-    let currentElement = element;
-
-    while (currentElement) {
-        let rect = currentElement.getBoundingClientRect();
-        topPosition += rect.top;
-        leftPosition += rect.left;
-
-        if (currentElement.ownerDocument.defaultView.frameElement) {
-            // If the current document is inside an iframe, adjust for the iframe's position
-            currentElement =
-                currentElement.ownerDocument.defaultView.frameElement;
-        } else {
-            // If not, add the scroll offsets and break the loop
-            topPosition += window.scrollY;
-            leftPosition += window.scrollX;
-            break;
-        }
-    }
-
-    return { top: topPosition, left: leftPosition };
-}
 
 export const StDatePickerTrigger = forwardRef<HTMLButtonElement>((props, ref) => {
     const [date, setDate] = useState<Date>();
