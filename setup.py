@@ -2,18 +2,18 @@ from pathlib import Path
 
 import setuptools
 
-# this_directory = Path(__file__).parent
-# long_description = (this_directory / "README.md").read_text()
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
 setuptools.setup(
     name="streamlit-shadcn-ui",
-    version="0.1.1",
+    version="0.1.3",
     author="Elwynn Chen",
     author_email="elwynn.c@kanaries.net",
     description="Use shadcn-ui components in Streamlit",
-    # long_description=long_description,
-    # long_description_content_type="text/markdown",
-    url="",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/ObservedObserver/streamlit-shadcn-ui",
     packages=setuptools.find_packages(),
     include_package_data=True,
     classifiers=[],

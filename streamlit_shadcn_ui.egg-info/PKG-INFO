@@ -1,8 +1,8 @@
 Metadata-Version: 2.1
 Name: streamlit-shadcn-ui
-Version: 0.1.2
+Version: 0.1.3
 Summary: Using shadcn components in Streamlit
-Home-page: 
+Home-page: https://github.com/ObservedObserver/streamlit-shadcn-ui
 Author: Elwynn Chen
 Author-email: Observed Observer <ooer@kanaries.net>
 License: MIT License
@@ -27,10 +27,48 @@ License: MIT License
         OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
         SOFTWARE.
         
+Project-URL: homepage, https://github.com/ObservedObserver/streamlit-shadcn-ui
+Project-URL: repository, https://github.com/ObservedObserver/streamlit-shadcn-ui
+Keywords: streamlit,shadcn,ui,components
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Requires-Python: >=3.7
+Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: streamlit
 Requires-Dist: pandas
+
+# streamlit-shadcn-ui :construction:
+
+[![PyPI - Version](https://img.shields.io/pypi/v/streamlit-shadcn-ui)](https://pypi.org/project/streamlit-shadcn-ui/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://shadcn.streamlit.app/)
+
+Using shadcn-ui components in streamlit
+
+
+## Installation
+
+```bash
+pip install streamlit-shadcn-ui
+```
+
+## Components
+
+Check docs and compoenent examples in [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://shadcn.streamlit.app/)
+
++ [x] button
++ [x] checkbox
++ [x] select
++ [x] tabs
++ [x] card
++ [x] containers
++ [x] avatar
++ [x] date_picker
++ [ ] date_range_picker
++ [x] table
++ [x] input
++ [x] slider
++ [x] textarea
++ [x] switch
++ [x] radio_group

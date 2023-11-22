@@ -1,6 +1,7 @@
 # streamlit-shadcn-ui :construction:
 
 [![PyPI - Version](https://img.shields.io/pypi/v/streamlit-shadcn-ui)](https://pypi.org/project/streamlit-shadcn-ui/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://shadcn.streamlit.app/)
 
 Using shadcn-ui components in streamlit
 
@@ -12,6 +13,9 @@ pip install streamlit-shadcn-ui
 ```
 
 ## Components
+
+Check docs and compoenent examples in [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://shadcn.streamlit.app/)
+
 + [x] button
 + [x] checkbox
 + [x] select
