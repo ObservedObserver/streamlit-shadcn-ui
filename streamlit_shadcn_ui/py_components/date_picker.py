@@ -30,6 +30,6 @@ def date_picker(label=None, value=None, min_value=None, max_value=None, key=None
             }
             """):
         trigger_pos = date_picker_trigger()
-        print(trigger_pos)
+
         choice = date_picker_content(x=trigger_pos['x'], y=trigger_pos['y'], open=trigger_pos['open'])
         return choice

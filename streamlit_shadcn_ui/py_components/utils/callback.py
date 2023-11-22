@@ -34,7 +34,6 @@ def _register_callback(element_key, callback, *callback_args, **callback_kwargs)
         _state._components_callbacks = {}
 
     # Register a callback for a given element_key.
-    print("register", element_key, callback, callback_args, callback_kwargs)
     _state._components_callbacks[element_key] = (callback, callback_args, callback_kwargs)
 
 def register_callback(key, callback, args, kwargs):

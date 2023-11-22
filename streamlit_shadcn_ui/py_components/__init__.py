@@ -6,3 +6,9 @@ from .card import card
 from .containers import tailwind_container
 from .avatar import avatar
 from .date_picker import date_picker
+from .table import table
+from .input import input
+from .slider import slider
+from .textarea import textarea
+from .switch import switch
+from .radio_group import radio_group

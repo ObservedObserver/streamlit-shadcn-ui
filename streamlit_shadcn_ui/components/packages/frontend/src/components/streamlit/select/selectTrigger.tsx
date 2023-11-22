@@ -3,6 +3,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useBodyStyle } from "@/hooks/useBodyStyle";
 import { getPositionRelativeToTopDocument } from "@/lib/utils";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { Streamlit } from "streamlit-component-lib";
@@ -20,7 +21,7 @@ export const StSelectTrigger = forwardRef<
     const [openStatus, setOpenStatus] = useState(open);
     useEffect(() => {
         if (ref) {
-            Streamlit.setFrameHeight(container.current.offsetHeight);
+            Streamlit.setFrameHeight(container.current.offsetHeight + 10);
         }
     });
     useEffect(() => {
@@ -41,9 +42,11 @@ export const StSelectTrigger = forwardRef<
             });
         }
     }, [openStatus]);
+    useBodyStyle("body { padding-right: 0.5em !important; }")
     return (
         <Select defaultOpen={false}>
             <SelectTrigger
+                className="m-1"
                 ref={container}
                 onClick={() => {
                     setOpenStatus(v => !v);

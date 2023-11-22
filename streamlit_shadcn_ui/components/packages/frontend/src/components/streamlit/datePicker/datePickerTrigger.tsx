@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/popover";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { Streamlit } from "streamlit-component-lib";
+import { useBodyStyle } from "@/hooks/useBodyStyle";
 
 export const StDatePickerTrigger = forwardRef<HTMLButtonElement>((props, ref) => {
     const [date, setDate] = useState<Date>();
@@ -16,7 +17,7 @@ export const StDatePickerTrigger = forwardRef<HTMLButtonElement>((props, ref) =>
     const [open, setOpen] = useState(false);
     useEffect(() => {
         if (ref) {
-            Streamlit.setFrameHeight(container.current.offsetHeight + 20);
+            Streamlit.setFrameHeight(container.current.offsetHeight + 10);
         }
     });
     useEffect(() => {
@@ -34,7 +35,7 @@ export const StDatePickerTrigger = forwardRef<HTMLButtonElement>((props, ref) =>
             });
         }
     }, [open]);
-
+    useBodyStyle("body { padding-right: 0.5em !important; }")
     return (
         <Popover>
             <PopoverTrigger ref={container} asChild>
@@ -42,7 +43,7 @@ export const StDatePickerTrigger = forwardRef<HTMLButtonElement>((props, ref) =>
                     ref={ref}
                     variant={"outline"}
                     className={cn(
-                        "w-[280px] justify-start text-left font-normal",
+                        "w-[280px] justify-start text-left font-normal m-1",
                         !date && "text-muted-foreground"
                     )}
                     onClick={() => {

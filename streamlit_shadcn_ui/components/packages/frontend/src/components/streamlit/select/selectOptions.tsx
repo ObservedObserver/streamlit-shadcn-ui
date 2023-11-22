@@ -5,6 +5,7 @@ import {
     SelectItem,
     SelectTrigger
 } from "@/components/ui/select";
+import { useBodyStyle } from "@/hooks/useBodyStyle";
 import { forwardRef, useEffect, useState } from "react";
 import { Streamlit } from "streamlit-component-lib";
 
@@ -21,15 +22,7 @@ export const StSelectOptions = forwardRef<HTMLDivElement, StSelectOptionsProps>(
         }
     });
 
-    useEffect(() => {
-        window.addEventListener("load", function () {
-            const styleElement = document.createElement("style");
-            styleElement.textContent =
-                "body { background-color: transparent !important; }";
-            this.document.head.appendChild(styleElement);
-            
-        });
-    }, []);
+    useBodyStyle("body { background-color: transparent !important; }")
 
     useEffect(() => {
         setSelectedValue(value);

@@ -17,6 +17,13 @@ import { StCard } from "./components/streamlit/card";
 import { StAvatar } from "./components/streamlit/avatar";
 import { StDatePickerContent } from "./components/streamlit/datePicker/datePickerContent";
 import { StDatePickerTrigger } from "./components/streamlit/datePicker/datePickerTrigger";
+import { StTable } from "./components/streamlit/table";
+import { StSlider } from "./components/streamlit/slider"
+import { StRadioGroup } from "./components/streamlit/radioGroup"
+import { StTextarea } from "./components/streamlit/textarea";
+import { StInput } from "./components/streamlit/input";
+import { StSwitch } from "./components/streamlit/switch";
+
 
 const crouter = new ComponentRouter();
 crouter.declare("button", StButton);
@@ -29,6 +36,12 @@ crouter.declare("card", StCard);
 crouter.declare("avatar", StAvatar);
 crouter.declare("date_picker_content", StDatePickerContent);
 crouter.declare("date_picker_trigger", StDatePickerTrigger);
+crouter.declare("table", StTable);
+crouter.declare("slider", StSlider);
+crouter.declare("radio_group", StRadioGroup);
+crouter.declare("textarea", StTextarea);
+crouter.declare("input", StInput);
+crouter.declare("switch", StSwitch);
 
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;
@@ -36,8 +49,7 @@ function App(props: ComponentProps<{comp: string; props: any; [key: string]: any
 
     useEffect(() => {
         if (container.current) {
-            // @ts-ignore
-            Streamlit.setFrameHeight(container.current.offsetHeight);
+            Streamlit.setFrameHeight(container.current.offsetHeight + 10);
         }
     }, []);
 
