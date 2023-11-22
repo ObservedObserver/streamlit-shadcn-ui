@@ -1,5 +1,7 @@
 # streamlit-shadcn-ui :construction:
 
+[![PyPI - Version](https://img.shields.io/pypi/v/streamlit-shadcn-ui)](https://pypi.org/project/streamlit-shadcn-ui/)
+
 Using shadcn-ui components in streamlit
 
 
