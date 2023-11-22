@@ -21,6 +21,7 @@ setuptools.setup(
         # If your component has other Python dependencies, list
         # them here.
         "streamlit >= 0.63",
+        "streamlit_extras >= 0.3.5"
     ],
     # extras_require={
     #     "devel": [
