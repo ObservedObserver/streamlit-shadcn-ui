@@ -2,17 +2,17 @@ from pathlib import Path
 
 import setuptools
 
-this_directory = Path(__file__).parent
-long_description = (this_directory / "README.md").read_text()
+# this_directory = Path(__file__).parent
+# long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name="streamlit-shadcn-ui",
-    version="0.0.1",
+    version="0.1.1",
     author="Elwynn Chen",
     author_email="elwynn.c@kanaries.net",
     description="Use shadcn-ui components in Streamlit",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
+    # long_description=long_description,
+    # long_description_content_type="text/markdown",
     url="",
     packages=setuptools.find_packages(),
     include_package_data=True,
@@ -24,14 +24,14 @@ setuptools.setup(
         # them here.
         "streamlit >= 0.63",
     ],
-    extras_require={
-        "devel": [
-            "wheel",
-            "pytest==7.4.0",
-            "playwright==1.36.0",
-            "requests==2.31.0",
-            "pytest-playwright-snapshot==1.0",
-            "pytest-rerunfailures==12.0",
-        ]
-    }
+    # extras_require={
+    #     "devel": [
+    #         "wheel",
+    #         "pytest==7.4.0",
+    #         "playwright==1.36.0",
+    #         "requests==2.31.0",
+    #         "pytest-playwright-snapshot==1.0",
+    #         "pytest-rerunfailures==12.0",
+    #     ]
+    # }
 )

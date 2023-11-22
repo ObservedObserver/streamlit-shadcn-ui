@@ -4,12 +4,12 @@ from streamlit_extras.stylable_container import stylable_container
 
 def date_picker_trigger():
     name = "date_picker_trigger"
-    _component_func = declare_component(name)
+    _component_func = declare_component(name, release=False)
     return _component_func(comp=name)
 
 def date_picker_content(x: int, y: int, open: bool = False):
     name = "date_picker_content"
-    _component_func = declare_component(name)
+    _component_func = declare_component(name, release=False)
     container = stylable_container(key="cont", css_styles=f"""
         {{
             position: absolute;
