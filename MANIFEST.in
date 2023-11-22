@@ -1,3 +1,0 @@
-recursive-include streamlit_shadcn_ui/components/packages/frontend/build *
-include LICENSE
-include README.md
