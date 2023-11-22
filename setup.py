@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import setuptools
 
 with open("README.md", "r") as fh:
@@ -7,8 +5,8 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="streamlit-shadcn-ui",
-    version="0.1.3",
-    author="Elwynn Chen",
+    version="0.1.4",
+    author="Observed Observer",
     author_email="elwynn.c@kanaries.net",
     description="Use shadcn-ui components in Streamlit",
     long_description=long_description,
