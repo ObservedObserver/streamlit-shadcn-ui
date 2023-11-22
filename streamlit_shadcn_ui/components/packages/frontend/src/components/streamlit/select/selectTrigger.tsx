@@ -1,8 +1,5 @@
 import {
     Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
@@ -12,19 +9,23 @@ import { Streamlit } from "streamlit-component-lib";
 
 interface StSelectTriggerProps {
     value?: string;
+    open: boolean;
 }
 export const StSelectTrigger = forwardRef<
     HTMLButtonElement,
     StSelectTriggerProps
 >((props, ref) => {
-    const { value } = props;
+    const { value, open } = props;
     const container = useRef(null);
-    const [open, setOpen] = useState(false);
+    const [openStatus, setOpenStatus] = useState(open);
     useEffect(() => {
         if (ref) {
             Streamlit.setFrameHeight(container.current.offsetHeight);
         }
     });
+    useEffect(() => {
+        setOpenStatus(open);
+    }, [open]);
     useEffect(() => {
         if (container.current) {
             const pos = getPositionRelativeToTopDocument(container.current);
@@ -36,16 +37,16 @@ export const StSelectTrigger = forwardRef<
                     pos.top +
                     container.current.offsetHeight +
                     container.current.style.marginTop.replace("px", "") * 1,
-                open,
+                open: openStatus,
             });
         }
-    }, [open]);
+    }, [openStatus]);
     return (
         <Select defaultOpen={false}>
             <SelectTrigger
                 ref={container}
                 onClick={() => {
-                    setOpen(!open);
+                    setOpenStatus(v => !v);
                 }}
             >
                 <SelectValue ref={ref} placeholder={value} />

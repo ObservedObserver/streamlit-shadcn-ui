@@ -3,7 +3,6 @@ import os
 import streamlit.components.v1 as components
 
 def declare_component(component_name: str, url="http://localhost:5173", release=False):
-
     if not release:
         _component_func = components.declare_component(
             # We give the component a simple, descriptive name ("my_component"

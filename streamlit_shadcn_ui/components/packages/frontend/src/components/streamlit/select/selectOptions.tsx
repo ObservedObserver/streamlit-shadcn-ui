@@ -23,7 +23,7 @@ export const StSelectOptions = forwardRef<HTMLDivElement, StSelectOptionsProps>(
 
     useEffect(() => {
         window.addEventListener("load", function () {
-            var styleElement = document.createElement("style");
+            const styleElement = document.createElement("style");
             styleElement.textContent =
                 "body { background-color: transparent !important; }";
             this.document.head.appendChild(styleElement);
@@ -45,12 +45,8 @@ export const StSelectOptions = forwardRef<HTMLDivElement, StSelectOptionsProps>(
             <SelectTrigger className="hidden">
                 {/* <SelectValue placeholder="Select a fruit" /> */}
             </SelectTrigger>
-            <SelectContent ref={ref} onMouseLeave={() => {
-                Streamlit.setComponentValue({
-                    value: selectedValue,
-                    open: false
-                })
-            }}>
+            <SelectContent ref={ref} 
+            >
                 <SelectGroup>
                     {
                         options.map((option, index) => {
