@@ -33,11 +33,11 @@ def date_picker_content(x: int, y: int, value=None, default_value=None, open: bo
 def date_choosen_handler(from_key, to_key):
     st.session_state[to_key]['open'] = st.session_state[from_key]['open']
 
-def date_picker(label=None, value=None, min_value=None, max_value=None, key=None):
+def date_picker(label=None, default_value=None, key=None):
     trigger_component_key = f"trigger_{key}"
     content_component_key = f"content_{key}"
     init_session(key=trigger_component_key, default_value={"x": 0, "y": 0, "open": False})
-    init_session(key=content_component_key, default_value={"value": "", "open": False})
+    init_session(key=content_component_key, default_value={"value": default_value, "open": False})
     open_status = st.session_state[trigger_component_key]['open']
     st.write(st.session_state[trigger_component_key], open_status)
     st.write(st.session_state[content_component_key], open_status)
