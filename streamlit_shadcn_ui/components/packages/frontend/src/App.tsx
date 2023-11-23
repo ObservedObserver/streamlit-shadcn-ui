@@ -25,7 +25,7 @@ import { StInput } from "./components/streamlit/input";
 import { StSwitch } from "./components/streamlit/switch";
 import { StHoverCardContent } from "./components/hoverCard/hoverCardContent";
 import { StHoverCardTrigger } from "./components/hoverCard/hoverCardTrigger";
-
+import { StAlertDialog } from "./components/streamlit/alertDialog";
 
 const crouter = new ComponentRouter();
 crouter.declare("button", StButton);
@@ -46,6 +46,7 @@ crouter.declare("input", StInput);
 crouter.declare("switch", StSwitch);
 crouter.declare("hover_card_content", StHoverCardContent);
 crouter.declare("hover_card_trigger", StHoverCardTrigger);
+crouter.declare("alert_dialog", StAlertDialog);
 
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;

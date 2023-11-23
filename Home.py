@@ -31,3 +31,6 @@ st.write("Selected Radio Option:", radio_value)
 # Switch Component
 switch_value = switch(default_checked=True, label="Toggle Switch", key="switch1")
 st.write("Switch is On:", switch_value)
+
+# st.header("Button Component")
+ui.alert_dialog(title="Alert Dialog", description="This is an alert dialog", confirm_label="OK", cancel_label="Cancel", key="alert_dialog1")
