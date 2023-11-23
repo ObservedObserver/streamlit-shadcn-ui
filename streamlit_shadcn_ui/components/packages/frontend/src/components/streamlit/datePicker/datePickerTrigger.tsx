@@ -49,7 +49,7 @@ export const StDatePickerTrigger = forwardRef<
         }
     }, [open]);
     useBodyStyle("body { padding-right: 0.5em !important; }");
-    console.log(label);
+
     return (
         <Popover>
             <PopoverTrigger asChild>

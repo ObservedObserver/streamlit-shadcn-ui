@@ -4,7 +4,7 @@ from .utils import declare_component
 import streamlit as st
 from .utils import init_session
 
-_RELEASE = False
+_RELEASE = True
 
 def hover_card_trigger(label=None, open_status=False, key=None):
     name = "hover_card_trigger"

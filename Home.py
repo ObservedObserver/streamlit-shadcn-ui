@@ -7,6 +7,18 @@ with open("docs/introduction.md", "r") as f:
 
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
 
+ui_result = ui.button("Button", key="btn")
+st.write("UI Button Clicked:", ui_result)
+
+st.write("before", st.session_state)
+
+st_result = st.button("Button", key="btn2")
+st.write("ST Button Clicked:", st_result)
+
+
+st.write("after", st.session_state)
+
+
 # Slider Component
 slider_value = slider(default_value=[20], min_value=0, max_value=100, step=2, label="Select a Range", key="slider1")
 st.write("Slider Value:", slider_value)
@@ -32,5 +44,6 @@ st.write("Selected Radio Option:", radio_value)
 switch_value = switch(default_checked=True, label="Toggle Switch", key="switch1")
 st.write("Switch is On:", switch_value)
 
-# st.header("Button Component")
-ui.alert_dialog(title="Alert Dialog", description="This is an alert dialog", confirm_label="OK", cancel_label="Cancel", key="alert_dialog1")
+st.header("Button Component")
+trigger_btn = ui.button(text="Trigger Button", key="trigger_btn")
+ui.alert_dialog(show=trigger_btn, title="Alert Dialog", description="This is an alert dialog", confirm_label="OK", cancel_label="Cancel", key="alert_dialog1")
