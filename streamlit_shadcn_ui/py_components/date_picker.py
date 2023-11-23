@@ -5,7 +5,7 @@ from streamlit_extras.stylable_container import stylable_container
 from streamlit_shadcn_ui.py_components.utils.session import init_session 
 import streamlit as st
 
-_RELEASE = False
+_RELEASE = True
 
 def date_picker_trigger(value = None, label: str = None, open_status = False, key = None):
     name = "date_picker_trigger"
