@@ -17,7 +17,7 @@ def date_picker_content(x: int, y: int, value=None, default_value=None, open: bo
     name = "date_picker_content"
     _component_func = declare_component(name, release=_RELEASE)
     register_callback(key=key, callback=on_change, args=args, kwargs=kwargs)
-    container = stylable_container(key="cont", css_styles=f"""
+    container = stylable_container(key=f"cont_{key}", css_styles=f"""
         {{
             position: absolute;
             top: {y}px;
@@ -41,7 +41,7 @@ def date_picker(label=None, default_value=None, key=None):
     init_session(key=trigger_component_key, default_value={"x": 0, "y": 0, "open": False})
     init_session(key=content_component_key, default_value={"value": default_value, "open": False})
     open_status = st.session_state[trigger_component_key]['open']
-    with stylable_container(key="all", css_styles="""
+    with stylable_container(key=f"root_{key}", css_styles="""
                             
             {
                 position: relative;

@@ -23,6 +23,8 @@ import { StRadioGroup } from "./components/streamlit/radioGroup"
 import { StTextarea } from "./components/streamlit/textarea";
 import { StInput } from "./components/streamlit/input";
 import { StSwitch } from "./components/streamlit/switch";
+import { StHoverCardContent } from "./components/hoverCard/hoverCardContent";
+import { StHoverCardTrigger } from "./components/hoverCard/hoverCardTrigger";
 
 
 const crouter = new ComponentRouter();
@@ -42,6 +44,8 @@ crouter.declare("radio_group", StRadioGroup);
 crouter.declare("textarea", StTextarea);
 crouter.declare("input", StInput);
 crouter.declare("switch", StSwitch);
+crouter.declare("hover_card_content", StHoverCardContent);
+crouter.declare("hover_card_trigger", StHoverCardTrigger);
 
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;
