@@ -15,7 +15,7 @@ def select_options(options: list[str], x, y, open_status=False, key=None, defaul
     name = "select_options"
     _component_func = declare_component(name)
     register_callback(key=key, callback=on_change, args=args, kwargs=kwargs)
-    container = stylable_container(key=f"cont_${key}", css_styles=f"""
+    container = stylable_container(key=f"cont_{key}", css_styles=f"""
         {{
             position: absolute;
             top: {y}px;
