@@ -1,8 +1,10 @@
 from .utils import declare_component
+_RELEASE = True
 
-_component_func = declare_component("button")
+_component_func = declare_component("button", release=_RELEASE)
+
 # variant "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
-def button(text: str, variant: str = None, key = None):
+def button(text: str, variant: str = "default", key = None):
     props = {"text": text, "variant": variant}
-    component_value = _component_func(comp="button", props=props, key=key, default=None)
-    return component_value
+    clicked = _component_func(comp="button", props=props, key=key, default=False)
+    return clicked
