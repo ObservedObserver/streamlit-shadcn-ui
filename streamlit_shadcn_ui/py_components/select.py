@@ -15,7 +15,7 @@ def select_options(options: list[str], x, y, open_status=False, key=None, defaul
     name = "select_options"
     _component_func = declare_component(name)
     register_callback(key=key, callback=on_change, args=args, kwargs=kwargs)
-    container = stylable_container(key="cont", css_styles=f"""
+    container = stylable_container(key=f"cont_${key}", css_styles=f"""
         {{
             position: absolute;
             top: {y}px;
@@ -42,7 +42,7 @@ def select(label=None, options=None, key="ui_select"):
     init_session(key=trigger_component_key, default_value={"x": 0, "y": 0, "open": False})
     init_session(key=options_component_key, default_value={"value": option_list[0], "open": False})
     open_status = st.session_state[trigger_component_key]['open']
-    with stylable_container(key="all", css_styles="""
+    with stylable_container(key=f"root_{key}", css_styles="""
             {
                 position: relative;
             }
