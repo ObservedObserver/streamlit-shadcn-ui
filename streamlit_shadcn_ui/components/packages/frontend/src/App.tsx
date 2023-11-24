@@ -26,6 +26,7 @@ import { StSwitch } from "./components/streamlit/switch";
 import { StHoverCardContent } from "./components/hoverCard/hoverCardContent";
 import { StHoverCardTrigger } from "./components/hoverCard/hoverCardTrigger";
 import { StAlertDialog } from "./components/streamlit/alertDialog";
+import { StLinkButton } from "./components/streamlit/linkButton";
 
 const crouter = new ComponentRouter();
 crouter.declare("button", StButton);
@@ -47,6 +48,7 @@ crouter.declare("switch", StSwitch);
 crouter.declare("hover_card_content", StHoverCardContent);
 crouter.declare("hover_card_trigger", StHoverCardTrigger);
 crouter.declare("alert_dialog", StAlertDialog);
+crouter.declare("link_button", StLinkButton);
 
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;
@@ -54,7 +56,7 @@ function App(props: ComponentProps<{comp: string; props: any; [key: string]: any
 
     useEffect(() => {
         if (container.current) {
-            Streamlit.setFrameHeight(container.current.offsetHeight + 10);
+            Streamlit.setFrameHeight(container.current.offsetHeight + 5);
         }
     }, []);
 

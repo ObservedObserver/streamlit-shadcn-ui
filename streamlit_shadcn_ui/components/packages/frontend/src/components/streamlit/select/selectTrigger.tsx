@@ -21,7 +21,7 @@ export const StSelectTrigger = forwardRef<
     const [openStatus, setOpenStatus] = useState(open);
     useEffect(() => {
         if (ref) {
-            Streamlit.setFrameHeight(container.current.offsetHeight + 10);
+            Streamlit.setFrameHeight(container.current.offsetHeight + 5);
         }
     });
     useEffect(() => {

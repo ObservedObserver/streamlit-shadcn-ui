@@ -16,7 +16,7 @@ export const StHoverCardContent = forwardRef<HTMLDivElement, StHoverCardContentP
     const { content, contentType = 'text' } = props;
     useEffect(() => {
         if (ref && typeof ref !== "function") {
-            Streamlit.setFrameHeight(ref.current.offsetHeight + 10);
+            Streamlit.setFrameHeight(ref.current.offsetHeight + 5);
         }
     });
 

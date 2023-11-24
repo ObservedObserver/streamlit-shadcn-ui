@@ -6,9 +6,10 @@ interface StButtonProps {
     text?: string;
     variant?: ButtonProps['variant'];
     disabled?: boolean;
+    className?: string;
 }
 export const StButton = forwardRef<HTMLButtonElement, StButtonProps>((props: StButtonProps, ref) => {
-    const { text, disabled, variant } = props;
+    const { text, disabled, variant, className } = props;
     
     const queue = useRef<(() => void)[]>([]);
 
@@ -29,7 +30,7 @@ export const StButton = forwardRef<HTMLButtonElement, StButtonProps>((props: StB
     })
 
     return (
-        <Button variant={variant} ref={ref} disabled={disabled} onClick={clickHandler}>
+        <Button className={className} variant={variant} ref={ref} disabled={disabled} onClick={clickHandler}>
             {text}
         </Button>
     );
