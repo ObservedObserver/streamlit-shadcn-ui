@@ -9,7 +9,7 @@
 
 Using shadcn-ui components in streamlit
 
-<img width="1447" alt="shadcn-demo" src="https://github.com/ObservedObserver/streamlit-shadcn-ui/assets/22167673/ae981a9e-6238-467e-a074-a335e6b9af55">
+<img width="1453" alt="streamlit-shadcn" src="https://github.com/ObservedObserver/streamlit-shadcn-ui/assets/22167673/75620347-9e9c-454c-a7ce-381d7464c519">
 
 
 ## Installation
