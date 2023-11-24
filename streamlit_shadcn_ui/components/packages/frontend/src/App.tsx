@@ -58,7 +58,7 @@ function App(props: ComponentProps<{comp: string; props: any; [key: string]: any
 
     useEffect(() => {
         if (container.current) {
-            Streamlit.setFrameHeight(container.current.offsetHeight + 5);
+            Streamlit.setFrameHeight(container.current.offsetHeight + 10);
         }
     }, []);
 

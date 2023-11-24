@@ -10,7 +10,7 @@ export const StAvatar = forwardRef<HTMLDivElement, StAvatarProps>(
         const { src, fallback } = props;
 
         return (
-            <Avatar>
+            <Avatar ref={ref}>
                 <AvatarImage src={src} />
                 <AvatarFallback>{fallback}</AvatarFallback>
             </Avatar>

@@ -30,8 +30,7 @@ export const StAlertDialog = forwardRef<HTMLDivElement, StAlertDialogProps>(
         } = props;
         useEffect(() => {
             if (ref && typeof ref !== "function") {
-                Streamlit.setFrameHeight(ref.current.offsetHeight + 5);
-                // Streamlit.setFrameHeight(1000);
+                Streamlit.setFrameHeight(ref.current.offsetHeight + 10);
             }
         });
         useBodyStyle(
