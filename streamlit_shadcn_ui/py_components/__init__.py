@@ -14,3 +14,4 @@ from .radio_group import radio_group
 from .hover_card import hover_card
 from .alert_dialog import alert_dialog
 from .link_button import link_button
+from .badges import badges

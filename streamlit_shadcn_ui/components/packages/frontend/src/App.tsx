@@ -23,10 +23,11 @@ import { StRadioGroup } from "./components/streamlit/radioGroup"
 import { StTextarea } from "./components/streamlit/textarea";
 import { StInput } from "./components/streamlit/input";
 import { StSwitch } from "./components/streamlit/switch";
-import { StHoverCardContent } from "./components/hoverCard/hoverCardContent";
-import { StHoverCardTrigger } from "./components/hoverCard/hoverCardTrigger";
+import { StHoverCardContent } from "./components/streamlit/hoverCard/hoverCardContent";
+import { StHoverCardTrigger } from "./components/streamlit/hoverCard/hoverCardTrigger";
 import { StAlertDialog } from "./components/streamlit/alertDialog";
 import { StLinkButton } from "./components/streamlit/linkButton";
+import { StBadges } from "./components/streamlit/badge";
 
 const crouter = new ComponentRouter();
 crouter.declare("button", StButton);
@@ -49,6 +50,7 @@ crouter.declare("hover_card_content", StHoverCardContent);
 crouter.declare("hover_card_trigger", StHoverCardTrigger);
 crouter.declare("alert_dialog", StAlertDialog);
 crouter.declare("link_button", StLinkButton);
+crouter.declare("badges", StBadges);
 
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;
@@ -63,5 +65,4 @@ function App(props: ComponentProps<{comp: string; props: any; [key: string]: any
     return crouter.render(args.comp, container, args.props);
 }
 
-const WP = withStreamlitConnection(App);
-export default WP;
+export const StApp = withStreamlitConnection(App);
