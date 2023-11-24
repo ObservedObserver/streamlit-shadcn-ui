@@ -6,6 +6,40 @@ with open("docs/introduction.md", "r") as f:
 # ui.date_picker()
 
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
+from streamlit_extras.stylable_container import stylable_container
+
+with stylable_container(key="DDDDDD", css_styles=[
+    """
+    {
+        display: flex;
+        flex-direction: row;
+    }
+    """,
+    f"""
+    > div:not(:first-child) {{
+        background-color: red;
+        width: 80px;
+        min-width: 1px;
+        display: inline;
+    }}
+    """,
+    f"""
+    > div:first-child {{
+        display: none;
+    }}
+    """,
+    f"""
+    > div:not(:first-child) > iframe {{
+        display: inline-block;
+        width: auto !important;
+        min-width: 1px;
+        border: none;
+    }}
+    """
+    ]):
+    ui.button(text="Button", key="xbtn1")
+    ui.button(text="Buttonwerwewerwerwerwerwerwerw", key="xbtn2")
+    ui.button(text="Button", key="xbtn3")
 
 ui_result = ui.button("Button", key="btn")
 st.write("UI Button Clicked:", ui_result)
