@@ -18,7 +18,7 @@ export const StSelectOptions = forwardRef<HTMLDivElement, StSelectOptionsProps>(
     const [selectedValue, setSelectedValue] = useState<string>(value);
     useEffect(() => {
         if (ref && typeof ref !== 'function') {
-            Streamlit.setFrameHeight(ref.current.offsetHeight + 20);
+            Streamlit.setFrameHeight(ref.current.offsetHeight + 5);
         }
     });
 
