@@ -5,6 +5,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import { useBodyStyle } from "@/hooks/useBodyStyle";
 import { forwardRef, useEffect, useState } from "react";
 import { Streamlit } from "streamlit-component-lib";
 
@@ -35,6 +36,8 @@ export const StDatePickerContent = forwardRef<
             Streamlit.setFrameHeight(ref.current.offsetHeight + 5);
         }
     });
+
+    useBodyStyle("body { background-color: transparent !important; }")
 
     return (
         <Popover open={true}>
