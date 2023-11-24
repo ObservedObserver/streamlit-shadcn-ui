@@ -1,6 +1,10 @@
 # streamlit-shadcn-ui :construction:
 
+> streamlit-shadcn-ui is in early development, the updates is shipped frequently. A relative stable will be launched after 11/27 2023. Follow the developer on twitter for updates: ![Follow ob12er](https://img.shields.io/twitter/follow/ob12er)
+
+
 [![PyPI - Version](https://img.shields.io/pypi/v/streamlit-shadcn-ui)](https://pypi.org/project/streamlit-shadcn-ui/)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/streamlit-shadcn-ui)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://shadcn.streamlit.app/)
 
 Using shadcn-ui components in streamlit
@@ -43,3 +47,9 @@ Check docs and compoenent examples in [![Streamlit App](https://static.streamlit
 + [x] radio_group
 + [x] alert_dialog
 + [x] hover_card
++ [x] badges
++ [x] link_button
+
+# License
+This repo is under MIT license. See [LICENSE](LICENSE) for details.
+`streamlit_shadcn_ui/components/packages/streamlit-components-lib` is under its original Apache-2.0 license. It is a temporal patch for streamlit-components-lib in react 18. 
