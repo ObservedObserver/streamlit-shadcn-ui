@@ -8,8 +8,6 @@ with open("docs/introduction.md", "r") as f:
 from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
 from streamlit_extras.stylable_container import stylable_container
 
-ui.element("test")
-
 ui_result = ui.button("Button", key="btn")
 st.write("UI Button Clicked:", ui_result)
 
@@ -50,3 +48,10 @@ st.write("Switch is On:", switch_value)
 st.header("Button Component")
 trigger_btn = ui.button(text="Trigger Button", key="trigger_btn")
 ui.alert_dialog(show=trigger_btn, title="Alert Dialog", description="This is an alert dialog", confirm_label="OK", cancel_label="Cancel", key="alert_dialog1")
+
+with ui.element("card", key="base_ele") as card:
+    with ui.element("card", key="base_ele2") as card2:
+        card2.add_child(ui.element("input", key="nst2_input", label="Value"))
+        card2.add_child(ui.element("button", key="nst2_btn", text="Nest Submmit", variant="outline"))
+    card.add_child(card2)
+    card.add_child(ui.element("button", key="nst_btn", text="Hello World"))

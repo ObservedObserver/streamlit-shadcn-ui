@@ -50,6 +50,19 @@ Check docs and compoenent examples in [![Streamlit App](https://static.streamlit
 + [x] badges
 + [x] link_button
 
+## One more thing
+There is a new component in testing, it will allows you to nest all streamlit-shadcn-ui components together.
+
+POC:
+```py
+with ui.element("card", key="base_ele") as card:
+    with ui.element("card", key="base_ele2") as card2:
+        card2.add_child(ui.element("input", key="nst2_input"))
+        card2.add_child(ui.element("button", key="nst2_btn", text="Nest Submmit", variant="outline"))
+    card.add_child(card2)
+    card.add_child(ui.element("button", key="nst_btn", text="Hello World"))
+```
+
 # License
 This repo is under MIT license. See [LICENSE](LICENSE) for details.
 `streamlit_shadcn_ui/components/packages/streamlit-components-lib` is under its original Apache-2.0 license. It is a temporal patch for streamlit-components-lib in react 18. 

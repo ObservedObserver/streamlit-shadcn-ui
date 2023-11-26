@@ -1,52 +1,45 @@
 from streamlit_shadcn_ui.py_components.utils.declare import declare_component
 
+component_func = declare_component("element_renderer", release=False)
 
 class UIElement:
-    def __init__(self, key, value):
+    def __init__(self, name: str, props=None, key=None):
         self.key = key
-        self.value = value
+        self.props = props
+        self.name = name
+        self.children = []
+    
+    def renderTree(self, tree):
+        c = component_func(comp="element_renderer", props={
+            "tree": tree,
+        }, key=self.key, default=None)
+        return c
 
     def render(self):
-        raise NotImplementedError
+        tree = {
+            "name": self.name,
+            "props": self.props,
+            "children": []
+        }
+        for child in self.children:
+            tree["children"].append(child.render())
+        print(tree)
+        return tree
+    
+    def __enter__(self):
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        tree = self.render()
+        return self.renderTree(tree)
 
-    def get_key(self):
-        return self.key
+    def add_child(self, child):
+        self.children.append(child)
 
-    def get_value(self):
-        return self.value
-
-    def set_value(self, value):
-        self.value = value
-
-    def set_key(self, key):
-        self.key = key
-
-    def __str__(self):
-        return f"{self.key}: {self.value}"
-
-    def __repr__(self):
-        return f"{self.key}: {self.value}"
-
-component_func = declare_component("element_renderer", release=False)
 
 
 # def ui_element():
     # case 1. 任意的shadcn ui组件
 
-def element(key):
-    tree = {
-        "name": "card",
-        "props": {
-            "className": "bg-red-500"
-        },
-        "children": ["Hello World", {
-            "name": "input",
-            "props": {
-                "className": "bg-yellow-500"
-            }
-        }]
-    }
-    c = component_func(comp="element_renderer", props={
-        "tree": tree,
-    }, key=key, default=None)
-    return c
+def element(name: str, key=None, **props):
+    return UIElement(name=name, props=props, key=key)
