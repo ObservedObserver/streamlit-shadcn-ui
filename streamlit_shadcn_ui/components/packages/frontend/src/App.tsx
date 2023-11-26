@@ -28,6 +28,7 @@ import { StHoverCardTrigger } from "./components/streamlit/hoverCard/hoverCardTr
 import { StAlertDialog } from "./components/streamlit/alertDialog";
 import { StLinkButton } from "./components/streamlit/linkButton";
 import { StBadges } from "./components/streamlit/badge";
+import { ElementRenderer } from "./components/streamlit/element";
 
 const crouter = new ComponentRouter();
 crouter.declare("button", StButton);
@@ -51,10 +52,13 @@ crouter.declare("hover_card_trigger", StHoverCardTrigger);
 crouter.declare("alert_dialog", StAlertDialog);
 crouter.declare("link_button", StLinkButton);
 crouter.declare("badges", StBadges);
+crouter.declare("element_renderer", ElementRenderer);
 
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;
     const container = useRef(null);
+
+    console.log(props)
 
     useEffect(() => {
         if (container.current) {

@@ -16,6 +16,6 @@ export class ComponentRouter {
             // Correctly spread props into the component
             return <Component {...props} ref={ref} />;
         }
-        return null;
+        return <div ref={ref}>Undefined Component {name}</div>;
     }
 }

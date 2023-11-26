@@ -10,10 +10,11 @@ interface StCardProps {
     title?: string;
     content?: string;
     description?: string;
+    children?: React.ReactNode;
 }
 export const StCard = forwardRef<HTMLDivElement, StCardProps>(
     (props: StCardProps, ref) => {
-        const { title, content, description } = props;
+        const { title, content, description, children } = props;
         return (
             <Card ref={ref}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -26,6 +27,7 @@ export const StCard = forwardRef<HTMLDivElement, StCardProps>(
                     <p className="text-xs text-muted-foreground">
                         {description}
                     </p>
+                    {children}
                 </CardContent>
             </Card>
         );
