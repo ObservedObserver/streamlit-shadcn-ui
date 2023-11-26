@@ -53,5 +53,5 @@ with ui.element("card", key="base_ele") as card:
     with ui.element("card", key="base_ele2") as card2:
         card2.add_child(ui.element("input", key="nst2_input", label="Value"))
         card2.add_child(ui.element("button", key="nst2_btn", text="Nest Submmit", variant="outline"))
-    card.add_child(card2)
+        card.add_child(card2)
     card.add_child(ui.element("button", key="nst_btn", text="Hello World"))
