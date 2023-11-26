@@ -52,6 +52,7 @@ Check docs and compoenent examples in [![Streamlit App](https://static.streamlit
 
 ## One more thing
 There is a new component in testing, it will allows you to nest all streamlit-shadcn-ui components together.
+It will not treat each component as an independent streamlit custom component in iframe, but parse the component structure as data and render them all at once in one iframe.
 
 POC:
 ```py
@@ -62,6 +63,8 @@ with ui.element("card", key="base_ele") as card:
     card.add_child(card2)
     card.add_child(ui.element("button", key="nst_btn", text="Hello World"))
 ```
+
+<img width="735" alt="POC example" src="https://github.com/ObservedObserver/streamlit-shadcn-ui/assets/22167673/ace9670f-64a4-4417-973e-7f8a86c704e2">
 
 # License
 This repo is under MIT license. See [LICENSE](LICENSE) for details.
