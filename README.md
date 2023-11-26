@@ -66,6 +66,11 @@ with ui.element("card", key="base_ele") as card:
 
 <img width="735" alt="POC example" src="https://github.com/ObservedObserver/streamlit-shadcn-ui/assets/22167673/ace9670f-64a4-4417-973e-7f8a86c704e2">
 
+## Reference
++ [streamlit-shadcn-ui examples and docs repo](https://github.com/ObservedObserver/steamlit-shadcn-ui-docs)
++ [Streamlit](https://streamlit.io/)
++ [shadcn-ui](https://ui.shadcn.com/)
+
 # License
 This repo is under MIT license. See [LICENSE](LICENSE) for details.
 `streamlit_shadcn_ui/components/packages/streamlit-components-lib` is under its original Apache-2.0 license. It is a temporal patch for streamlit-components-lib in react 18. 

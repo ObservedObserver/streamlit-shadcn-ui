@@ -58,8 +58,6 @@ function App(props: ComponentProps<{comp: string; props: any; [key: string]: any
     const { args, width, disabled, theme } = props;
     const container = useRef(null);
 
-    console.log(props)
-
     useEffect(() => {
         if (container.current) {
             Streamlit.setFrameHeight(container.current.offsetHeight + 10);

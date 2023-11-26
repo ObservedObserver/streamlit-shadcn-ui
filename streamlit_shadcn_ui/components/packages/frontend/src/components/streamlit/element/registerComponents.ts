@@ -10,7 +10,6 @@ const ComponentCollection = {
 } as const;
 
 export function getComponent (componentName: string) {
-    console.log(componentName, ComponentCollection)
     if (componentName in ComponentCollection) {
         return ComponentCollection[componentName]
     }

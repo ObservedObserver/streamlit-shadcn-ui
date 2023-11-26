@@ -1,54 +1,42 @@
+from typing import List, Optional, Any, Dict
 from streamlit_shadcn_ui.py_components.utils.declare import declare_component
 from .context import get_context
-component_func = declare_component("element_renderer", release=False)
+
+__RELEASE = True
+component_func = declare_component("element_renderer", release=__RELEASE)
 
 class UIElement:
-    def __init__(self, name: str, props=None, key=None):
+    def __init__(self, name: str, props: Optional[Dict[str, Any]] = None, key: Optional[str] = None):
         self.key = key
-        self.props = props
+        self.props = props if props is not None else {}
         self.name = name
-        self.children = []
+        self.children: List['UIElement'] = []
         self.is_root = False
     
-    def renderTree(self, tree):
-        c = component_func(comp="element_renderer", props={
-            "tree": tree,
-        }, key=self.key, default=None)
-        return c
+    def render_tree(self, tree: Dict[str, Any]) -> Any:
+        return component_func(comp="element_renderer", props={"tree": tree}, key=self.key, default=None)
 
-    def render(self):
-        tree = {
+    def render(self) -> Dict[str, Any]:
+        return {
             "name": self.name,
             "props": self.props,
-            "children": []
+            "children": [child.render() for child in self.children]
         }
-        for child in self.children:
-            tree["children"].append(child.render())
-        print(tree)
-        return tree
     
-    def __enter__(self):
+    def __enter__(self) -> 'UIElement':
         ctx = get_context()
-        if (ctx["in_render"] is False):
+        if not ctx["in_render"]:
             ctx["in_render"] = True
             self.is_root = True
         return self
     
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        tree = self.render()
-        ctx = get_context()
-        if (self.is_root):
-            ctx["in_render"] = False
-            return self.renderTree(tree)
-        return
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        if self.is_root:
+            get_context()["in_render"] = False
+            self.render_tree(self.render())
 
-    def add_child(self, child):
+    def add_child(self, child: 'UIElement') -> None:
         self.children.append(child)
 
-
-
-# def ui_element():
-    # case 1. 任意的shadcn ui组件
-
-def element(name: str, key=None, **props):
+def element(name: str, key: Optional[str] = None, **props) -> UIElement:
     return UIElement(name=name, props=props, key=key)

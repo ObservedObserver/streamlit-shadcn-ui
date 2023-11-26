@@ -16,7 +16,6 @@ function dfsRender (tree: IElementTree | string) {
     }
     const children = tree.children?.map(child => typeof child === "string" ? child : dfsRender(child)) ?? [];
     const ele = getComponent(tree.name) || tree.name
-    console.log('ele', ele)
     return createElement(ele, tree.props, ...children)
 }
 export const ElementRenderer = forwardRef<HTMLDivElement, ElementRendererProps>((props, ref) => {
