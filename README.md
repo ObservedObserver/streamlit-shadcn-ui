@@ -47,6 +47,14 @@ Check docs and compoenent examples in [![Streamlit App](https://static.streamlit
 + [x] badges
 + [x] link_button
 
+![streamlit card](https://github.com/ObservedObserver/streamlit-shadcn-ui/assets/22167673/799b9235-96a6-406e-b270-e685de9ba5fd)
+
+![streamlit date picker](https://github.com/ObservedObserver/streamlit-shadcn-ui/assets/22167673/8c32c4e0-8aaf-421d-b459-bceb63f1dd0a)
+
+![streamlit select](https://github.com/ObservedObserver/streamlit-shadcn-ui/assets/22167673/f5a6eb8d-163f-4a7b-b88b-9b962d32dc1b)
+
+
+
 ## One more thing
 There is a new component in testing, it will allows you to nest all streamlit-shadcn-ui components together.
 It will not treat each component as an independent streamlit custom component in iframe, but parse the component structure as data and render them all at once in one iframe.
@@ -60,7 +68,8 @@ with ui.card(key="card1"):
     ui.element("button", key="card1_btn", text="Hello World")
 ```
 
-<img width="735" alt="POC example" src="https://github.com/ObservedObserver/streamlit-shadcn-ui/assets/22167673/ace9670f-64a4-4417-973e-7f8a86c704e2">
+![streamlit react_component](https://github.com/ObservedObserver/streamlit-shadcn-ui/assets/22167673/ab40ed25-cc41-4630-adc9-7d604e44d538)
+
 
 ## Reference
 + [streamlit-shadcn-ui examples and docs repo](https://github.com/ObservedObserver/steamlit-shadcn-ui-docs)
