@@ -10,14 +10,12 @@ from streamlit_extras.stylable_container import stylable_container
 
 ui_result = ui.button("Button", key="btn")
 st.write("UI Button Clicked:", ui_result)
+st.write(st.session_state.get("btn"))
 
-st.write("before", st.session_state)
-
-st_result = st.button("Button", key="btn2")
+st_result = ui.button("Button", key="btn2")
 st.write("ST Button Clicked:", st_result)
+st.write(st.session_state.get("btn2"))
 
-
-st.write("after", st.session_state)
 
 
 # Slider Component
@@ -49,9 +47,21 @@ st.header("Button Component")
 trigger_btn = ui.button(text="Trigger Button", key="trigger_btn")
 ui.alert_dialog(show=trigger_btn, title="Alert Dialog", description="This is an alert dialog", confirm_label="OK", cancel_label="Cancel", key="alert_dialog1")
 
-with ui.element("card", key="base_ele") as card:
-    with ui.element("card", key="base_ele2") as card2:
-        card2.add_child(ui.element("input", key="nst2_input", label="Value"))
-        card2.add_child(ui.element("button", key="nst2_btn", text="Nest Submmit", variant="outline"))
-        card.add_child(card2)
-    card.add_child(ui.element("button", key="nst_btn", text="Hello World"))
+st.header("Nest Element 1")
+
+with ui.card(key="base_ele_card_l1"):
+    with ui.card(key="base_ele_card_l2"):
+    # with ui.element("card", key="base_ele1") as card2:
+        ui.element("input", key="nst2_input", label="Value")
+        ui.element("button", key="nst2_btn", text="Nest Submmit", variant="outline")
+
+    ui.element("button", key="nst_btn", text="Hello World")
+
+st.header("Nest Element 2")
+card = ui.element("card", key="base_ele_2")
+card2 = ui.element("card", key="base_ele2_2")
+card2.add_child(ui.element("input", key="nst2_input_2", label="Value"))
+card2.add_child(ui.element("button", key="nst2_btn_2", text="Nest Submmit", variant="outline"))
+card.add_child(card2)
+card.add_child(ui.element("button", key="nst_btn_2", text="Hello World"))
+card.render()

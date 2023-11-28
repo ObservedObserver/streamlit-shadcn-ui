@@ -1,6 +1,9 @@
 import { Button, ButtonProps } from "@/components/ui/button";
+import { StComponentValue } from "@/interfaces";
 import { forwardRef, useCallback, useEffect, useRef } from "react";
 import { Streamlit } from "streamlit-component-lib";
+import { nanoid } from 'nanoid'
+
 
 interface StButtonProps {
     text?: string;
@@ -8,6 +11,10 @@ interface StButtonProps {
     disabled?: boolean;
     className?: string;
 }
+
+type StButtonValue = StComponentValue<boolean, undefined>;
+
+
 export const StButton = forwardRef<HTMLButtonElement, StButtonProps>((props: StButtonProps, ref) => {
     const { text, disabled, variant, className } = props;
     
@@ -15,19 +22,9 @@ export const StButton = forwardRef<HTMLButtonElement, StButtonProps>((props: StB
 
     const clickHandler = useCallback(() => {
         queue.current = [];
-        Streamlit.setComponentValue(true);
-        queue.current.push(() => {})
-        queue.current.push(() => {
-            Streamlit.setComponentValue(false);
-        })
-    }, [])
+        Streamlit.setComponentValue({ value: true, event_id: nanoid() } as StButtonValue);
 
-    useEffect(() => {
-        if (queue.current.length > 0) {
-            const fn = queue.current.shift();
-            fn?.();
-        }
-    })
+    }, [])
 
     return (
         <Button className={className} variant={variant} ref={ref} disabled={disabled} onClick={clickHandler}>
