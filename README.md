@@ -54,14 +54,13 @@ Check docs and compoenent examples in [![Streamlit App](https://static.streamlit
 There is a new component in testing, it will allows you to nest all streamlit-shadcn-ui components together.
 It will not treat each component as an independent streamlit custom component in iframe, but parse the component structure as data and render them all at once in one iframe.
 
-POC:
+example ([live demo](https://shadcn.streamlit.app/Experiment(Cool))):
 ```py
-with ui.element("card", key="base_ele") as card:
-    with ui.element("card", key="base_ele2") as card2:
-        card2.add_child(ui.element("input", key="nst2_input"))
-        card2.add_child(ui.element("button", key="nst2_btn", text="Nest Submmit", variant="outline"))
-    card.add_child(card2)
-    card.add_child(ui.element("button", key="nst_btn", text="Hello World"))
+with ui.card(key="card1"):
+    with ui.card(key="card2"):
+        ui.element("input", key="card2_input")
+        ui.element("button", key="card2_btn", text="Nest Submmit", variant="outline")
+    ui.element("button", key="card1_btn", text="Hello World")
 ```
 
 <img width="735" alt="POC example" src="https://github.com/ObservedObserver/streamlit-shadcn-ui/assets/22167673/ace9670f-64a4-4417-973e-7f8a86c704e2">
