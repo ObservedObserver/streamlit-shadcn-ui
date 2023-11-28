@@ -73,4 +73,28 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
+  safelist: [
+    // flex related
+    {
+      pattern: /^flex-/
+    },
+    {
+      pattern: /^justify-/
+    },
+    {
+      pattern: /^items-/
+    },
+    {
+      pattern: /^content-/
+    },
+    {
+      pattern: /^align-/
+    },
+    {
+      pattern: /^place-/
+    },
+    {
+      pattern: /^self-/
+    }
+  ]
 }
