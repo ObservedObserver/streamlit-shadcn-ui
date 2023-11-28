@@ -14,13 +14,13 @@ def init_default_state(key: str = None, default_value: Any = None, **component_s
     }
 
 class UIElement:
-    def __init__(self, name: str, props: Optional[Dict[str, Any]] = None, key: Optional[str] = None, default_value: Any = None, default_component_state: Any = None):
+    def __init__(self, name: str, props: Optional[Dict[str, Any]] = None, key: Optional[str] = None, default_value: Any = None, default_component_state: Any = {}):
         self.key = key
         self.props = props if props is not None else {}
         self.name = name
         self.children: List['UIElement'] = []
         self.parent = None
-        default_state = init_default_state(key, default_value, default_component_state)
+        default_state = init_default_state(key=key, default_value=default_value, **default_component_state)
         self.state = default_state
         self.default_state = default_state
         ctx = get_context()
@@ -69,5 +69,5 @@ class UIElement:
     def value(self) -> Any:
         return self.state["value"]
 
-def element(name: str, key: Optional[str] = None , default_value: Any = None, default_component_state: Any = None, **props) -> UIElement:
+def element(name: str, key: Optional[str] = None , default_value: Any = None, default_component_state: Any = {}, **props) -> UIElement:
     return UIElement(name=name, props=props, key=key, default_value=default_value, default_component_state=default_component_state)

@@ -11,7 +11,7 @@ _component_func = declare_component("button", release=_RELEASE)
 # variant "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
 def button(text: str, variant: str = "default", class_name: str = None, key = None):
     props = {"text": text, "variant": variant, "className": class_name}
-    default_state = init_default_state(key, default_value=False, default_component_state={})
+    default_state = init_default_state(key, default_value=False)
     non_resettable_state_key = f"{key}__non_resettable_state"
     init_session(key, default_state)
     init_session(non_resettable_state_key, default_value=default_state)
