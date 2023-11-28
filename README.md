@@ -1,8 +1,5 @@
 # streamlit-shadcn-ui :construction:
 
-> streamlit-shadcn-ui is in early development, the updates is shipped frequently. A relative stable will be launched after 11/27 2023. Follow the developer on twitter for updates: ![Follow ob12er](https://img.shields.io/twitter/follow/ob12er)
-
-
 [![PyPI - Version](https://img.shields.io/pypi/v/streamlit-shadcn-ui)](https://pypi.org/project/streamlit-shadcn-ui/)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/streamlit-shadcn-ui)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://shadcn.streamlit.app/)
