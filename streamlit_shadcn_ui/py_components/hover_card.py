@@ -4,17 +4,15 @@ from .utils import declare_component
 import streamlit as st
 from .utils import init_session
 
-_RELEASE = True
-
 def hover_card_trigger(label=None, open_status=False, key=None):
     name = "hover_card_trigger"
-    _component_func = declare_component(name, release=_RELEASE)
+    _component_func = declare_component(name)
     props = {"label": label, "open": open_status}
     return _component_func(comp=name, props=props, key=key, default={"x": 0, "y": 0, "open": False})
 
 def hover_card_content(x, y, content: str, content_type: str, open_status=False, key=None):
     name = "hover_card_content"
-    _component_func = declare_component(name, release=_RELEASE)
+    _component_func = declare_component(name)
     container = stylable_container(key=f"cont_{key}", css_styles=f"""
         {{
             position: absolute;

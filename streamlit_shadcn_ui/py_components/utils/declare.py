@@ -2,7 +2,12 @@
 import os
 import streamlit.components.v1 as components
 
-def declare_component(component_name: str, url="http://localhost:5173", release=True):
+# import streamlit_shadcn_ui.config as config
+# TODO: streamlit seems to run declare first, so the config setting is not working
+__RELEASE = True
+
+def declare_component(component_name: str, url="http://localhost:5173", release=__RELEASE):
+
     if not release:
         _component_func = components.declare_component(
             # We give the component a simple, descriptive name ("my_component"

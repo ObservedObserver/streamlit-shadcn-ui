@@ -1,7 +1,6 @@
 from .utils import declare_component
-_RELEASE = True
 
-_component_func = declare_component("link_button", release=_RELEASE)
+_component_func = declare_component("link_button")
 
 def link_button(text: str, url: str, variant: str = "default", class_name: str = None, key = None):
     props = {"text": text, "variant": variant, "url": url, "className": class_name}

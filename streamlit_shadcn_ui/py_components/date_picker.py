@@ -5,17 +5,15 @@ from streamlit_extras.stylable_container import stylable_container
 from streamlit_shadcn_ui.py_components.utils.session import init_session 
 import streamlit as st
 
-_RELEASE = True
-
 def date_picker_trigger(value = None, label: str = None, open_status = False, key = None):
     name = "date_picker_trigger"
-    _component_func = declare_component(name, release=_RELEASE)
+    _component_func = declare_component(name)
     props = {"value": value, "open": open_status, "label": label}
     return _component_func(comp=name, props=props, key=key,  default={"x": 0, "y": 0, "open": False})
 
 def date_picker_content(x: int, y: int, value=None, default_value=None, open: bool = False, key=None, on_change=None, args=None, kwargs=None):
     name = "date_picker_content"
-    _component_func = declare_component(name, release=_RELEASE)
+    _component_func = declare_component(name)
     register_callback(key=key, callback=on_change, args=args, kwargs=kwargs)
     container = stylable_container(key=f"cont_{key}", css_styles=f"""
         {{

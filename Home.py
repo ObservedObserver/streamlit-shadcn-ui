@@ -1,4 +1,9 @@
 import streamlit as st
+
+# import streamlit_shadcn_ui.config as config
+# config.RELEASE = False
+# TODO: streamlit seems to run declare first, so the config setting is not working
+
 import streamlit_shadcn_ui as ui
 with open("docs/introduction.md", "r") as f:
     st.markdown(f.read())

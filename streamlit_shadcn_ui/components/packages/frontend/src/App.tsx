@@ -57,7 +57,9 @@ crouter.declare("element_renderer", ElementRenderer);
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;
     const container = useRef(null);
-
+    if (import.meta.env.DEV) {
+        console.log("DEV MODE", args.comp);
+    }
     useEffect(() => {
         if (container.current) {
             Streamlit.setFrameHeight(container.current.offsetHeight + 10);

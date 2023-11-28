@@ -4,8 +4,7 @@ from streamlit_extras.stylable_container import stylable_container
 from .button import button
 import streamlit as st
 
-_RELEASE = True
-_component_func = declare_component("alert_dialog", release=_RELEASE)
+_component_func = declare_component("alert_dialog")
 
 def dialog_layer(props, open_status=False, key=None):
     container = stylable_container(key=f"dialog_layer_{key}", css_styles=f"""

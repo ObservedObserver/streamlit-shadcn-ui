@@ -4,9 +4,7 @@ from streamlit_shadcn_ui.py_components.utils.session import init_session
 from .utils import declare_component
 import streamlit as st
 
-_RELEASE = True
-
-_component_func = declare_component("button", release=_RELEASE)
+_component_func = declare_component("button")
 
 # variant "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
 def button(text: str, variant: str = "default", class_name: str = None, key = None):

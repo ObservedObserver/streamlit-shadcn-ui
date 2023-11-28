@@ -21,7 +21,6 @@ function dfsRender (tree: IElementTree | string) {
 export const ElementRenderer = forwardRef<HTMLDivElement, ElementRendererProps>((props, ref) => {
     const { tree } = props;
     return <div ref={ref}>
-        <div className="bg-red-500"></div>
         {dfsRender(tree)}
     </div>
 })
