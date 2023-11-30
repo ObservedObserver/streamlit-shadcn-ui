@@ -5,15 +5,13 @@ import { Streamlit } from "streamlit-component-lib";
 
 interface StSwitchProps {
     label?: string;
-    checked?: boolean;
+    defaultChecked?: boolean;
 }
 export const StSwitch = forwardRef<HTMLDivElement, StSwitchProps>(
     (props: StSwitchProps, ref) => {
-        const { label, checked } = props;
-        const [checkedStatus, setCheckedStatus] = useState(checked);
-        useEffect(() => {
-            setCheckedStatus(checked);
-        }, [checked]);
+        const { label, defaultChecked } = props;
+        const [checkedStatus, setCheckedStatus] = useState(defaultChecked);
+
         return (
             <div ref={ref} className="flex items-center space-x-2 m-1">
                 <Switch
