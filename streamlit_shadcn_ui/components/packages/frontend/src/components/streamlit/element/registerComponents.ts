@@ -6,6 +6,7 @@ import { StCard } from "../card"
 import { StCheckbox } from "../checkbox";
 import { StInput } from "../input";
 import { StLinkButton } from "../linkButton";
+import { StSelectTrigger } from "../select";
 import { StSlider } from "../slider";
 import { StSwitch } from "../switch";
 import { StTable } from "../table";
@@ -24,7 +25,8 @@ const ComponentCollection = {
     avatar: StAvatar,
     link_button: StLinkButton,
     badges: StBadges,
-    switch: StSwitch
+    switch: StSwitch,
+    __select: StSelectTrigger
 } as const;
 
 export function getComponent (componentName: string) {

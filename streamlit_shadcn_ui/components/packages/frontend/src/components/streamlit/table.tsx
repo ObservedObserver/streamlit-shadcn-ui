@@ -22,12 +22,13 @@ interface StTableProps {
     data: IRow[];
     columns: IColumn[];
     maxHeight?: number;
+    className?: string;
 }
 
 export const StTable = forwardRef<HTMLTableElement, StTableProps>((props, ref) => {
-    const { data, columns, maxHeight = 300 } = props;
+    const { data, columns, maxHeight = 300, className } = props;
     return (
-        <Table ref={ref} className="m-1">
+        <Table ref={ref} className={`m-1 ${className}`}>
             <TableHeader>
                 <TableRow>
                     {

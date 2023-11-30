@@ -6,8 +6,8 @@ interface StBadgesProps {
     className?: string;
 }
 export const StBadges = forwardRef<HTMLDivElement, StBadgesProps>((props, ref) => {
-    const { badges, className } = props;
-    return <div className={className}  ref={ref}>
+    const { badges, className, ..._props } = props;
+    return <div className={className}  ref={ref} {..._props}>
         {
             badges.map((badge, index) => {
                 return <Badge key={`${badge}-${index}`} variant={badge.variant}>{badge.text}</Badge>

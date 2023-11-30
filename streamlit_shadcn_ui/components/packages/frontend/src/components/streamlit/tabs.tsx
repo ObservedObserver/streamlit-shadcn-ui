@@ -5,16 +5,17 @@ import { Streamlit } from "streamlit-component-lib";
 interface StTabProps {
     defaultValue?: string;
     options?: string[];
+    className?: string;
 }
 export const StTab = forwardRef<HTMLDivElement, StTabProps>(
     (props: StTabProps, ref) => {
-        const { options = [], defaultValue } = props;
+        const { options = [], defaultValue, className } = props;
 
         return (
             <Tabs
                 ref={ref}
                 defaultValue={defaultValue}
-                className="w-[400px]"
+                className={`w-[400px] ${className}`}
                 onValueChange={(v) => {
                     Streamlit.setComponentValue(v);
                 }}

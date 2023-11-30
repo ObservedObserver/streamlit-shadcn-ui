@@ -70,6 +70,24 @@ with ui.card(key="card1"):
 
 ![streamlit react_component](https://github.com/ObservedObserver/streamlit-shadcn-ui/assets/22167673/ab40ed25-cc41-4630-adc9-7d604e44d538)
 
+## Development Guide
+
+There are several scripts in `scripts` folder to help you develop this project.
+
+```sh
+# For local development
+./scripts/frontend.sh # frontend dev server
+./scripts/dev.sh # streamlit dev server
+```
+
+This repo follows the streamlit custom component structure.
++ `./streamlit_shadcn_ui` is the python package
+    + `./streamlit_shadcn_ui/components` is the frontend mono repo
+        + `./streamlit_shadcn_ui/components/packages/frontend` is the custom components collection.
+        + `./streamlit_shadcn_ui/components/packages/streamlit-components-lib` is a patch of streamlit-components-lib for react 18 (For now, only the react/react-dom version is changed).
+    + `./streamlit_shadcn_ui/py_components` is the python level API for components.
+
+
 
 ## Reference
 + [streamlit-shadcn-ui examples and docs repo](https://github.com/ObservedObserver/steamlit-shadcn-ui-docs)

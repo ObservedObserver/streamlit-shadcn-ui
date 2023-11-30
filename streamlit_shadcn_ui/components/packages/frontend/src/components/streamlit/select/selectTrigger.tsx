@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/select";
 import { useBodyStyle } from "@/hooks/useBodyStyle";
 import { getPositionRelativeToTopDocument } from "@/lib/utils";
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { Streamlit } from "streamlit-component-lib";
 
 interface StSelectTriggerProps {
@@ -17,27 +17,21 @@ export const StSelectTrigger = forwardRef<
     StSelectTriggerProps
 >((props, ref) => {
     const { value, open } = props;
-    const container = useRef(null);
     const [openStatus, setOpenStatus] = useState(open);
-    useEffect(() => {
-        if (ref) {
-            Streamlit.setFrameHeight(container.current.offsetHeight + 5);
-        }
-    });
+
     useEffect(() => {
         setOpenStatus(open);
     }, [open]);
     useEffect(() => {
-        if (container.current) {
-            const pos = getPositionRelativeToTopDocument(container.current);
+        if (ref && typeof ref !== "function") {
+            const pos = getPositionRelativeToTopDocument(ref.current);
 
             Streamlit.setComponentValue({
                 x: pos.left,
-                // consider the margin of the container
                 y:
                     pos.top +
-                    container.current.offsetHeight +
-                    container.current.style.marginTop.replace("px", "") * 1,
+                    ref.current.offsetHeight +
+                    Number(ref.current.style.marginTop.replace("px", "")),
                 open: openStatus,
             });
         }
@@ -47,12 +41,12 @@ export const StSelectTrigger = forwardRef<
         <Select defaultOpen={false}>
             <SelectTrigger
                 className="m-1"
-                ref={container}
+                ref={ref}
                 onClick={() => {
                     setOpenStatus(v => !v);
                 }}
             >
-                <SelectValue ref={ref} placeholder={value} />
+                <SelectValue placeholder={value} />
             </SelectTrigger>
         </Select>
     );

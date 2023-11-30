@@ -9,14 +9,14 @@ interface StCheckboxProps {
 }
 export const StCheckbox = forwardRef<HTMLDivElement>(
     (props: StCheckboxProps, ref) => {
-        const { label, defaultChecked, disabled } = props;
+        const { label, defaultChecked, disabled, ..._props } = props;
         const [checked, setChecked] = useState(defaultChecked ?? false);
         const onCheckedChange = useCallback((checked: boolean) => {
             setChecked(checked);
             Streamlit.setComponentValue(checked);
         }, []);
         return (
-            <div className="flex items-center space-x-2" ref={ref}>
+            <div className="flex items-center space-x-2" ref={ref} {..._props}>
                 <Checkbox
                     checked={checked}
                     disabled={disabled}

@@ -134,3 +134,4 @@ dist
 __pycache__
 
 streamlit_shadcn_ui.egg-info
+.vscode

@@ -7,11 +7,12 @@ interface StInputProps {
     type?: React.HTMLInputTypeAttribute;
     defaultValue?: string;
     placeholder?: string;
+    className?: string;
 }
 
 export const StInput = forwardRef<HTMLInputElement, StInputProps>(
     (props: StInputProps, ref) => {
-        const { type, defaultValue, placeholder } = props;
+        const { type, defaultValue, placeholder, className, ..._props } = props;
         const [inputValue, setInputValue] = useState<string>(defaultValue || '');
 
         // Update the state when defaultValue changes
@@ -29,12 +30,13 @@ export const StInput = forwardRef<HTMLInputElement, StInputProps>(
 
         return (
             <Input
-                className="m-1"
+                className={`m-1 ${className}`}
                 ref={ref}
                 type={type || 'text'}
                 value={inputValue}
                 placeholder={placeholder}
                 onChange={handleInputChange}
+                {..._props}
             />
         );
     }

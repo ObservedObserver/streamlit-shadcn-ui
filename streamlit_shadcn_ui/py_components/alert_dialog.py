@@ -1,7 +1,6 @@
 from streamlit_shadcn_ui.py_components.utils.session import init_session
 from .utils import declare_component
 from streamlit_extras.stylable_container import stylable_container
-from .button import button
 import streamlit as st
 
 _component_func = declare_component("alert_dialog")
@@ -30,7 +29,6 @@ def dialog_layer(props, open_status=False, key=None):
 def alert_dialog(show: bool, title: str, description: str, confirm_label: str=None, cancel_label: str=None, key = None):
     props = {"title": title, "description": description, "confirmLabel": confirm_label, "cancelLabel": cancel_label}
     init_session(key=key, default_value={"open": False, "confirm": False })
-    # trigger_button = button(text="Trigger", key=f"trigger_{key}")
     if show:
         st.session_state[key]['open'] = True
     component_state = dialog_layer(props=props, key=key, open_status=st.session_state[key]['open'])

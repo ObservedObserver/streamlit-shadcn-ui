@@ -19,3 +19,5 @@ st.markdown(f"""
 
 with open("docs/components/checkbox.md", "r") as f:
     st.markdown(f.read())
+
+st.write(ui.checkbox)

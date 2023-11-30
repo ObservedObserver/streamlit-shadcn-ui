@@ -1,6 +1,6 @@
 import { Button, ButtonProps } from "@/components/ui/button";
 import { StComponentValue } from "@/interfaces";
-import { forwardRef, useCallback, useEffect, useRef } from "react";
+import { forwardRef, useCallback, useRef } from "react";
 import { Streamlit } from "streamlit-component-lib";
 import { nanoid } from 'nanoid'
 
@@ -16,7 +16,7 @@ type StButtonValue = StComponentValue<boolean, undefined>;
 
 
 export const StButton = forwardRef<HTMLButtonElement, StButtonProps>((props: StButtonProps, ref) => {
-    const { text, disabled, variant, className } = props;
+    const { text, disabled, variant, className, ..._props } = props;
     
     const queue = useRef<(() => void)[]>([]);
 
@@ -27,7 +27,7 @@ export const StButton = forwardRef<HTMLButtonElement, StButtonProps>((props: StB
     }, [])
 
     return (
-        <Button className={className} variant={variant} ref={ref} disabled={disabled} onClick={clickHandler}>
+        <Button className={className} variant={variant} ref={ref} disabled={disabled} onClick={clickHandler} {..._props}>
             {text}
         </Button>
     );

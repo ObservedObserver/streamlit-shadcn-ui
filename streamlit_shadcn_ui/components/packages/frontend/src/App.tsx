@@ -1,8 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import "./App.css";
 import {
     ComponentProps,
-    Streamlit,
     withStreamlitConnection,
 } from "streamlit-component-lib";
 import { ComponentRouter } from "./componentRouter";
@@ -29,6 +28,7 @@ import { StAlertDialog } from "./components/streamlit/alertDialog";
 import { StLinkButton } from "./components/streamlit/linkButton";
 import { StBadges } from "./components/streamlit/badge";
 import { ElementRenderer } from "./components/streamlit/element";
+import { useAutoHeight } from "./hooks/useAutoHeight";
 
 const crouter = new ComponentRouter();
 crouter.declare("button", StButton);
@@ -57,14 +57,13 @@ crouter.declare("element_renderer", ElementRenderer);
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;
     const container = useRef(null);
+    const safeHeight = args.safeHeight ?? 10;
     if (import.meta.env.DEV) {
         console.log("DEV MODE", args.comp);
     }
-    useEffect(() => {
-        if (container.current) {
-            Streamlit.setFrameHeight(container.current.offsetHeight + 10);
-        }
-    }, []);
+    // TODO: different safe-height for different components
+    // 10px is the minimum safe height for slider, while most of the other components do not need it.
+    useAutoHeight(container, safeHeight);
 
     return crouter.render(args.comp, container, args.props);
 }

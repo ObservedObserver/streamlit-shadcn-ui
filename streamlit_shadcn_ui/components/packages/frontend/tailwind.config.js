@@ -95,6 +95,9 @@ module.exports = {
     },
     {
       pattern: /^self-/
+    },
+    {
+      pattern: /^(w|h|shadow|bg|rounded|text)-/
     }
   ]
 }

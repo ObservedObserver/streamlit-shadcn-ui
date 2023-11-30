@@ -16,11 +16,11 @@ interface StSelectOptionsProps {
 export const StSelectOptions = forwardRef<HTMLDivElement, StSelectOptionsProps>((props, ref) => {
     const { options, value } = props;
     const [selectedValue, setSelectedValue] = useState<string>(value);
-    useEffect(() => {
-        if (ref && typeof ref !== 'function') {
-            Streamlit.setFrameHeight(ref.current.offsetHeight + 5);
-        }
-    });
+    // useEffect(() => {
+    //     if (ref && typeof ref !== 'function') {
+    //         Streamlit.setFrameHeight(ref.current.offsetHeight + 5);
+    //     }
+    // });
 
     useBodyStyle("body { background-color: transparent !important; }")
 

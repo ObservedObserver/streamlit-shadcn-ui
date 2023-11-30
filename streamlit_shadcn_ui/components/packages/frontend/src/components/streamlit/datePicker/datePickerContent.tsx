@@ -31,12 +31,6 @@ export const StDatePickerContent = forwardRef<
         setDate(new Date(value));
     }, [value]);
 
-    useEffect(() => {
-        if (ref && typeof ref !== "function") {
-            Streamlit.setFrameHeight(ref.current.offsetHeight + 5);
-        }
-    });
-
     useBodyStyle("body { background-color: transparent !important; }")
 
     return (

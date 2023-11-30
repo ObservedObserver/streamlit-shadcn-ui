@@ -30,11 +30,6 @@ export const StDatePickerTrigger = forwardRef<
 
     useEffect(() => {
         if (ref && typeof ref !== 'function') {
-            Streamlit.setFrameHeight(ref.current.offsetHeight + 5);
-        }
-    });
-    useEffect(() => {
-        if (ref && typeof ref !== 'function') {
             const pos = getPositionRelativeToTopDocument(ref.current);
 
             Streamlit.setComponentValue({

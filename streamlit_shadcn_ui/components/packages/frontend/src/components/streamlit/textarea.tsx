@@ -6,11 +6,12 @@ import { useBodyStyle } from "@/hooks/useBodyStyle";
 interface StTextareaProps {
     defaultValue?: string;
     placeholder?: string;
+    className?: string;
 }
 
 export const StTextarea = forwardRef<HTMLTextAreaElement, StTextareaProps>(
     (props: StTextareaProps, ref) => {
-        const { defaultValue, placeholder } = props;
+        const { defaultValue, placeholder, className } = props;
         const [textareaValue, setTextareaValue] = useState<string>(defaultValue || '');
 
         // Update the state when defaultValue changes
@@ -28,7 +29,7 @@ export const StTextarea = forwardRef<HTMLTextAreaElement, StTextareaProps>(
 
         return (
             <Textarea
-                className="m-1"
+                className={`m-1 ${className}`}
                 ref={ref}
                 value={textareaValue}
                 placeholder={placeholder}

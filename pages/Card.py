@@ -4,13 +4,16 @@ import streamlit_shadcn_ui as ui
 
 st.header("Card")
 
-cols = st.columns(3)
-
-with cols[0]:
-    ui.card(title="Total Revenue", content="$45,231.89", description="+20.1% from last month", key="card1")
-with cols[1]:
-    ui.card(title="Total Revenue", content="$45,231.89", description="+20.1% from last month", key="card2")
-with cols[2]:
-    ui.card(title="Total Revenue", content="$45,231.89", description="+20.1% from last month", key="card3")
+with open("docs/components/card.md", "r") as f:
+    st.markdown(f.read())
 
 
+with ui.card(key="card1"):
+    ui.element("span", children=["Email"], className="text-gray-400 text-sm font-medium m-1", key="label1")
+    ui.element("input", key="email_input", placeholder="Your email")
+
+    ui.element("span", children=["User Name"], className="text-gray-400 text-sm font-medium m-1", key="label2")
+    ui.element("input", key="username_input", placeholder="Create a User Name")
+    ui.element("button", text="Submit", key="button", className="m-1")
+
+st.write(ui.card)
