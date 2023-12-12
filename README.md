@@ -35,7 +35,7 @@ Check docs and compoenent examples in [![Streamlit App](https://static.streamlit
 + [x] card
 + [x] avatar
 + [x] date_picker
-+ [ ] date_range_picker
++ [x] date_range_picker (date_picker with mode="range")
 + [x] table
 + [x] input
 + [x] slider

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "streamlit-shadcn-ui"
-version = "0.1.17"
+version = "0.1.18"
 readme = "README.md"
 keywords = ["streamlit", "shadcn", "ui", "components"]
 description = "Using shadcn components in Streamlit"

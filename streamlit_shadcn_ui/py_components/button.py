@@ -8,7 +8,6 @@ _component_func = declare_component("button")
 
 # variant "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
 
-
 def button(text: str, variant: str = "default", class_name: str = None, key=None, **kwargs):
     props = {"text": text, "variant": variant, "className": class_name, **kwargs}
     default_state = init_default_state(key, default_value=False)
