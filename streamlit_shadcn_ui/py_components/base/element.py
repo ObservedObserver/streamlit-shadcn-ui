@@ -77,5 +77,19 @@ class UIElement:
     def value(self) -> Any:
         return self.state["value"]
 
-def element(name: str, key: Optional[str] = None , default_value: Any = None, default_component_state: Any = {}, children: List[Union['UIElement', str]] = None, **props) -> UIElement:
-    return UIElement(name=name, props=props, key=key, default_value=default_value, default_component_state=default_component_state, children=children)
+def element(name: str, *args, key: Optional[str] = None, default_value: Any = None, default_component_state: Any = {}, **props) -> UIElement:
+    children = []
+    for arg in args:
+        if isinstance(arg, (UIElement, str)):
+            children.append(arg)
+        elif isinstance(arg, list):
+            children.extend(arg)
+    
+    return UIElement(
+        name=name,
+        props=props,
+        key=key,
+        default_value=default_value,
+        default_component_state=default_component_state,
+        children=children if children else None
+    )

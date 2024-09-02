@@ -1,4 +1,3 @@
-
 import { StAvatar } from "../avatar";
 import { StBadges } from "../badge";
 import { StButton } from "../button";
@@ -29,9 +28,15 @@ const ComponentCollection = {
     __select: StSelectTrigger
 } as const;
 
-export function getComponent (componentName: string) {
+export function getComponent(componentName: string) {
     if (componentName in ComponentCollection) {
-        return ComponentCollection[componentName]
+        return ComponentCollection[componentName as keyof typeof ComponentCollection];
     }
-    return false
+    
+    // Check if the componentName is a valid HTML element
+    if (typeof document.createElement(componentName).tagName === 'string') {
+        return componentName;
+    }
+    
+    return false;
 }

@@ -4,7 +4,7 @@ import streamlit.components.v1 as components
 
 # import streamlit_shadcn_ui.config as config
 # TODO: streamlit seems to run declare first, so the config setting is not working
-__RELEASE = True
+__RELEASE = False
 
 def declare_component(component_name: str, url="http://localhost:5173", release=__RELEASE):
 
