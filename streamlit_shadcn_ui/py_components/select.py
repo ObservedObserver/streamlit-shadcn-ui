@@ -1,3 +1,5 @@
+from typing import List
+
 from streamlit_extras.stylable_container import stylable_container
 
 from streamlit_shadcn_ui.py_components.utils.callback import register_callback 
@@ -11,7 +13,7 @@ def select_trigger(value=None, open_status=False, key=None):
     props = {"value": value, "open": open_status}
     return _component_func(comp=name, props=props, key=key, default={"x": 0, "y": 0, "open": False})
 
-def select_options(options: list[str], x, y, open_status=False, key=None, default_value=None, on_change=None, args=None, kwargs=None):
+def select_options(options: List[str], x, y, open_status=False, key=None, default_value=None, on_change=None, args=None, kwargs=None):
     name = "select_options"
     _component_func = declare_component(name)
     register_callback(key=key, callback=on_change, args=args, kwargs=kwargs)
