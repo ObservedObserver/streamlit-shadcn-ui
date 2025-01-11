@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+import tailwindcssAnimate from "tailwindcss-animate";
+export default {
   darkMode: ["class"],
   content: [
     './pages/**/*.{ts,tsx}',
@@ -50,6 +51,15 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        keyframes: {
+          "caret-blink": {
+            "0%,70%,100%": { opacity: "1" },
+            "20%,50%": { opacity: "0" },
+          },
+        },
+        animation: {
+          "caret-blink": "caret-blink 1.25s ease-out infinite",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -72,7 +82,7 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
   safelist: [
     // flex related
     {

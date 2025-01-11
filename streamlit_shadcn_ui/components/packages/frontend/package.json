@@ -26,6 +26,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
+    "input-otp": "^1.4.2",
     "lucide-react": "^0.292.0",
     "nanoid": "^5.0.3",
     "react": "^18.2.0",

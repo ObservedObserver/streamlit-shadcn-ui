@@ -29,6 +29,9 @@ import { StLinkButton } from "./components/streamlit/linkButton";
 import { StBadges } from "./components/streamlit/badge";
 import { ElementRenderer } from "./components/streamlit/element";
 import { useAutoHeight } from "./hooks/useAutoHeight";
+import { StBreadcrumb} from "./components/streamlit/breadcrumb";
+import { StInputOTP } from "./components/streamlit/inputopt";
+import { StSkeleton } from "./components/streamlit/skeleton";
 
 const crouter = new ComponentRouter();
 crouter.declare("button", StButton);
@@ -53,6 +56,9 @@ crouter.declare("alert_dialog", StAlertDialog);
 crouter.declare("link_button", StLinkButton);
 crouter.declare("badges", StBadges);
 crouter.declare("element_renderer", ElementRenderer);
+crouter.declare("breadcrumb", StBreadcrumb);
+crouter.declare("input_otp", StInputOTP);
+crouter.declare("skeleton", StSkeleton);
 
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;
