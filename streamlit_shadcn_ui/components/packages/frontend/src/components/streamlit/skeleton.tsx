@@ -9,10 +9,10 @@ export const StSkeleton = forwardRef<HTMLDivElement, StSkeletonProps>(
     (props: StSkeletonProps, ref) => {
         const { className, ..._props } = props;
         return (
-            <Skeleton
-                className={`m-1 ${className}`}
-                {..._props}
-            />
+            <div ref={ref} {..._props}>
+                <Skeleton className={`rounded-full ${className}`}/>
+            </div>
+            
         );
     }
 );

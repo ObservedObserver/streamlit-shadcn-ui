@@ -1,14 +1,8 @@
-import streamlit as st
+### Basic Usage
 
-import streamlit_shadcn_ui as ui
-
-st.header("Breadcrumb")
-
-with open("docs/components/bread_crumb.md", "r") as f:
-    st.markdown(f.read())
-
+```py
 ui.breadcrumb(
-    breadcrumb_items=[
+     breadcrumb_items=[
         {"text": "Home", "href": "/"},
         {"text": "Components", "href": "/components"},
         {"text": "Breadcrumb", "isCurrentPage": True},
@@ -18,3 +12,4 @@ ui.breadcrumb(
 )
 
 st.write(ui.breadcrumb)
+```

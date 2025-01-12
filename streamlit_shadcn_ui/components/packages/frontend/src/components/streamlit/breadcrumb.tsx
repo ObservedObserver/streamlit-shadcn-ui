@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,27 +21,26 @@ interface StBreadcrumbProps {
 export const StBreadcrumb = forwardRef<HTMLElement, StBreadcrumbProps>(
   (props: StBreadcrumbProps, ref) => {
     const { items, separator, className, ..._props } = props;
+
     return (
-      <Breadcrumb className={className} ref={ref} {...props}>
+      <Breadcrumb className={className} ref={ref} {..._props}>
         <BreadcrumbList>
-          {items.map((item, index) => (
-            <>
-              <BreadcrumbItem key={`${item.text}-${index}`}>
-                {item.isCurrentPage ? (
-                  <BreadcrumbPage>{item.text}</BreadcrumbPage>
-                ) : (
-                  <BreadcrumbLink href={item.href || "#"}>
-                    {item.text}
-                  </BreadcrumbLink>
-                )}
-              </BreadcrumbItem>
-              {index < items.length - 1 && (
-                <BreadcrumbSeparator key={`separator-${index}`}>
-                  {separator}
-                </BreadcrumbSeparator>
+        {items.map((item, index) => (
+          <React.Fragment key={`${item.text}-${index}`}>
+            <BreadcrumbItem>
+              {item.isCurrentPage ? (
+                <BreadcrumbPage>{item.text}</BreadcrumbPage>
+              ) : (
+                <BreadcrumbLink href={item.href || "#"}>
+                  {item.text}
+                </BreadcrumbLink>
               )}
-            </>
-          ))}
+            </BreadcrumbItem>
+            {index < items.length - 1 && (
+              <BreadcrumbSeparator>{separator}</BreadcrumbSeparator>
+            )}
+          </React.Fragment>
+        ))}
         </BreadcrumbList>
       </Breadcrumb>
     );

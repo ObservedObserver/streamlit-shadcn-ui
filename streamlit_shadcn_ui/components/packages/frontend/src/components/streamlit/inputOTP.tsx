@@ -17,7 +17,7 @@ import {
     (props: StInputOTPProps, ref) => {
     const { defaultValue, maxLength, className, ..._props } = props;
       const [otp, setOtp] = useState<string>("");
-  
+      console.log("maxLength",maxLength)
       useEffect(() => {
         const initialValue = defaultValue.slice(0, maxLength);
         setOtp(initialValue);

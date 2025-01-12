@@ -30,8 +30,10 @@ import { StBadges } from "./components/streamlit/badge";
 import { ElementRenderer } from "./components/streamlit/element";
 import { useAutoHeight } from "./hooks/useAutoHeight";
 import { StBreadcrumb} from "./components/streamlit/breadcrumb";
-import { StInputOTP } from "./components/streamlit/inputopt";
+import { StInputOTP } from "./components/streamlit/inputOTP";
 import { StSkeleton } from "./components/streamlit/skeleton";
+import {StDropdownMenuTrigger} from "./components/streamlit/dropdownMenu/DropdownMenuTrigger";
+import {StDropdownMenuContent} from "./components/streamlit/dropdownMenu/DropdownMenuContent";
 
 const crouter = new ComponentRouter();
 crouter.declare("button", StButton);
@@ -59,6 +61,8 @@ crouter.declare("element_renderer", ElementRenderer);
 crouter.declare("breadcrumb", StBreadcrumb);
 crouter.declare("input_otp", StInputOTP);
 crouter.declare("skeleton", StSkeleton);
+crouter.declare("dropdown_menu_trigger", StDropdownMenuTrigger);
+crouter.declare("dropdown_menu_content", StDropdownMenuContent);
 
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;

@@ -5,7 +5,6 @@ _component_func = declare_component("breadcrumb")
 
 def breadcrumb(
     breadcrumb_items: List[Dict[str, Optional[str]]], 
-    separator: Optional[str] = None, 
     class_name: Optional[str] = None, 
     key=None
 ):
@@ -20,7 +19,6 @@ def breadcrumb(
     ]
     props = {
         "items": items,
-        "separator": separator,
         "className": class_name,
     }
     component_value =  _component_func(comp="breadcrumb", props=props, key=key, default=None)
