@@ -23,7 +23,7 @@ export const StInput = forwardRef<HTMLInputElement, StInputProps>(
         // Handle input change
         const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
             setInputValue(event.target.value);
-            Streamlit.setComponentValue(event.target.value); //把值传递给python
+            Streamlit.setComponentValue(event.target.value);
         };
         
         useBodyStyle("body { padding-right: 0.5em !important; }")
