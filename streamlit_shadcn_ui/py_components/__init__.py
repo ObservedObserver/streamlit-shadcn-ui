@@ -21,3 +21,7 @@ from .breadcrumb import breadcrumb
 from .input_otp import input_otp
 from .skeleton import skeleton
 from .dropdown_menu import dropdown_menu
+from .carousel import carousel
+from .progress import progress
+from .accordtion import accordtion
+from .alert import alert

@@ -1,6 +1,9 @@
 ### Basic Usage
 
 ```py
+import streamlit as st
+import streamlit_shadcn_ui as ui
+
 ui.breadcrumb(
      breadcrumb_items=[
         {"text": "Home", "href": "/"},

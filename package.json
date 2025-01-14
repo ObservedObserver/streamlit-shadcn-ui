@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@radix-ui/react-accordion": "^1.2.2",
+    "@radix-ui/react-progress": "^1.1.1",
+    "embla-carousel-react": "^8.5.2"
+  }
+}

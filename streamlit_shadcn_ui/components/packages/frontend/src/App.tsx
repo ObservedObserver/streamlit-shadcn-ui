@@ -32,8 +32,12 @@ import { useAutoHeight } from "./hooks/useAutoHeight";
 import { StBreadcrumb} from "./components/streamlit/breadcrumb";
 import { StInputOTP } from "./components/streamlit/inputOTP";
 import { StSkeleton } from "./components/streamlit/skeleton";
-import {StDropdownMenuTrigger} from "./components/streamlit/dropdownMenu/DropdownMenuTrigger";
-import {StDropdownMenuContent} from "./components/streamlit/dropdownMenu/DropdownMenuContent";
+import { StDropdownMenuTrigger} from "./components/streamlit/dropdownMenu/dropdownMenuTrigger";
+import { StDropdownMenuContent} from "./components/streamlit/dropdownMenu/dropdownMenuContent";
+import { StCarousel } from "./components/streamlit/carousel";
+import { StProgress } from "./components/streamlit/progress";
+import { StAccordion } from "./components/streamlit/accordtion";
+import { StAlert } from "./components/streamlit/alert";
 
 const crouter = new ComponentRouter();
 crouter.declare("button", StButton);
@@ -63,6 +67,10 @@ crouter.declare("input_otp", StInputOTP);
 crouter.declare("skeleton", StSkeleton);
 crouter.declare("dropdown_menu_trigger", StDropdownMenuTrigger);
 crouter.declare("dropdown_menu_content", StDropdownMenuContent);
+crouter.declare("carousel", StCarousel);
+crouter.declare("progress", StProgress);
+crouter.declare("accordtion", StAccordion);
+crouter.declare("alert", StAlert);
 
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;
