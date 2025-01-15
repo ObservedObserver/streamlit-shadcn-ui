@@ -25,3 +25,4 @@ from .carousel import carousel
 from .progress import progress
 from .accordtion import accordtion
 from .alert import alert
+from .calendar import calendar

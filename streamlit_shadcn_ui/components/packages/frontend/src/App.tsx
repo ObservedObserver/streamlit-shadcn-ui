@@ -38,6 +38,7 @@ import { StCarousel } from "./components/streamlit/carousel";
 import { StProgress } from "./components/streamlit/progress";
 import { StAccordion } from "./components/streamlit/accordtion";
 import { StAlert } from "./components/streamlit/alert";
+import { StCalendar } from "./components/streamlit/calendar";
 
 const crouter = new ComponentRouter();
 crouter.declare("button", StButton);
@@ -71,6 +72,7 @@ crouter.declare("carousel", StCarousel);
 crouter.declare("progress", StProgress);
 crouter.declare("accordtion", StAccordion);
 crouter.declare("alert", StAlert);
+crouter.declare("calendar", StCalendar);
 
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;
