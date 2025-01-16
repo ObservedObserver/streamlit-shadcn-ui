@@ -26,3 +26,6 @@ from .progress import progress
 from .accordtion import accordtion
 from .alert import alert
 from .calendar import calendar
+from .collapsible import collapsible
+from .scroll_area import scroll_area
+from .dialog import dialog
