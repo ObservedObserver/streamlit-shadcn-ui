@@ -29,32 +29,35 @@ import {
       };
   
       return (
-        <InputOTP
-          value={otp}
-          ref={ref}
-          maxLength={maxLength}
-          onChange={handleChange} 
-          className={`${className}`}
-          {..._props}
-        >
-          <InputOTPGroup>
-            {Array.from({ length: Math.ceil(maxLength / 2) }).map((_, index) => (
-              <InputOTPSlot
-                key={index}
-                index={index} 
-              />
-            ))}
-          </InputOTPGroup>
-          <InputOTPSeparator />
-          <InputOTPGroup>
-            {Array.from({ length: Math.floor(maxLength / 2) }).map((_, index) => (
-              <InputOTPSlot
-                key={index + Math.ceil(maxLength / 2)}
-                index={index + Math.ceil(maxLength / 2)}
-              />
-            ))}
-          </InputOTPGroup>
-        </InputOTP>
+        <div className="m-1">
+          <InputOTP
+            value={otp}
+            ref={ref}
+            maxLength={maxLength}
+            onChange={handleChange} 
+            className={`${className}`}
+            {..._props}
+          >
+            <InputOTPGroup>
+              {Array.from({ length: Math.ceil(maxLength / 2) }).map((_, index) => (
+                <InputOTPSlot
+                  key={index}
+                  index={index} 
+                />
+              ))}
+            </InputOTPGroup>
+            <InputOTPSeparator />
+            <InputOTPGroup>
+              {Array.from({ length: Math.floor(maxLength / 2) }).map((_, index) => (
+                <InputOTPSlot
+                  key={index + Math.ceil(maxLength / 2)}
+                  index={index + Math.ceil(maxLength / 2)}
+                />
+              ))}
+            </InputOTPGroup>
+          </InputOTP>
+        </div>
+        
       );
     }
   );

@@ -18,6 +18,7 @@ def dropdown_menu_trigger(
 def dropdown_menu_content(
     x,
     y,
+    label,
     items: list[str],
     open_status = False,
     key = None,
@@ -35,6 +36,7 @@ def dropdown_menu_content(
         """)
     with container:
         props = {
+            "label":label,
             "items": items,
             "open": open_status
         }
@@ -44,6 +46,7 @@ def dropdown_menu_content(
 def dropdown_menu(
     items: list[str],
     label = "Open",
+    menu_label= "Position",
     key = "ui_dropdown"
 ):
     trigger_key = f"trigger_{key}"
@@ -70,9 +73,10 @@ def dropdown_menu(
         content_state = dropdown_menu_content(
             x=trigger_state['x'], 
             y=trigger_state['y'],
+            label = menu_label,
             items = items,
             open_status=trigger_state['open'],
             key = content_key,
         )
 
-        return None
+        return content_state
