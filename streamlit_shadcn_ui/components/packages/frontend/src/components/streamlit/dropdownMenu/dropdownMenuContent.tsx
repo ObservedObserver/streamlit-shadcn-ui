@@ -1,7 +1,6 @@
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuTrigger,
     DropdownMenuLabel,
     DropdownMenuSeparator,
@@ -32,23 +31,23 @@ export const StDropdownMenuContent = forwardRef<HTMLDivElement, StDropdownMenuCo
         Streamlit.setComponentValue({ value }); 
     };
     return (
-    <DropdownMenu open={true}>
-        <DropdownMenuTrigger className="hidden" />
-        <DropdownMenuContent ref={ref}>
-            <DropdownMenuLabel>{label}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuRadioGroup 
-                value={position} 
-                onValueChange={
-                    (value)=>handleValueChange(value)}>
-                {items.map((item, index) => (
-                    <DropdownMenuRadioItem value={item} key={index}>
-                        {item}
-                    </DropdownMenuRadioItem>
-                ))}
-            </DropdownMenuRadioGroup>
-        </DropdownMenuContent>
-    </DropdownMenu>
+        <DropdownMenu open={true}>
+            <DropdownMenuTrigger className="hidden" />
+            <DropdownMenuContent ref={ref}>
+                <DropdownMenuLabel>{label}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup 
+                    value={position} 
+                    onValueChange={
+                        (value)=>handleValueChange(value)}>
+                    {items.map((item, index) => (
+                        <DropdownMenuRadioItem value={item} key={index}>
+                            {item}
+                        </DropdownMenuRadioItem>
+                    ))}
+                </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 }
 );

@@ -41,6 +41,9 @@ import { StCalendar } from "./components/streamlit/calendar";
 import { StCollapsible } from "./components/streamlit/collapsible";
 import { StScrollArea } from "./components/streamlit/scrollArea";
 import { StDialog } from "./components/streamlit/dialog";
+import { StCommand } from "./components/streamlit/command";
+import {StResizable} from "./components/streamlit/resizable";
+import {StToggle} from "./components/streamlit/toggle";
 
 const crouter = new ComponentRouter();
 crouter.declare("button", StButton);
@@ -77,6 +80,9 @@ crouter.declare("calendar", StCalendar);
 crouter.declare("collapsible", StCollapsible);
 crouter.declare("scroll_area", StScrollArea);
 crouter.declare("dialog", StDialog);
+crouter.declare("command", StCommand);
+crouter.declare("resizable", StResizable);
+crouter.declare("toggle", StToggle);
 
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;
