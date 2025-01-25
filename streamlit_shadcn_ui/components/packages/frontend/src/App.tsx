@@ -42,8 +42,9 @@ import { StCollapsible } from "./components/streamlit/collapsible";
 import { StScrollArea } from "./components/streamlit/scrollArea";
 import { StDialog } from "./components/streamlit/dialog";
 import { StCommand } from "./components/streamlit/command";
-import {StResizable} from "./components/streamlit/resizable";
-import {StToggle} from "./components/streamlit/toggle";
+import { StResizable} from "./components/streamlit/resizable";
+import { StToggle} from "./components/streamlit/toggle";
+import { StPagination } from "./components/streamlit/pagination";
 
 const crouter = new ComponentRouter();
 crouter.declare("button", StButton);
@@ -83,6 +84,7 @@ crouter.declare("dialog", StDialog);
 crouter.declare("command", StCommand);
 crouter.declare("resizable", StResizable);
 crouter.declare("toggle", StToggle);
+crouter.declare("pagination", StPagination);
 
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;

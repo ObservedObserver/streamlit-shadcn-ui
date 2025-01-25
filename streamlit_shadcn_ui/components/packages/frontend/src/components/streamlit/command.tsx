@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/command"
 
 import { forwardRef } from "react";
+import { Streamlit } from "streamlit-component-lib";
 
 interface CommandItemProps {
   label: string; 
@@ -30,7 +31,9 @@ export const StCommand = forwardRef<HTMLElement, StCommandProps>(
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading={title}>
             {items.map((item, index) => (
-              <CommandItem key={index}>
+              <CommandItem key={index} onSelect={() => {
+                Streamlit.setComponentValue(item.label);
+              }}>
                 {item.label}
               </CommandItem>
             ))}

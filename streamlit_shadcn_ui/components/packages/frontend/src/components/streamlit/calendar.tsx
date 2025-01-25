@@ -23,10 +23,10 @@ export const StCalendar = forwardRef<HTMLDivElement,StCalendarProps>(
     return (
         <div className={`max-w-xs flex items-center justify-center ${className}`} ref = {ref}>
             <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-            className="rounded-md border shadow"
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                className="rounded-md border shadow"
             />
         </div>
         

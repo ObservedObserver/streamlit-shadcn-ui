@@ -31,3 +31,4 @@ from .dialog import dialog
 from .command import command
 from .resizable import resizable
 from .toggle import toggle
+from .pagination import pagination

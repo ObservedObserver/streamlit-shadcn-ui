@@ -9,7 +9,8 @@ items = [
     {"label": "Search Emoji"},
     {"label": "Calculator"},
 ]
-ui.command(items=items, key="command1", title="Suggestions")
+value = ui.command(items=items, key="command1", title="Suggestions")
 
+st.write("value:", value)
 st.write(ui.command)
 ```
