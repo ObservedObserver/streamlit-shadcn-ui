@@ -25,7 +25,7 @@ export const StInput = forwardRef<HTMLInputElement, StInputProps>(
             setInputValue(event.target.value);
             Streamlit.setComponentValue(event.target.value);
         };
-
+        
         useBodyStyle("body { padding-right: 0.5em !important; }")
 
         return (

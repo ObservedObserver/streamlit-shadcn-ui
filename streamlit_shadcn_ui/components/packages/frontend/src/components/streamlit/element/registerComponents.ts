@@ -11,6 +11,8 @@ import { StSwitch } from "../switch";
 import { StTable } from "../table";
 import { StTab } from "../tabs";
 import { StTextarea } from "../textarea";
+import { StSeletonCircle } from "../skeleton/circle";
+import { StSkeletonRectangle } from "../skeleton/rectangle";    
 
 const ComponentCollection = {
     card: StCard,
@@ -25,6 +27,8 @@ const ComponentCollection = {
     link_button: StLinkButton,
     badges: StBadges,
     switch: StSwitch,
+    circle: StSeletonCircle,
+    rectangle: StSkeletonRectangle,
     __select: StSelectTrigger
 } as const;
 
