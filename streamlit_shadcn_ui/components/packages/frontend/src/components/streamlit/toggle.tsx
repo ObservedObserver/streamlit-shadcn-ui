@@ -18,7 +18,6 @@ export const StToggle = forwardRef<HTMLDivElement, StToggleProps>(
           aria-label="Toggle italic"
           pressed={pressedStatus}
           onPressedChange={(value) => {
-            console.log("Toggle value:", value)
             setPressedStatus(value)
             Streamlit.setComponentValue(value)
           }}

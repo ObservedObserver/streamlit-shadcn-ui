@@ -45,6 +45,10 @@ import { StCommand } from "./components/streamlit/command";
 import { StResizable} from "./components/streamlit/resizable";
 import { StToggle} from "./components/streamlit/toggle";
 import { StPagination } from "./components/streamlit/pagination";
+import { StPopoverTrigger } from "./components/streamlit/popover/popoverTrigger";
+import { StPopoverContent } from "./components/streamlit/popover/popoverContent";
+import { StToggleGroup } from "./components/streamlit/toggleGroup";
+import { StAspectRatio } from "./components/streamlit/aspectRatio";
 
 const crouter = new ComponentRouter();
 crouter.declare("button", StButton);
@@ -85,6 +89,10 @@ crouter.declare("command", StCommand);
 crouter.declare("resizable", StResizable);
 crouter.declare("toggle", StToggle);
 crouter.declare("pagination", StPagination);
+crouter.declare("popover_trigger", StPopoverTrigger);
+crouter.declare("popover_content", StPopoverContent);
+crouter.declare("toggle_group", StToggleGroup);
+crouter.declare("aspect_ratio", StAspectRatio);
 
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;
