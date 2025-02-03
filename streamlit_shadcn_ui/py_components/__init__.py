@@ -31,4 +31,7 @@ from .dialog import dialog
 from .command import command
 from .resizable import resizable
 from .toggle import toggle
+from .toggle_group import toggle_group
 from .pagination import pagination
+from .popover import popover
+from .aspect_ratio import aspect_ratio
