@@ -49,6 +49,7 @@ import { StPopoverTrigger } from "./components/streamlit/popover/popoverTrigger"
 import { StPopoverContent } from "./components/streamlit/popover/popoverContent";
 import { StToggleGroup } from "./components/streamlit/toggleGroup";
 import { StAspectRatio } from "./components/streamlit/aspectRatio";
+import { StSeparator } from "./components/streamlit/separator";
 
 const crouter = new ComponentRouter();
 crouter.declare("button", StButton);
@@ -93,6 +94,7 @@ crouter.declare("popover_trigger", StPopoverTrigger);
 crouter.declare("popover_content", StPopoverContent);
 crouter.declare("toggle_group", StToggleGroup);
 crouter.declare("aspect_ratio", StAspectRatio);
+crouter.declare("separator", StSeparator);
 
 function App(props: ComponentProps<{comp: string; props: any; [key: string]: any}>) {
     const { args, width, disabled, theme } = props;
