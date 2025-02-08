@@ -2,7 +2,11 @@ from .utils import declare_component
 
 _component_func = declare_component("checkbox")
 
-def checkbox(default_checked=False, label=None, key=None):
-    props = {"defaultChecked": default_checked, "label": label}
-    component_value = _component_func(comp="checkbox", props=props, key=key, default=default_checked)
+def checkbox(mode = None, options=None,key=None):
+    
+    props = {
+        "options": options,
+        "mode": mode
+        }
+    component_value = _component_func(comp="checkbox", props=props, key=key)
     return component_value

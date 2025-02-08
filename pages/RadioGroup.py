@@ -12,10 +12,7 @@ radio_options = [
     {"label": "Option C", "value": "C", "id": "r3"},
     {"label": "Option D", "value": "D", "id": "r4"}
 ]
-radio_value = ui.radio_group(options=radio_options, default_value="B", mode="single",key="radio1")
+radio_value = ui.radio_group(options=radio_options, default_value="B", key="radio1")
 st.write("Selected Radio Option:", radio_value)
-
-radio_value_1 = ui.radio_group(options=radio_options, default_value=["B"], mode="multiple",key="radio2")
-st.write("Selected Radio Option:", radio_value_1)
 
 st.write(ui.radio_group)
