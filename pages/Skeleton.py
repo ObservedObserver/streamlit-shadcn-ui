@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_shadcn_ui as ui
 
-st.header("Skeleton Component")
+st.header("Skeleton")
 
 with open("docs/components/skeleton.md", "r") as f:
     st.markdown(f.read())

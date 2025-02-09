@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_shadcn_ui as ui
 
-st.header("Textarea Component")
+st.header("Textarea")
 
 with open("docs/components/textarea.md", "r") as f:
     st.markdown(f.read())

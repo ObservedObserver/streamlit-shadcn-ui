@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_shadcn_ui as ui
 
-st.header("Slider Component")
+st.header("Slider")
 
 with open("docs/components/slider.md", "r") as f:
     st.markdown(f.read())

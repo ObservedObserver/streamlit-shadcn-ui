@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_shadcn_ui as ui
 
-st.header("Pagination Component")
+st.header("Pagination")
 
 with open("docs/components/pagination.md", "r") as f:
     st.markdown(f.read())

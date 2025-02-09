@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_shadcn_ui as ui
 
-st.header("Resizable Component")
+st.header("Resizable")
 
 with open("docs/components/resizable.md", "r") as f:
     st.markdown(f.read())
