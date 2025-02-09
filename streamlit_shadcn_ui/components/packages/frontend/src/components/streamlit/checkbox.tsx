@@ -11,13 +11,11 @@ interface StCheckboxProps {
 export const StCheckbox = forwardRef<HTMLDivElement, StCheckboxProps>(
     (props: StCheckboxProps, ref) => {
         const { options, mode, ..._props } = props;
-        console.log("options",options)
         const initialValues =
             options?.reduce((acc, option) => {
                 acc[option.id] = option.default_checked;
                 return acc;
             }, {} as Record<string, boolean>) || {};
-        console.log("initialValues",initialValues)
         const [selectedValues, setSelectedValues] = useState<Record<string, boolean>>(initialValues);
 
         useEffect(() => {
