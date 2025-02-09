@@ -48,8 +48,8 @@ export const StPagination = forwardRef<HTMLDivElement, StPaginationProps>(
     };
 
     return (
-      <div ref={ref}>
-        <Pagination>
+      // <div ref={ref}>
+        <Pagination ref={ref}>
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
@@ -76,7 +76,7 @@ export const StPagination = forwardRef<HTMLDivElement, StPaginationProps>(
             </PaginationItem>
           </PaginationContent>
         </Pagination>
-      </div>
+      // </div>
     );
   }
 );
