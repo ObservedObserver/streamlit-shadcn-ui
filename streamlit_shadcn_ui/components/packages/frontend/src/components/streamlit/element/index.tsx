@@ -4,7 +4,7 @@ import { getComponent } from "./registerComponents";
 interface ElementRendererProps {
     tree: IElementTree;
 }
-interface IElementTree {
+export interface IElementTree {
     name: string;
     props: any;
     children?: (IElementTree | string)[];
