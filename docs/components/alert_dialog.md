@@ -3,6 +3,7 @@
 Alert Dialogs are used to display information to the user. It is a modal window, blocking other actions in the application until it is closed.
 
 ```py
+import streamlit as st
 import streamlit_shadcn_ui as ui
 
 trigger_btn = ui.button(text="Trigger Button", key="trigger_btn_1")

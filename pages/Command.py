@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_shadcn_ui as ui
 
-st.header("Command Component")
+st.header("Command")
 
 with open("docs/components/command.md", "r") as f:
     st.markdown(f.read())

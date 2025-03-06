@@ -47,7 +47,6 @@ def popover(
 ):
     trigger_key = f"trigger_{key}"
     content_key = f"content_{key}"
-    print(trigger_key)
     # Initialize session state
     init_session(key=trigger_key, default_value={"x": 0, "y": 0, "open": False})
     init_session(key=content_key, default_value={"open": False})

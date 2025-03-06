@@ -46,6 +46,28 @@ Check docs and compoenent examples in [![Streamlit App](https://static.streamlit
 + [x] hover_card
 + [x] badges
 + [x] link_button
++ [x] accordtion
++ [x] alert
++ [x] aspect_ratio
++ [x] calendar
++ [x] carousel
++ [x] checkbox
++ [x] collapsible
++ [x] command
++ [x] dialog
++ [x] dropdown_menu
++ [x] input-OTP
++ [x] metric_card
++ [x] pagination
++ [x] popover
++ [x] progress
++ [x] radio_group
++ [x] resizable
++ [x] scroll_area
++ [x] separator
++ [x] skeleton
++ [x] toggle
++ [x] toggle_group
 
 ![streamlit card](https://github.com/ObservedObserver/streamlit-shadcn-ui/assets/22167673/799b9235-96a6-406e-b270-e685de9ba5fd)
 

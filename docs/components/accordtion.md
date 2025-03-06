@@ -1,4 +1,4 @@
-### Basic usage
+### Basic Usage
 
 ```py
 import streamlit as st

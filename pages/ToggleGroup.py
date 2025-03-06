@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_shadcn_ui as ui  
 
-st.header("Toggle Group Component")
+st.header("Toggle Group")
 
 with open("docs/components/toggle_group.md", "r") as f:
     st.markdown(f.read())

@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_shadcn_ui as ui
 
-st.header("Separator Component")
+st.header("Separator")
 
 with open("docs/components/separator.md", "r") as f:
     st.markdown(f.read())

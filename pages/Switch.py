@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_shadcn_ui as ui
 
-st.header("Switch Component")
+st.header("Switch")
 
 with open("docs/components/switch.md", "r") as f:
     st.markdown(f.read())
