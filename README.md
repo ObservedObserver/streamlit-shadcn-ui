@@ -24,6 +24,8 @@ ui.alert_dialog(show=trigger_btn, title="Alert Dialog", description="This is an 
 
 ```
 
+[<img src="https://py.cafe/logos/pycafe_logo.png" alt="PyCafe logo" width="24" height="24"> Run and edit this example in Py.Cafe](https://py.cafe/maartenbreddels/streamlit-shadcn-ui-example)
+
 ## Components
 
 Check docs and compoenent examples in [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://shadcn.streamlit.app/)
