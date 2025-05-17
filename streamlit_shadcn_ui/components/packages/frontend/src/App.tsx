@@ -35,7 +35,7 @@ import { StDropdownMenuTrigger} from "./components/streamlit/dropdownMenu/dropdo
 import { StDropdownMenuContent} from "./components/streamlit/dropdownMenu/dropdownMenuContent";
 import { StCarousel } from "./components/streamlit/carousel";
 import { StProgress } from "./components/streamlit/progress";
-import { StAccordion } from "./components/streamlit/accordtion";
+import { StAccordion } from "./components/streamlit/accordion";
 import { StAlert } from "./components/streamlit/alert";
 import { StCalendar } from "./components/streamlit/calendar";
 import { StCollapsible } from "./components/streamlit/collapsible";
@@ -80,7 +80,7 @@ crouter.declare("dropdown_menu_trigger", StDropdownMenuTrigger);
 crouter.declare("dropdown_menu_content", StDropdownMenuContent);
 crouter.declare("carousel", StCarousel);
 crouter.declare("progress", StProgress);
-crouter.declare("accordtion", StAccordion);
+crouter.declare("accordion", StAccordion);
 crouter.declare("alert", StAlert);
 crouter.declare("calendar", StCalendar);
 crouter.declare("collapsible", StCollapsible);

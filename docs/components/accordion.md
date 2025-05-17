@@ -9,7 +9,7 @@ data = [
     {"trigger": "Is it styled?", "content": "Yes. It comes with default styles that match the other components' aesthetic."},
     {"trigger": "Is it animated?", "content": "Yes. It's animated by default, but you can disable it if you prefer."},
 ]
-ui.accordtion(data = data, class_name=None, key="accordtion1")
+ui.accordion(data = data, class_name=None, key="accordion1")
 
-st.write(ui.accordtion)
+st.write(ui.accordion)
 ```

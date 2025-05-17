@@ -22,7 +22,7 @@ from .input_otp import input_otp
 from .dropdown_menu import dropdown_menu
 from .carousel import carousel
 from .progress import progress
-from .accordtion import accordtion
+from .accordion import accordion
 from .alert import alert
 from .calendar import calendar
 from .collapsible import collapsible
