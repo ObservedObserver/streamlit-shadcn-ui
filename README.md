@@ -46,7 +46,7 @@ Check docs and compoenent examples in [![Streamlit App](https://static.streamlit
 + [x] hover_card
 + [x] badges
 + [x] link_button
-+ [x] accordtion
++ [x] accordion
 + [x] alert
 + [x] aspect_ratio
 + [x] calendar

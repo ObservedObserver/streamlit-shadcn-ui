@@ -3,7 +3,7 @@ import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from "@/components/ui/accordtion";
+} from "@/components/ui/accordion";
 
 import { forwardRef } from "react";
 
