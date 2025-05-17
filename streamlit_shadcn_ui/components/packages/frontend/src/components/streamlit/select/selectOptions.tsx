@@ -6,7 +6,8 @@ import {
     SelectTrigger
 } from "@/components/ui/select";
 import { useBodyStyle } from "@/hooks/useBodyStyle";
-import { forwardRef, useEffect, useState } from "react";
+import { useOutsideEvent } from "@/hooks/useOutsideEvent";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { Streamlit } from "streamlit-component-lib";
 
 interface StSelectOptionsProps {
@@ -16,6 +17,17 @@ interface StSelectOptionsProps {
 export const StSelectOptions = forwardRef<HTMLDivElement, StSelectOptionsProps>((props, ref) => {
     const { options, value } = props;
     const [selectedValue, setSelectedValue] = useState<string>(value);
+    const contentRef = useRef<HTMLDivElement>(null);
+
+    // expose internal ref
+    useEffect(() => {
+        if (!ref) return;
+        if (typeof ref === "function") {
+            ref(contentRef.current);
+        } else {
+            (ref as React.MutableRefObject<HTMLDivElement | null>).current = contentRef.current;
+        }
+    }, [ref]);
     // useEffect(() => {
     //     if (ref && typeof ref !== 'function') {
     //         Streamlit.setFrameHeight(ref.current.offsetHeight + 5);
@@ -23,6 +35,24 @@ export const StSelectOptions = forwardRef<HTMLDivElement, StSelectOptionsProps>(
     // });
 
     useBodyStyle("body { background-color: transparent !important; }")
+
+    useOutsideEvent(
+        "mousedown",
+        e => {
+            const el = contentRef.current;
+            if (!el) return;
+            if (el.offsetParent === null) {
+                return;
+            }
+            if (!el.contains(e.target as Node)) {
+                Streamlit.setComponentValue({
+                    value: selectedValue,
+                    open: false,
+                });
+            }
+        },
+        true
+    );
 
     useEffect(() => {
         setSelectedValue(value);
@@ -38,7 +68,7 @@ export const StSelectOptions = forwardRef<HTMLDivElement, StSelectOptionsProps>(
             <SelectTrigger className="hidden">
                 {/* <SelectValue placeholder="Select a fruit" /> */}
             </SelectTrigger>
-            <SelectContent ref={ref} 
+            <SelectContent ref={contentRef}
             >
                 <SelectGroup>
                     {
