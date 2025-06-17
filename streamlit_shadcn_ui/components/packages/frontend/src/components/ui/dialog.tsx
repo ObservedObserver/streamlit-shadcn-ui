@@ -5,28 +5,46 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { useParentPortal } from "@/hooks/useParentPortal"
+import { Streamlit } from "streamlit-component-lib"
 
 const Dialog = DialogPrimitive.Root
 
 const DialogTrigger = DialogPrimitive.Trigger
 
-const DialogPortal = DialogPrimitive.Portal
+const DialogPortal = ({ children, ...props }: DialogPrimitive.DialogPortalProps) => {
+  const container = useParentPortal()
+  if (!container) return null
+  return (
+    <DialogPrimitive.Portal container={container} {...props}>
+      {children}
+    </DialogPrimitive.Portal>
+  )
+}
+DialogPortal.displayName = DialogPrimitive.Portal.displayName
 
 const DialogClose = DialogPrimitive.Close
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Overlay
-    ref={ref}
-    className={cn(
-      "fixed inset-0 z-50 bg-background/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-      className
-    )}
-    {...props}
-  />
-))
+>(({ className, onClick, ...props }, ref) => {
+  const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    onClick?.(e)
+    Streamlit.setComponentValue({ confirm: false, open: false })
+  }
+  return (
+    <DialogPrimitive.Overlay
+      ref={ref}
+      onClick={handleClick}
+      className={cn(
+        "fixed inset-0 z-50 bg-background/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+        className
+      )}
+      {...props}
+    />
+  )
+})
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
 const DialogContent = React.forwardRef<
