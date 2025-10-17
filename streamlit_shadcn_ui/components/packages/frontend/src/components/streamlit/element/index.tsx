@@ -11,14 +11,11 @@ export interface IElementTree {
 }
 
 function dfsRender(tree: IElementTree | string) {
-    console.log("tree", tree)
     if (typeof tree === "string") {
-        console.log("string", tree)
         return tree;
     }
     const children = tree.children?.map(child => typeof child === "string" ? child : dfsRender(child)) ?? [];
     const ele = getComponent(tree.name);
-    console.log(tree.name, ele)
     if (ele === false) {
         // If getComponent returns false, treat it as an unknown element
         console.warn(`Unknown element: ${tree.name}`);

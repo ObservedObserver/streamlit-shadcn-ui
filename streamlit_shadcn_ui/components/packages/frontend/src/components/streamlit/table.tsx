@@ -41,12 +41,12 @@ export const StTable = forwardRef<HTMLTableElement, StTableProps>((props, ref) =
                 </TableRow>
             </TableHeader>
             <TableBody style={{ overflowY: 'auto', maxHeight: maxHeight + 'px' }}>
-                {data.map((invoice) => (
-                    <TableRow key={invoice.id}>
+                {data.map((row, index) => (
+                    <TableRow key={`${row.id}-${index}`}>
                         {
                             columns.map((column) => {
                                 return (
-                                    <TableCell key={column.dataKey}>{invoice[column.dataKey]}</TableCell>
+                                    <TableCell key={`${row.id}-${column.dataKey}-${index}`}>{row[column.dataKey]}</TableCell>
                                 )
                             })
                         }

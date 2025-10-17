@@ -4,21 +4,20 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "streamlit-shadcn-ui"
-version = "0.1.18"
+version = "0.1.19"
 readme = "README.md"
 keywords = ["streamlit", "shadcn", "ui", "components"]
 description = "Using shadcn components in Streamlit"
 authors = [{ name = "Observed Observer", email = "ooer@kanaries.net" }]
-requires-python = ">=3.6"
+requires-python = ">=3.7"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "streamlit",
-    "streamlit_extras",
-    "pandas"
+    "streamlit >= 0.63",
+    "streamlit_extras >= 0.3.5",
 ]
 
 [project.license]
@@ -27,3 +26,7 @@ file = "LICENSE"
 [project.urls]
 homepage = "https://github.com/ObservedObserver/streamlit-shadcn-ui"
 repository = "https://github.com/ObservedObserver/streamlit-shadcn-ui"
+
+[tool.setuptools]
+packages = { find = {} }
+include-package-data = true

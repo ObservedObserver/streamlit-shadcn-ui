@@ -29,7 +29,7 @@ export const StAlertDialog = forwardRef<HTMLDivElement, StAlertDialogProps>(
             cancelLabel = "Cancel",
         } = props;
         useEffect(() => {
-            if (ref && typeof ref !== "function") {
+            if (ref && typeof ref !== "function" && ref.current) {
                 Streamlit.setFrameHeight(ref.current.offsetHeight + 10);
             }
         });
