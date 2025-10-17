@@ -20,16 +20,12 @@ from .base.element import element
 from .breadcrumb import breadcrumb
 from .input_otp import input_otp
 from .dropdown_menu import dropdown_menu
-from .carousel import carousel
 from .progress import progress
 from .accordion import accordion
 from .alert import alert
 from .calendar import calendar
 from .collapsible import collapsible
 from .scroll_area import scroll_area
-from .dialog import dialog
-from .command import command
-from .resizable import resizable
 from .toggle import toggle
 from .toggle_group import toggle_group
 from .pagination import pagination
