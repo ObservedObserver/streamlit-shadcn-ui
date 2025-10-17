@@ -39,21 +39,32 @@ def select(label=None, options=None, key="ui_select"):
 
     trigger_component_key = f"trigger_{key}"
     options_component_key = f"options_{key}"
+    prev_choice_key = f"prev_choice_{key}"
 
     option_list = list(options)
     init_session(key=trigger_component_key, default_value={"x": 0, "y": 0, "open": False})
     init_session(key=options_component_key, default_value={"value": option_list[0], "open": False})
+    init_session(key=prev_choice_key, default_value=None)
+    
     open_status = st.session_state[trigger_component_key]['open']
+    choice = st.session_state[options_component_key]['value']
+    
+    # Check if user just selected an option (choice changed while dropdown was open)
+    if open_status and st.session_state[prev_choice_key] != choice and st.session_state[prev_choice_key] is not None:
+        # Close immediately for this render
+        open_status = False
+        st.session_state[trigger_component_key]['open'] = False
+    
     with stylable_container(key=f"root_{key}", css_styles="""
             {
                 position: relative;
             }
             """):
-        choice = st.session_state[options_component_key]['value']
-
         trigger_state = select_trigger(value=choice, open_status=open_status, key=trigger_component_key)
 
         options_state = select_options(options=option_list, x=trigger_state['x'], y=trigger_state['y'], open_status=open_status, default_value=option_list[0], key=options_component_key, on_change=option_choosen_handler, kwargs={"from_key": options_component_key, "to_key": trigger_component_key})
 
         choice = options_state['value']
+        st.session_state[prev_choice_key] = choice
+        
         return choice

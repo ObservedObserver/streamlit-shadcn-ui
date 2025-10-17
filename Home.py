@@ -3,7 +3,7 @@ import streamlit_shadcn_ui as ui
 import pandas as pd
 import numpy as np
 from local_components import card_container
-from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch
+from streamlit_shadcn_ui import slider, input, textarea, radio_group, switch, select
 
 # with open("docs/introduction.md", "r") as f:
 #     st.markdown(f.read())
@@ -96,6 +96,11 @@ st.write("Selected Radio Option:", radio_value)
 # Switch Component
 switch_value = switch(default_checked=True, label="Toggle Switch", key="switch1")
 st.write("Switch is On:", switch_value)
+
+# Select Component
+select_options = ["Apple", "Banana", "Orange", "Grape", "Mango"]
+select_value = select(label="Choose a fruit", options=select_options, key="select1")
+st.write("Selected Fruit:", select_value)
 
 st.subheader("Alert Dialog")
 trigger_btn = ui.button(text="Trigger Button", key="trigger_btn")
