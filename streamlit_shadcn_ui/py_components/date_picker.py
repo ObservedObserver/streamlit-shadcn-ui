@@ -37,18 +37,53 @@ def date_choosen_handler(from_key, to_key):
 def date_picker(label=None, mode="single", default_value=None, key=None):
     trigger_component_key = f"trigger_{key}"
     content_component_key = f"content_{key}"
+    prev_value_key = f"prev_value_{key}"
+    prev_open_key = f"prev_open_{key}"
+    
     init_session(key=trigger_component_key, default_value={"x": 0, "y": 0, "open": False})
     init_session(key=content_component_key, default_value={"value": default_value, "open": False})
+    
     open_status = st.session_state[trigger_component_key]['open']
+    value = st.session_state[content_component_key]['value']
+    
+    # Initialize prev_value if not exists
+    if prev_value_key not in st.session_state:
+        st.session_state[prev_value_key] = value
+    
+    # Track previous content open state
+    if prev_open_key not in st.session_state:
+        st.session_state[prev_open_key] = st.session_state[content_component_key].get('open', False)
+    
+    prev_value = st.session_state[prev_value_key]
+    prev_content_open = st.session_state[prev_open_key]
+    current_content_open = st.session_state[content_component_key].get('open', False)
+    
+    # Check if value changed - this means user clicked "Pick"
+    if prev_value != value:
+        # Value changed, close the dropdown
+        open_status = False
+        st.session_state[trigger_component_key]['open'] = False
+    # Check if content's open state changed from True to False - user clicked Cancel or Pick
+    elif prev_content_open == True and current_content_open == False:
+        # Content explicitly closed, ensure trigger is also closed
+        open_status = False
+        st.session_state[trigger_component_key]['open'] = False
+    
     with stylable_container(key=f"root_{key}", css_styles="""                  
             {
                 position: relative;
             }
             """):
-        value = st.session_state[content_component_key]['value']
         trigger_pos = date_picker_trigger(value=value, label=label, open_status=open_status, key=trigger_component_key)
-        # need to sync value, or "cancel" will not work
+        # Sync trigger state to content - this allows content to know the open state
         st.session_state[content_component_key]['open'] = trigger_pos['open']
+        
         content_state = date_picker_content(value=value, mode=mode, x=trigger_pos['x'], y=trigger_pos['y'], open=open_status, key=content_component_key, on_change=date_choosen_handler, kwargs={"from_key": content_component_key, "to_key": trigger_component_key})
+        
         value = content_state['value']
+        
+        # Update tracking vars for next render
+        st.session_state[prev_value_key] = value
+        st.session_state[prev_open_key] = st.session_state[content_component_key].get('open', False)
+        
         return value
