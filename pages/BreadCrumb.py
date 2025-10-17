@@ -14,6 +14,7 @@ ui.breadcrumb(
         {"text": "Breadcrumb", "isCurrentPage": True},
     ],
     class_name="flex gap-2 text-sm",
+    separator="/",
     key="breadcrumb1"
 )
 
