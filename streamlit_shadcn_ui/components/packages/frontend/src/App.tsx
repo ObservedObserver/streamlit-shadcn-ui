@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import "./App.css";
 import {
     ComponentProps,
@@ -98,6 +98,23 @@ function App(props: ComponentProps<{comp: string; props: any; [key: string]: any
     // TODO: different safe-height for different components
     // 10px is the minimum safe height for slider, while most of the other components do not need it.
     useAutoHeight(container, safeHeight);
+
+    useEffect(() => {
+        const root = document.documentElement;
+        const body = document.body;
+        const isDark = theme?.base === "dark";
+        root.classList.toggle("dark", isDark);
+        root.style.colorScheme = isDark ? "dark" : "light";
+        body.style.colorScheme = isDark ? "dark" : "light";
+
+        if (theme?.base) {
+            body.dataset.theme = theme.base;
+            root.dataset.theme = theme.base;
+        } else {
+            delete body.dataset.theme;
+            delete root.dataset.theme;
+        }
+    }, [theme?.base]);
 
     return crouter.render(args.comp, container, args.props);
 }
