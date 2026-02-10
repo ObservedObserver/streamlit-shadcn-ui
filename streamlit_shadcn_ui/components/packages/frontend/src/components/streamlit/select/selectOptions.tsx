@@ -12,10 +12,11 @@ import { Streamlit } from "streamlit-component-lib";
 interface StSelectOptionsProps {
     options: string[];
     value?: string;
+    open?: boolean;
 }
 export const StSelectOptions = forwardRef<HTMLDivElement, StSelectOptionsProps>((props, ref) => {
-    const { options, value } = props;
-    const [selectedValue, setSelectedValue] = useState<string>(value);
+    const { options, value, open } = props;
+    const [selectedValue, setSelectedValue] = useState<string>(value ?? options?.[0] ?? "");
     // useEffect(() => {
     //     if (ref && typeof ref !== 'function') {
     //         Streamlit.setFrameHeight(ref.current.offsetHeight + 5);
@@ -25,8 +26,43 @@ export const StSelectOptions = forwardRef<HTMLDivElement, StSelectOptionsProps>(
     useBodyStyle("body { background-color: transparent !important; }")
 
     useEffect(() => {
-        setSelectedValue(value);
+        if (value !== undefined) {
+            setSelectedValue(value);
+        }
     }, [value]);
+
+    useEffect(() => {
+        if (!open) {
+            return;
+        }
+
+        const frameElement = window.frameElement;
+        const parentWindow = window.parent ?? window;
+        const parentDocument = parentWindow.document;
+
+        if (!parentDocument) {
+            return;
+        }
+
+        const handlePointerDown = (event: PointerEvent) => {
+            if (frameElement && event.target === frameElement) {
+                return;
+            }
+
+            const resolvedValue = selectedValue ?? value ?? options?.[0] ?? "";
+
+            Streamlit.setComponentValue({
+                value: resolvedValue,
+                open: false,
+            });
+        };
+
+        parentDocument.addEventListener("pointerdown", handlePointerDown, true);
+
+        return () => {
+            parentDocument.removeEventListener("pointerdown", handlePointerDown, true);
+        };
+    }, [open, options, selectedValue, value]);
     return (
         <Select open={true} onValueChange={newValue => {
             setSelectedValue(newValue);
