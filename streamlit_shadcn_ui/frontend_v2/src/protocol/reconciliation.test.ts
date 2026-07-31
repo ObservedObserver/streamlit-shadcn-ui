@@ -1,6 +1,10 @@
-import { describe, expect, it } from "vitest"
+import { act, renderHook } from "@testing-library/react"
+import { describe, expect, it, vi } from "vitest"
 
-import { reconcileState } from "@/protocol/reconciliation"
+import {
+  reconcileState,
+  useRevisionedState,
+} from "@/protocol/reconciliation"
 import type {
   ComponentKind,
   StateCell,
@@ -63,5 +67,32 @@ describe("reconcileState", () => {
         }
       )
     ).toThrow("SSUI_V2_STATE_KIND_MISMATCH")
+  })
+
+  it("does not publish an unchanged array as a new revision", () => {
+    const setStateValue = vi.fn()
+    const initial: StateCell<number[], "slider"> = {
+      kind: "slider",
+      value: [20, 80],
+      clientRevision: 4,
+      serverRevision: 1,
+    }
+    const view = renderHook(() =>
+      useRevisionedState(initial, setStateValue)
+    )
+
+    act(() => {
+      view.result.current.commit([20, 80])
+    })
+    expect(setStateValue).not.toHaveBeenCalled()
+
+    act(() => {
+      view.result.current.commit([25, 80])
+    })
+    expect(setStateValue).toHaveBeenCalledWith("state", {
+      ...initial,
+      value: [25, 80],
+      clientRevision: 5,
+    })
   })
 })

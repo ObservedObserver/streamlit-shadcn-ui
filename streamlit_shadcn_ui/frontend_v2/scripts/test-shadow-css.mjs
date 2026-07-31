@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFile } from "node:fs/promises"
 
 import {
   normalizeCompiledShadowCss,
@@ -32,5 +33,18 @@ assert.match(normalized, /var\(--ssui-v2-1-shimmer-image\)/)
 assert.match(normalized, /@keyframes ssui-v2-1-spin/)
 assert.match(normalized, /animation: ssui-v2-1-spin/)
 assert.equal(normalizeCompiledShadowCss(normalized), normalized)
+
+const shadowSource = await readFile(
+  new URL("../src/platform/shadow.css", import.meta.url),
+  "utf8"
+)
+assert.match(
+  shadowSource,
+  /\.base-ui-disable-scrollbar\s*\{[^}]*scrollbar-width:\s*none/s
+)
+assert.match(
+  shadowSource,
+  /\.base-ui-disable-scrollbar::\-webkit-scrollbar\s*\{[^}]*display:\s*none/s
+)
 
 console.log("Shadow CSS normalization and idempotency checks passed.")

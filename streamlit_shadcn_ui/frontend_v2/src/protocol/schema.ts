@@ -20,6 +20,20 @@ export type ComponentKind =
   | "skeleton"
   | "table"
   | "link_button"
+  | "input"
+  | "textarea"
+  | "accordion"
+  | "collapsible"
+  | "input_otp"
+  | "pagination"
+  | "radio_group"
+  | "scroll_area"
+  | "slider"
+  | "switch"
+  | "tabs"
+  | "toggle"
+  | "toggle_group"
+  | "calendar"
 
 export type StateCell<T, TKind extends ComponentKind> = {
   kind: TKind
@@ -237,6 +251,194 @@ export type LinkButtonEnvelope = {
   }
 }
 
+export type InputType =
+  | "text"
+  | "email"
+  | "password"
+  | "search"
+  | "tel"
+  | "url"
+
+export type InputEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "input"
+  state: StateCell<string, "input">
+  props: {
+    label: string
+    placeholder: string
+    type: InputType
+    disabled: boolean
+    maxLength: number | null
+  }
+}
+
+export type TextareaEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "textarea"
+  state: StateCell<string, "textarea">
+  props: {
+    label: string
+    placeholder: string
+    disabled: boolean
+    rows: number
+    maxLength: number | null
+  }
+}
+
+export type AccordionEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "accordion"
+  state: StateCell<string[], "accordion">
+  props: {
+    label: string
+    disabled: boolean
+    multiple: boolean
+    items: Array<{
+      label: string
+      content: string
+      value: string
+      disabled: boolean
+    }>
+  }
+}
+
+export type CollapsibleEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "collapsible"
+  state: StateCell<boolean, "collapsible">
+  props: {
+    title: string
+    firstItem: string | null
+    items: string[]
+    disabled: boolean
+  }
+}
+
+export type InputOtpEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "input_otp"
+  state: StateCell<string, "input_otp">
+  props: {
+    label: string
+    maxLength: number
+    pattern: "digits" | "alphanumeric"
+    disabled: boolean
+  }
+}
+
+export type PaginationEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "pagination"
+  state: StateCell<number, "pagination">
+  props: {
+    label: string
+    totalPages: number
+    siblingCount: number
+    disabled: boolean
+  }
+}
+
+export type ChoiceOption = {
+  label: string
+  value: string
+  disabled: boolean
+}
+
+export type RadioGroupEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "radio_group"
+  state: StateCell<string | null, "radio_group">
+  props: {
+    label: string
+    options: ChoiceOption[]
+    disabled: boolean
+  }
+}
+
+export type ScrollAreaEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "scroll_area"
+  props: {
+    title: string | null
+    items: string[]
+    height: number
+  }
+}
+
+export type SliderEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "slider"
+  state: StateCell<number[], "slider">
+  props: {
+    label: string
+    min: number
+    max: number
+    step: number
+    disabled: boolean
+  }
+}
+
+export type SwitchEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "switch"
+  state: StateCell<boolean, "switch">
+  props: {
+    label: string
+    disabled: boolean
+  }
+}
+
+export type TabsEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "tabs"
+  state: StateCell<string, "tabs">
+  props: {
+    label: string
+    options: ChoiceOption[]
+    orientation: "horizontal" | "vertical"
+    variant: "default" | "line"
+    disabled: boolean
+  }
+}
+
+export type ToggleEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "toggle"
+  state: StateCell<boolean, "toggle">
+  props: {
+    label: string
+    icon: "bold" | "italic" | "underline" | null
+    variant: "default" | "outline"
+    disabled: boolean
+  }
+}
+
+export type ToggleGroupEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "toggle_group"
+  state: StateCell<string[], "toggle_group">
+  props: {
+    label: string
+    options: ChoiceOption[]
+    multiple: boolean
+    orientation: "horizontal" | "vertical"
+    variant: "default" | "outline"
+    disabled: boolean
+  }
+}
+
+export type CalendarEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "calendar"
+  state: StateCell<string | null, "calendar">
+  props: {
+    label: string
+    minDate: string | null
+    maxDate: string | null
+    disabled: boolean
+  }
+}
+
 export type Envelope =
   | SelectEnvelope
   | DropdownMenuEnvelope
@@ -254,6 +456,20 @@ export type Envelope =
   | SkeletonEnvelope
   | TableEnvelope
   | LinkButtonEnvelope
+  | InputEnvelope
+  | TextareaEnvelope
+  | AccordionEnvelope
+  | CollapsibleEnvelope
+  | InputOtpEnvelope
+  | PaginationEnvelope
+  | RadioGroupEnvelope
+  | ScrollAreaEnvelope
+  | SliderEnvelope
+  | SwitchEnvelope
+  | TabsEnvelope
+  | ToggleEnvelope
+  | ToggleGroupEnvelope
+  | CalendarEnvelope
 
 export type ProtocolFailure = {
   code: string
@@ -347,7 +563,7 @@ function isRevision(value: unknown): value is number {
   )
 }
 
-function isStateCell<TKind extends "select" | "checkbox">(
+function isStateCell<TKind extends ComponentKind>(
   value: unknown,
   kind: TKind
 ): value is StateCell<unknown, TKind> {
@@ -357,6 +573,22 @@ function isStateCell<TKind extends "select" | "checkbox">(
     isRevision(value.clientRevision) &&
     isRevision(value.serverRevision)
   )
+}
+
+function parseStateCell<TValue, TKind extends ComponentKind>(
+  value: unknown,
+  kind: TKind,
+  isValue: (candidate: unknown) => candidate is TValue
+): StateCell<TValue, TKind> | null {
+  if (!isStateCell(value, kind) || !isValue(value.value)) {
+    return null
+  }
+  return {
+    kind,
+    value: value.value,
+    clientRevision: value.clientRevision,
+    serverRevision: value.serverRevision,
+  }
 }
 
 function parseSelect(value: Record<string, unknown>): SelectEnvelope | null {
@@ -896,6 +1128,635 @@ function parseLinkButton(
   }
 }
 
+const INPUT_TYPES = new Set<InputType>([
+  "text",
+  "email",
+  "password",
+  "search",
+  "tel",
+  "url",
+])
+
+function isOptionalMaxLength(value: unknown): value is number | null {
+  return (
+    value === null ||
+    (Number.isSafeInteger(value) &&
+      (value as number) >= 1 &&
+      (value as number) <= MAX_TEXT_BYTES)
+  )
+}
+
+function parseChoiceOptions(value: unknown): ChoiceOption[] | null {
+  if (!Array.isArray(value) || value.length > MAX_OPTIONS) {
+    return null
+  }
+  const options: ChoiceOption[] = []
+  const values = new Set<string>()
+  for (const option of value) {
+    if (
+      !isRecord(option) ||
+      !isBoundedText(option.label) ||
+      !isBoundedText(option.value) ||
+      typeof option.disabled !== "boolean" ||
+      values.has(option.value)
+    ) {
+      return null
+    }
+    values.add(option.value)
+    options.push({
+      label: option.label,
+      value: option.value,
+      disabled: option.disabled,
+    })
+  }
+  return options
+}
+
+function isBoundedStringArray(value: unknown): value is string[] {
+  return (
+    Array.isArray(value) &&
+    value.length <= MAX_OPTIONS &&
+    value.every((item) => isBoundedText(item))
+  )
+}
+
+function hasUniqueValues(values: string[]) {
+  return new Set(values).size === values.length
+}
+
+function isIsoDate(value: unknown): value is string {
+  if (
+    typeof value !== "string" ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(value)
+  ) {
+    return false
+  }
+  const year = Number(value.slice(0, 4))
+  const month = Number(value.slice(5, 7))
+  const day = Number(value.slice(8, 10))
+  const date = new Date(0)
+  date.setUTCHours(0, 0, 0, 0)
+  date.setUTCFullYear(year, month - 1, day)
+  return (
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day
+  )
+}
+
+function isNullableIsoDate(value: unknown): value is string | null {
+  return value === null || isIsoDate(value)
+}
+
+function parseInput(value: Record<string, unknown>): InputEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(
+    value.state,
+    "input",
+    isBoundedText
+  )
+  if (
+    !state ||
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    !isBoundedText(props.placeholder) ||
+    typeof props.type !== "string" ||
+    !INPUT_TYPES.has(props.type as InputType) ||
+    typeof props.disabled !== "boolean" ||
+    !isOptionalMaxLength(props.maxLength) ||
+    (props.maxLength !== null &&
+      state.value.length > props.maxLength)
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "input",
+    state,
+    props: {
+      label: props.label,
+      placeholder: props.placeholder,
+      type: props.type as InputType,
+      disabled: props.disabled,
+      maxLength: props.maxLength,
+    },
+  }
+}
+
+function parseTextarea(
+  value: Record<string, unknown>
+): TextareaEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(
+    value.state,
+    "textarea",
+    isBoundedText
+  )
+  if (
+    !state ||
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    !isBoundedText(props.placeholder) ||
+    typeof props.disabled !== "boolean" ||
+    !Number.isSafeInteger(props.rows) ||
+    (props.rows as number) < 2 ||
+    (props.rows as number) > 20 ||
+    !isOptionalMaxLength(props.maxLength) ||
+    (props.maxLength !== null &&
+      state.value.length > props.maxLength)
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "textarea",
+    state,
+    props: {
+      label: props.label,
+      placeholder: props.placeholder,
+      disabled: props.disabled,
+      rows: props.rows as number,
+      maxLength: props.maxLength,
+    },
+  }
+}
+
+function parseAccordion(
+  value: Record<string, unknown>
+): AccordionEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(
+    value.state,
+    "accordion",
+    isBoundedStringArray
+  )
+  if (
+    !state ||
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    typeof props.disabled !== "boolean" ||
+    typeof props.multiple !== "boolean" ||
+    !Array.isArray(props.items) ||
+    props.items.length > MAX_OPTIONS ||
+    !hasUniqueValues(state.value) ||
+    (!props.multiple && state.value.length > 1)
+  ) {
+    return null
+  }
+
+  const items: AccordionEnvelope["props"]["items"] = []
+  const values = new Set<string>()
+  for (const item of props.items) {
+    if (
+      !isRecord(item) ||
+      !isBoundedText(item.label) ||
+      !isBoundedText(item.content) ||
+      !isBoundedText(item.value) ||
+      typeof item.disabled !== "boolean" ||
+      values.has(item.value)
+    ) {
+      return null
+    }
+    values.add(item.value)
+    items.push({
+      label: item.label,
+      content: item.content,
+      value: item.value,
+      disabled: item.disabled,
+    })
+  }
+  if (state.value.some((item) => !values.has(item))) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "accordion",
+    state,
+    props: {
+      label: props.label,
+      disabled: props.disabled,
+      multiple: props.multiple,
+      items,
+    },
+  }
+}
+
+function parseCollapsible(
+  value: Record<string, unknown>
+): CollapsibleEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(
+    value.state,
+    "collapsible",
+    (candidate): candidate is boolean =>
+      typeof candidate === "boolean"
+  )
+  if (
+    !state ||
+    !isRecord(props) ||
+    !isBoundedText(props.title) ||
+    !isNullableBoundedText(props.firstItem) ||
+    !isBoundedStringArray(props.items) ||
+    typeof props.disabled !== "boolean"
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "collapsible",
+    state,
+    props: {
+      title: props.title,
+      firstItem: props.firstItem,
+      items: [...props.items],
+      disabled: props.disabled,
+    },
+  }
+}
+
+function parseInputOtp(
+  value: Record<string, unknown>
+): InputOtpEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(
+    value.state,
+    "input_otp",
+    isBoundedText
+  )
+  if (
+    !state ||
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    !Number.isSafeInteger(props.maxLength) ||
+    (props.maxLength as number) < 1 ||
+    (props.maxLength as number) > 12 ||
+    (props.pattern !== "digits" &&
+      props.pattern !== "alphanumeric") ||
+    typeof props.disabled !== "boolean" ||
+    state.value.length > (props.maxLength as number) ||
+    (props.pattern === "digits"
+      ? !/^\d*$/.test(state.value)
+      : !/^[a-z0-9]*$/i.test(state.value))
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "input_otp",
+    state,
+    props: {
+      label: props.label,
+      maxLength: props.maxLength as number,
+      pattern: props.pattern,
+      disabled: props.disabled,
+    },
+  }
+}
+
+function parsePagination(
+  value: Record<string, unknown>
+): PaginationEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(
+    value.state,
+    "pagination",
+    (candidate): candidate is number =>
+      Number.isSafeInteger(candidate)
+  )
+  if (
+    !state ||
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    !Number.isSafeInteger(props.totalPages) ||
+    (props.totalPages as number) < 1 ||
+    (props.totalPages as number) > MAX_OPTIONS ||
+    !Number.isSafeInteger(props.siblingCount) ||
+    (props.siblingCount as number) < 0 ||
+    (props.siblingCount as number) > 10 ||
+    typeof props.disabled !== "boolean" ||
+    state.value < 1 ||
+    state.value > (props.totalPages as number)
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "pagination",
+    state,
+    props: {
+      label: props.label,
+      totalPages: props.totalPages as number,
+      siblingCount: props.siblingCount as number,
+      disabled: props.disabled,
+    },
+  }
+}
+
+function parseRadioGroup(
+  value: Record<string, unknown>
+): RadioGroupEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(
+    value.state,
+    "radio_group",
+    isNullableBoundedText
+  )
+  if (
+    !state ||
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    typeof props.disabled !== "boolean"
+  ) {
+    return null
+  }
+  const options = parseChoiceOptions(props.options)
+  if (
+    !options ||
+    (state.value !== null &&
+      !options.some((option) => option.value === state.value))
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "radio_group",
+    state,
+    props: {
+      label: props.label,
+      options,
+      disabled: props.disabled,
+    },
+  }
+}
+
+function parseScrollArea(
+  value: Record<string, unknown>
+): ScrollAreaEnvelope | null {
+  const props = value.props
+  if (
+    !isRecord(props) ||
+    !isNullableBoundedText(props.title) ||
+    !isBoundedStringArray(props.items) ||
+    !Number.isSafeInteger(props.height) ||
+    (props.height as number) < 80 ||
+    (props.height as number) > 10_000
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "scroll_area",
+    props: {
+      title: props.title,
+      items: [...props.items],
+      height: props.height as number,
+    },
+  }
+}
+
+function parseSlider(
+  value: Record<string, unknown>
+): SliderEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(
+    value.state,
+    "slider",
+    (candidate): candidate is number[] =>
+      Array.isArray(candidate) &&
+      candidate.every((item) => isFiniteNumber(item))
+  )
+  if (
+    !state ||
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    !isFiniteNumber(props.min) ||
+    !isFiniteNumber(props.max) ||
+    props.max <= props.min ||
+    !isFiniteNumber(props.step) ||
+    props.step <= 0 ||
+    props.step > props.max - props.min ||
+    typeof props.disabled !== "boolean" ||
+    (state.value.length !== 1 && state.value.length !== 2)
+  ) {
+    return null
+  }
+  const min = props.min
+  const max = props.max
+  if (
+    state.value.some((item) => item < min || item > max) ||
+    (state.value.length === 2 &&
+      (state.value[0] as number) > (state.value[1] as number))
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "slider",
+    state,
+    props: {
+      label: props.label,
+      min,
+      max,
+      step: props.step,
+      disabled: props.disabled,
+    },
+  }
+}
+
+function parseSwitch(
+  value: Record<string, unknown>
+): SwitchEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(
+    value.state,
+    "switch",
+    (candidate): candidate is boolean =>
+      typeof candidate === "boolean"
+  )
+  if (
+    !state ||
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    typeof props.disabled !== "boolean"
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "switch",
+    state,
+    props: {
+      label: props.label,
+      disabled: props.disabled,
+    },
+  }
+}
+
+function parseTabs(value: Record<string, unknown>): TabsEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(
+    value.state,
+    "tabs",
+    isBoundedText
+  )
+  if (
+    !state ||
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    (props.orientation !== "horizontal" &&
+      props.orientation !== "vertical") ||
+    (props.variant !== "default" && props.variant !== "line") ||
+    typeof props.disabled !== "boolean"
+  ) {
+    return null
+  }
+  const options = parseChoiceOptions(props.options)
+  if (
+    !options ||
+    options.length === 0 ||
+    !options.some((option) => option.value === state.value)
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "tabs",
+    state,
+    props: {
+      label: props.label,
+      options,
+      orientation: props.orientation,
+      variant: props.variant,
+      disabled: props.disabled,
+    },
+  }
+}
+
+function parseToggle(
+  value: Record<string, unknown>
+): ToggleEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(
+    value.state,
+    "toggle",
+    (candidate): candidate is boolean =>
+      typeof candidate === "boolean"
+  )
+  if (
+    !state ||
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    !(
+      props.icon === null ||
+      props.icon === "bold" ||
+      props.icon === "italic" ||
+      props.icon === "underline"
+    ) ||
+    (props.variant !== "default" && props.variant !== "outline") ||
+    typeof props.disabled !== "boolean"
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "toggle",
+    state,
+    props: {
+      label: props.label,
+      icon: props.icon,
+      variant: props.variant,
+      disabled: props.disabled,
+    },
+  }
+}
+
+function parseToggleGroup(
+  value: Record<string, unknown>
+): ToggleGroupEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(
+    value.state,
+    "toggle_group",
+    isBoundedStringArray
+  )
+  if (
+    !state ||
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    typeof props.multiple !== "boolean" ||
+    (props.orientation !== "horizontal" &&
+      props.orientation !== "vertical") ||
+    (props.variant !== "default" && props.variant !== "outline") ||
+    typeof props.disabled !== "boolean" ||
+    !hasUniqueValues(state.value) ||
+    (!props.multiple && state.value.length > 1)
+  ) {
+    return null
+  }
+  const options = parseChoiceOptions(props.options)
+  if (
+    !options ||
+    options.length === 0 ||
+    state.value.some(
+      (selected) =>
+        !options.some((option) => option.value === selected)
+    )
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "toggle_group",
+    state,
+    props: {
+      label: props.label,
+      options,
+      multiple: props.multiple,
+      orientation: props.orientation,
+      variant: props.variant,
+      disabled: props.disabled,
+    },
+  }
+}
+
+function parseCalendar(
+  value: Record<string, unknown>
+): CalendarEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(
+    value.state,
+    "calendar",
+    isNullableIsoDate
+  )
+  if (
+    !state ||
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    !isNullableIsoDate(props.minDate) ||
+    !isNullableIsoDate(props.maxDate) ||
+    typeof props.disabled !== "boolean" ||
+    (props.minDate !== null &&
+      props.maxDate !== null &&
+      props.minDate > props.maxDate) ||
+    (state.value !== null &&
+      ((props.minDate !== null && state.value < props.minDate) ||
+        (props.maxDate !== null && state.value > props.maxDate)))
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "calendar",
+    state,
+    props: {
+      label: props.label,
+      minDate: props.minDate,
+      maxDate: props.maxDate,
+      disabled: props.disabled,
+    },
+  }
+}
+
 function parseKnownEnvelope(
   value: Record<string, unknown>
 ): Envelope | null {
@@ -932,6 +1793,34 @@ function parseKnownEnvelope(
       return parseTable(value)
     case "link_button":
       return parseLinkButton(value)
+    case "input":
+      return parseInput(value)
+    case "textarea":
+      return parseTextarea(value)
+    case "accordion":
+      return parseAccordion(value)
+    case "collapsible":
+      return parseCollapsible(value)
+    case "input_otp":
+      return parseInputOtp(value)
+    case "pagination":
+      return parsePagination(value)
+    case "radio_group":
+      return parseRadioGroup(value)
+    case "scroll_area":
+      return parseScrollArea(value)
+    case "slider":
+      return parseSlider(value)
+    case "switch":
+      return parseSwitch(value)
+    case "tabs":
+      return parseTabs(value)
+    case "toggle":
+      return parseToggle(value)
+    case "toggle_group":
+      return parseToggleGroup(value)
+    case "calendar":
+      return parseCalendar(value)
     default:
       return null
   }

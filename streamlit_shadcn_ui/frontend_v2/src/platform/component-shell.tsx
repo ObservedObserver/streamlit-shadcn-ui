@@ -1,3 +1,4 @@
+import { CSPProvider } from "@base-ui/react/csp-provider"
 import type { ReactNode } from "react"
 
 import { ComponentErrorBoundary } from "@/platform/error-boundary"
@@ -18,12 +19,14 @@ export function ComponentShell({
 }: ComponentShellProps) {
   return (
     <ComponentErrorBoundary resetKey={resetKey}>
-      <OverlayContainerProvider
-        container={overlayRoot}
-        expectedRoot={parentElement}
-      >
-        {children}
-      </OverlayContainerProvider>
+      <CSPProvider disableStyleElements>
+        <OverlayContainerProvider
+          container={overlayRoot}
+          expectedRoot={parentElement}
+        >
+          {children}
+        </OverlayContainerProvider>
+      </CSPProvider>
     </ComponentErrorBoundary>
   )
 }

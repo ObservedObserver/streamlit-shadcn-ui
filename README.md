@@ -40,6 +40,12 @@ adds the low-risk display catalog:
 `aspect_ratio`, `progress`, `separator`, `skeleton`, `table`, and
 `link_button`.
 
+Wave 3 adds the inline and form catalog:
+
+`input`, `textarea`, `input_otp`, `accordion`, `collapsible`, `pagination`,
+`radio_group`, `scroll_area`, `slider`, `switch`, `tabs`, `toggle`,
+`toggle_group`, and `calendar`.
+
 For example:
 
 ```py
@@ -64,20 +70,23 @@ popup in `document.body`.
 V2 requires Python 3.10 or newer and Streamlit 1.60 or newer. V1 keeps its
 existing package-wide compatibility floor.
 
-Run the Wave 1 or Wave 2 acceptance page with:
+Run a completed-wave acceptance page with:
 
 ```sh
 ./scripts/poc_v2.sh
 ./scripts/wave2_v2.sh
+./scripts/wave3_v2.sh
 ```
 
 See the
 [Wave 1 acceptance record](docs/v2-wave1-acceptance.md),
 [Wave 2 acceptance record](docs/v2-wave2-acceptance.md),
+[Wave 3 acceptance record](docs/v2-wave3-acceptance.md),
+[Wave 3 state contract](docs/v2-wave3-state-contract.md),
 [full migration tracker](docs/v2-full-migration-tracker.md),
 [anchored-overlay decision](docs/adr/001-v2-anchored-overlay-host.md), and
-[migration plan](docs/v2-production-migration-plan.md). Wave 1 has been
-accepted; Waves 3–6 remain opt-in migration work and V1 remains the rollback.
+[migration plan](docs/v2-production-migration-plan.md). Waves 1–3 have been
+accepted; Waves 4–6 remain opt-in migration work and V1 remains the rollback.
 
 ## Components
 
@@ -157,6 +166,7 @@ There are several scripts in `scripts` folder to help you develop this project.
 ./scripts/frontend_v2.sh # V2 frontend watch build
 ./scripts/poc_v2.sh # build and run the independent V2 POC
 ./scripts/wave2_v2.sh # build and run the Wave 2 acceptance catalog
+./scripts/wave3_v2.sh # build and run the Wave 3 state/form catalog
 ./scripts/dev.sh # streamlit dev server
 ```
 

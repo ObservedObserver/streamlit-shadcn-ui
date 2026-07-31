@@ -17,3 +17,10 @@ if (!globalThis.PointerEvent) {
     value: MouseEvent,
   })
 }
+
+if (!Element.prototype.getAnimations) {
+  Object.defineProperty(Element.prototype, "getAnimations", {
+    configurable: true,
+    value: () => [],
+  })
+}

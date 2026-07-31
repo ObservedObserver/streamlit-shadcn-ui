@@ -49,6 +49,19 @@ export function reconcileState<
 
 type SetStateCell = (name: "state", value: unknown) => void
 
+function stateValuesEqual<TValue>(left: TValue, right: TValue) {
+  if (Object.is(left, right)) {
+    return true
+  }
+  if (Array.isArray(left) && Array.isArray(right)) {
+    return (
+      left.length === right.length &&
+      left.every((item, index) => Object.is(item, right[index]))
+    )
+  }
+  return false
+}
+
 export function useRevisionedState<
   TValue,
   TKind extends ComponentKind,
@@ -82,6 +95,9 @@ export function useRevisionedState<
   ])
 
   const commit = (value: TValue) => {
+    if (stateValuesEqual(localRef.current.value, value)) {
+      return
+    }
     const next = {
       ...localRef.current,
       value,
@@ -93,4 +109,32 @@ export function useRevisionedState<
   }
 
   return { commit, state: local }
+}
+
+export function useRevisionedDraftState<
+  TValue,
+  TKind extends ComponentKind,
+>(
+  incoming: StateCell<TValue, TKind>,
+  setStateCell: SetStateCell
+) {
+  const { commit, state } = useRevisionedState(
+    incoming,
+    setStateCell
+  )
+  const [draft, setDraft] = useState(state.value)
+
+  useEffect(() => {
+    setDraft(state.value)
+  }, [state.value])
+
+  return {
+    commit,
+    commitDraft: () => {
+      commit(draft)
+    },
+    draft,
+    setDraft,
+    state,
+  }
 }

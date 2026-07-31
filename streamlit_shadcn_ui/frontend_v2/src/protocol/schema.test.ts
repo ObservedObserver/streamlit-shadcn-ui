@@ -150,6 +150,194 @@ function wave2Envelopes() {
   ]
 }
 
+function stateCell<T>(kind: string, value: T) {
+  return {
+    kind,
+    value,
+    clientRevision: 0,
+    serverRevision: 0,
+  }
+}
+
+function wave3Envelopes() {
+  const choices = [
+    {
+      label: "Alpha",
+      value: "alpha",
+      disabled: false,
+    },
+    {
+      label: "Beta",
+      value: "beta",
+      disabled: true,
+    },
+  ]
+  return [
+    {
+      protocolVersion: 1,
+      kind: "input",
+      state: stateCell("input", "Ada"),
+      props: {
+        label: "Name",
+        placeholder: "Type a name",
+        type: "text",
+        disabled: false,
+        maxLength: 40,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "textarea",
+      state: stateCell("textarea", "Notes"),
+      props: {
+        label: "Notes",
+        placeholder: "",
+        disabled: false,
+        rows: 4,
+        maxLength: null,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "accordion",
+      state: stateCell("accordion", ["first"]),
+      props: {
+        label: "Questions",
+        disabled: false,
+        multiple: true,
+        items: [
+          {
+            label: "First",
+            content: "Answer",
+            value: "first",
+            disabled: false,
+          },
+        ],
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "collapsible",
+      state: stateCell("collapsible", true),
+      props: {
+        title: "Details",
+        firstItem: null,
+        items: ["One", "Two"],
+        disabled: false,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "input_otp",
+      state: stateCell("input_otp", "123"),
+      props: {
+        label: "Code",
+        maxLength: 6,
+        pattern: "digits",
+        disabled: false,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "pagination",
+      state: stateCell("pagination", 3),
+      props: {
+        label: "Pages",
+        totalPages: 10,
+        siblingCount: 1,
+        disabled: false,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "radio_group",
+      state: stateCell("radio_group", "alpha"),
+      props: {
+        label: "Choices",
+        options: choices,
+        disabled: false,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "scroll_area",
+      props: {
+        title: "Tags",
+        items: ["One", "Two"],
+        height: 240,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "slider",
+      state: stateCell("slider", [20, 80]),
+      props: {
+        label: "Range",
+        min: 0,
+        max: 100,
+        step: 2,
+        disabled: false,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "switch",
+      state: stateCell("switch", true),
+      props: {
+        label: "Enabled",
+        disabled: false,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "tabs",
+      state: stateCell("tabs", "alpha"),
+      props: {
+        label: "Sections",
+        options: choices,
+        orientation: "horizontal",
+        variant: "line",
+        disabled: false,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "toggle",
+      state: stateCell("toggle", false),
+      props: {
+        label: "Bold",
+        icon: "bold",
+        variant: "outline",
+        disabled: false,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "toggle_group",
+      state: stateCell("toggle_group", ["alpha"]),
+      props: {
+        label: "Formatting",
+        options: choices,
+        multiple: true,
+        orientation: "horizontal",
+        variant: "outline",
+        disabled: false,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "calendar",
+      state: stateCell("calendar", "2026-07-30"),
+      props: {
+        label: "Date",
+        minDate: "2026-01-01",
+        maxDate: "2026-12-31",
+        disabled: false,
+      },
+    },
+  ]
+}
+
 describe("parseEnvelope", () => {
   it("accepts and normalizes a valid Select envelope", () => {
     const parsed = parseEnvelope(selectEnvelope())
@@ -340,6 +528,117 @@ describe("parseEnvelope", () => {
       },
     ],
   ])("rejects malformed Wave 2 input: %s", (_name, envelope) => {
+    expect(parseEnvelope(envelope).ok).toBe(false)
+  })
+
+  it("accepts and normalizes every Wave 3 envelope", () => {
+    for (const envelope of wave3Envelopes()) {
+      expect(parseEnvelope(envelope)).toEqual({
+        ok: true,
+        envelope,
+      })
+    }
+  })
+
+  it("validates ISO years below 100 without the Date.UTC 1900 offset", () => {
+    const calendar = wave3Envelopes()[13]
+    const ancient = {
+      ...calendar,
+      state: stateCell("calendar", "0001-01-01"),
+      props: {
+        label: "Ancient date",
+        minDate: "0001-01-01",
+        maxDate: "0099-12-31",
+        disabled: false,
+      },
+    }
+    expect(parseEnvelope(ancient)).toEqual({
+      ok: true,
+      envelope: ancient,
+    })
+  })
+
+  it.each([
+    [
+      "input value above max length",
+      {
+        ...wave3Envelopes()[0],
+        state: stateCell("input", "too long"),
+        props: {
+          ...wave3Envelopes()[0]?.props,
+          maxLength: 2,
+        },
+      },
+    ],
+    [
+      "single accordion with two open items",
+      {
+        ...wave3Envelopes()[2],
+        state: stateCell("accordion", ["first", "second"]),
+        props: {
+          label: "Questions",
+          disabled: false,
+          multiple: false,
+          items: [
+            {
+              label: "First",
+              content: "One",
+              value: "first",
+              disabled: false,
+            },
+            {
+              label: "Second",
+              content: "Two",
+              value: "second",
+              disabled: false,
+            },
+          ],
+        },
+      },
+    ],
+    [
+      "OTP characters outside policy",
+      {
+        ...wave3Envelopes()[4],
+        state: stateCell("input_otp", "12a"),
+      },
+    ],
+    [
+      "page outside total",
+      {
+        ...wave3Envelopes()[5],
+        state: stateCell("pagination", 11),
+      },
+    ],
+    [
+      "descending slider range",
+      {
+        ...wave3Envelopes()[8],
+        state: stateCell("slider", [80, 20]),
+      },
+    ],
+    [
+      "unknown selected tab",
+      {
+        ...wave3Envelopes()[10],
+        state: stateCell("tabs", "missing"),
+      },
+    ],
+    [
+      "duplicate toggle values",
+      {
+        ...wave3Envelopes()[12],
+        state: stateCell("toggle_group", ["alpha", "alpha"]),
+      },
+    ],
+    [
+      "impossible calendar date",
+      {
+        ...wave3Envelopes()[13],
+        state: stateCell("calendar", "2026-02-30"),
+      },
+    ],
+  ])("rejects malformed Wave 3 input: %s", (_name, envelope) => {
     expect(parseEnvelope(envelope).ok).toBe(false)
   })
 })

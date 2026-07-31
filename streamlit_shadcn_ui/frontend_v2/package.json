@@ -20,6 +20,7 @@
     "test:e2e": "playwright test",
     "test:e2e:wave1": "SSUI_V2_E2E_APP=V2_POC.py SSUI_V2_E2E_SUITE=wave1 playwright test",
     "test:e2e:wave2": "SSUI_V2_E2E_APP=V2_WAVE2.py SSUI_V2_E2E_SUITE=wave2 playwright test",
+    "test:e2e:wave3": "SSUI_V2_E2E_APP=V2_WAVE3.py SSUI_V2_E2E_SUITE=wave3 playwright test",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest"
   },
@@ -28,8 +29,11 @@
     "@streamlit/component-v2-lib": "0.2.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
+    "date-fns": "4.4.0",
+    "input-otp": "1.4.2",
     "lucide-react": "1.28.0",
     "react": "19.2.8",
+    "react-day-picker": "10.0.1",
     "react-dom": "19.2.8",
     "tailwind-merge": "3.6.0"
   },

@@ -1,6 +1,7 @@
 import type { FrontendRendererArgs } from "@streamlit/component-v2-lib"
 
 import { AlertView } from "@/components/streamlit/alert"
+import { AccordionView } from "@/components/streamlit/accordion"
 import { AspectRatioView } from "@/components/streamlit/aspect-ratio"
 import { AvatarView } from "@/components/streamlit/avatar"
 import { BadgeView } from "@/components/streamlit/badge"
@@ -11,13 +12,26 @@ import {
   MetricCardView,
 } from "@/components/streamlit/card"
 import { CheckboxView } from "@/components/streamlit/checkbox"
+import { CollapsibleView } from "@/components/streamlit/collapsible"
 import { DropdownMenuView } from "@/components/streamlit/dropdown-menu"
+import { CalendarView } from "@/components/streamlit/calendar"
+import { InputOtpView } from "@/components/streamlit/input-otp"
+import { InputView } from "@/components/streamlit/input"
 import { LinkButtonView } from "@/components/streamlit/link-button"
+import { PaginationView } from "@/components/streamlit/pagination"
 import { ProgressView } from "@/components/streamlit/progress"
+import { RadioGroupView } from "@/components/streamlit/radio-group"
+import { ScrollAreaView } from "@/components/streamlit/scroll-area"
 import { SelectView } from "@/components/streamlit/select"
 import { SeparatorView } from "@/components/streamlit/separator"
 import { SkeletonView } from "@/components/streamlit/skeleton"
+import { SliderView } from "@/components/streamlit/slider"
+import { SwitchView } from "@/components/streamlit/switch"
 import { TableView } from "@/components/streamlit/table"
+import { TabsView } from "@/components/streamlit/tabs"
+import { TextareaView } from "@/components/streamlit/textarea"
+import { ToggleGroupView } from "@/components/streamlit/toggle-group"
+import { ToggleView } from "@/components/streamlit/toggle"
 import type { Envelope } from "@/protocol/schema"
 
 export type V2FrontendState = Record<string, unknown>
@@ -95,5 +109,98 @@ export function V2App({
       return <TableView envelope={envelope} />
     case "link_button":
       return <LinkButtonView envelope={envelope} />
+    case "input":
+      return (
+        <InputView
+          envelope={envelope}
+          setStateValue={setStateValue}
+        />
+      )
+    case "textarea":
+      return (
+        <TextareaView
+          envelope={envelope}
+          setStateValue={setStateValue}
+        />
+      )
+    case "accordion":
+      return (
+        <AccordionView
+          envelope={envelope}
+          setStateValue={setStateValue}
+        />
+      )
+    case "collapsible":
+      return (
+        <CollapsibleView
+          envelope={envelope}
+          setStateValue={setStateValue}
+        />
+      )
+    case "input_otp":
+      return (
+        <InputOtpView
+          envelope={envelope}
+          setStateValue={setStateValue}
+        />
+      )
+    case "pagination":
+      return (
+        <PaginationView
+          envelope={envelope}
+          setStateValue={setStateValue}
+        />
+      )
+    case "radio_group":
+      return (
+        <RadioGroupView
+          envelope={envelope}
+          setStateValue={setStateValue}
+        />
+      )
+    case "scroll_area":
+      return <ScrollAreaView envelope={envelope} />
+    case "slider":
+      return (
+        <SliderView
+          envelope={envelope}
+          setStateValue={setStateValue}
+        />
+      )
+    case "switch":
+      return (
+        <SwitchView
+          envelope={envelope}
+          setStateValue={setStateValue}
+        />
+      )
+    case "tabs":
+      return (
+        <TabsView
+          envelope={envelope}
+          setStateValue={setStateValue}
+        />
+      )
+    case "toggle":
+      return (
+        <ToggleView
+          envelope={envelope}
+          setStateValue={setStateValue}
+        />
+      )
+    case "toggle_group":
+      return (
+        <ToggleGroupView
+          envelope={envelope}
+          setStateValue={setStateValue}
+        />
+      )
+    case "calendar":
+      return (
+        <CalendarView
+          envelope={envelope}
+          setStateValue={setStateValue}
+        />
+      )
   }
 }

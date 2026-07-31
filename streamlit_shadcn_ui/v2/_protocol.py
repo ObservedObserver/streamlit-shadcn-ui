@@ -155,7 +155,10 @@ def prepare_state(
         entry.get("default_fingerprint") is not None
         and entry.get("default_fingerprint") != default_fingerprint
     )
-    invalid_value = not is_valid_value(incoming_value)
+    try:
+        invalid_value = not is_valid_value(incoming_value)
+    except (TypeError, ValueError, OverflowError):
+        invalid_value = True
 
     if default_changed or invalid_value:
         authoritative_revision += 1

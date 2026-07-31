@@ -101,6 +101,14 @@
   width: 100%;
 }
 
+.base-ui-disable-scrollbar {
+  scrollbar-width: none;
+}
+
+.base-ui-disable-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 [data-ssui-v2-overlay-root] {
   background: transparent;
   border: 0;

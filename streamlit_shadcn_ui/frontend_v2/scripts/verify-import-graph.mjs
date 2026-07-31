@@ -13,6 +13,7 @@ const adaptersDir = path.join(
   "streamlit"
 )
 const expectedEdges = {
+  "accordion.tsx": '@/components/ui/accordion',
   "alert.tsx": '@/components/ui/alert',
   "aspect-ratio.tsx": '@/components/ui/aspect-ratio',
   "avatar.tsx": '@/components/ui/avatar',
@@ -21,13 +22,26 @@ const expectedEdges = {
   "button.tsx": '@/components/ui/button',
   "card.tsx": '@/components/ui/card',
   "checkbox.tsx": '@/components/ui/checkbox',
+  "collapsible.tsx": '@/components/ui/collapsible',
+  "calendar.tsx": '@/components/ui/calendar',
   "dropdown-menu.tsx": '@/components/ui/dropdown-menu',
+  "input-otp.tsx": '@/components/ui/input-otp',
+  "input.tsx": '@/components/ui/input',
   "link-button.tsx": '@/components/ui/button',
+  "pagination.tsx": '@/components/ui/pagination',
   "progress.tsx": '@/components/ui/progress',
+  "radio-group.tsx": '@/components/ui/radio-group',
+  "scroll-area.tsx": '@/components/ui/scroll-area',
   "select.tsx": '@/components/ui/select',
   "separator.tsx": '@/components/ui/separator',
   "skeleton.tsx": '@/components/ui/skeleton',
+  "slider.tsx": '@/components/ui/slider',
+  "switch.tsx": '@/components/ui/switch',
   "table.tsx": '@/components/ui/table',
+  "tabs.tsx": '@/components/ui/tabs',
+  "textarea.tsx": '@/components/ui/textarea',
+  "toggle-group.tsx": '@/components/ui/toggle-group',
+  "toggle.tsx": '@/components/ui/toggle',
 }
 
 const adapterFiles = (await readdir(adaptersDir))

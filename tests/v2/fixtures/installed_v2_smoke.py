@@ -94,12 +94,96 @@ ui.link_button(
     key="installed_link",
 )
 
+input_value = ui.input(
+    "Installed input",
+    key="installed_input",
+    label="Installed Input",
+)
+textarea_value = ui.textarea(
+    "Installed textarea",
+    key="installed_textarea",
+    label="Installed Textarea",
+)
+accordion_value = ui.accordion(
+    [{"trigger": "Installed question", "content": "Installed answer"}],
+    key="installed_accordion",
+)
+collapsible_value = ui.collapsible(
+    "Installed Collapsible",
+    "First",
+    ["Second"],
+    key="installed_collapsible",
+)
+otp_value = ui.input_otp(
+    "123",
+    6,
+    key="installed_otp",
+)
+pagination_value = ui.pagination(
+    key="installed_pagination",
+    total_pages=10,
+)
+radio_value = ui.radio_group(
+    ["Alpha", "Beta"],
+    "Alpha",
+    key="installed_radio",
+)
+ui.scroll_area(
+    "Installed Scroll Area",
+    ["One", "Two"],
+    key="installed_scroll",
+)
+slider_value = ui.slider(
+    [25, 75],
+    0,
+    100,
+    5,
+    "Installed Slider",
+    key="installed_slider",
+)
+switch_value = ui.switch(
+    True,
+    "Installed Switch",
+    key="installed_switch",
+)
+tabs_value = ui.tabs(
+    ["Overview", "Details"],
+    "Overview",
+    key="installed_tabs",
+)
+toggle_value = ui.toggle(
+    False,
+    "bold",
+    key="installed_toggle",
+)
+toggle_group_value = ui.toggle_group(
+    ["bold"],
+    key="installed_toggle_group",
+)
+calendar_value = ui.calendar(
+    key="installed_calendar",
+    value="2026-07-30",
+)
+
 st.write(
     {
+        "accordion": accordion_value,
         "selected": selected,
         "action": action,
+        "calendar": calendar_value,
         "checked": checked,
         "clicked": clicked,
+        "collapsible": collapsible_value,
         "crumb": crumb,
+        "input": input_value,
+        "otp": otp_value,
+        "pagination": pagination_value,
+        "radio": radio_value,
+        "slider": slider_value,
+        "switch": switch_value,
+        "tabs": tabs_value,
+        "textarea": textarea_value,
+        "toggle": toggle_value,
+        "toggle_group": toggle_group_value,
     }
 )

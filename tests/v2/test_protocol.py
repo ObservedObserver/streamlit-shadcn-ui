@@ -144,6 +144,34 @@ class ProtocolStateTests(unittest.TestCase):
         self.assertEqual(state["value"], "alpha")
         self.assertEqual(state["serverRevision"], 1)
 
+    def test_unhashable_persisted_value_is_invalid_not_an_exception(
+        self,
+    ) -> None:
+        _protocol.prepare_state(
+            key="choice",
+            kind="select",
+            default_value="alpha",
+            is_valid_value=lambda value: value in {"alpha", "beta"},
+        )
+        self.st.session_state["choice"] = {
+            "state": {
+                "kind": "select",
+                "value": {"forged": True},
+                "clientRevision": 2,
+                "serverRevision": 0,
+            }
+        }
+
+        state = _protocol.prepare_state(
+            key="choice",
+            kind="select",
+            default_value="alpha",
+            is_valid_value=lambda value: value in {"alpha", "beta"},
+        )
+
+        self.assertEqual(state["value"], "alpha")
+        self.assertEqual(state["serverRevision"], 1)
+
     def test_malformed_state_fails_closed(self) -> None:
         self.st.session_state["choice"] = {
             "state": {

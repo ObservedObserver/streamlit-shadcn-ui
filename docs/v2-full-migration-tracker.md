@@ -28,20 +28,20 @@ real Streamlit browser and packaging gates are green.
 | `skeleton` | 2 | Accepted | stateless, restricted dimensions |
 | `table` | 2 | Accepted | stateless bounded primitive cells |
 | `link_button` | 2 | Accepted | native link semantics, safe URL |
-| `input` | 3 | Planned | persistent value; commit policy required |
-| `textarea` | 3 | Planned | persistent value; commit policy required |
-| `accordion` | 3 | Planned | controlled persistent open items |
-| `collapsible` | 3 | Planned | controlled persistent open state |
-| `input_otp` | 3 | Planned | persistent value; commit policy required |
-| `pagination` | 3 | Planned | persistent page |
-| `radio_group` | 3 | Planned | persistent value |
-| `scroll_area` | 3 | Planned | stateless content helper |
-| `slider` | 3 | Planned | persistent numeric value |
-| `switch` | 3 | Planned | persistent boolean |
-| `tabs` | 3 | Planned | persistent selected tab |
-| `toggle` | 3 | Planned | persistent boolean |
-| `toggle_group` | 3 | Planned | persistent bounded values |
-| `calendar` | 3 | Planned | persistent date/range value |
+| `input` | 3 | Accepted | persistent string; commit on blur / Enter |
+| `textarea` | 3 | Accepted | persistent string; commit on blur / Ctrl/Cmd+Enter |
+| `accordion` | 3 | Accepted | controlled persistent open-item array |
+| `collapsible` | 3 | Accepted | controlled persistent open boolean |
+| `input_otp` | 3 | Accepted | persistent string; commit on completion / blur |
+| `pagination` | 3 | Accepted | persistent 1-based page |
+| `radio_group` | 3 | Accepted | persistent value |
+| `scroll_area` | 3 | Accepted | stateless bounded content helper |
+| `slider` | 3 | Accepted | persistent numeric array; commit after interaction |
+| `switch` | 3 | Accepted | persistent boolean |
+| `tabs` | 3 | Accepted | persistent selected tab |
+| `toggle` | 3 | Accepted | persistent boolean |
+| `toggle_group` | 3 | Accepted | persistent bounded unique values |
+| `calendar` | 3 | Accepted | persistent ISO single date |
 | `popover` | 4 | Planned | anchored non-modal overlay |
 | `hover_card` | 4 | Planned | anchored non-modal overlay |
 | `date_picker` | 4 | Planned | persistent date/range plus anchored overlay |

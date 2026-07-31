@@ -110,11 +110,16 @@ function replaceIconPlaceholders(sourceFile) {
 
 function adaptAliases(sourceFile) {
   for (const declaration of sourceFile.getImportDeclarations()) {
-    if (
-      declaration.getModuleSpecifierValue() ===
-      "@/registry/base-nova/lib/utils"
-    ) {
+    const specifier = declaration.getModuleSpecifierValue()
+    if (specifier === "@/registry/base-nova/lib/utils") {
       declaration.setModuleSpecifier("@/lib/utils")
+    } else if (specifier.startsWith("@/registry/base-nova/ui/")) {
+      declaration.setModuleSpecifier(
+        specifier.replace(
+          "@/registry/base-nova/ui/",
+          "@/components/ui/"
+        )
+      )
     }
   }
 }

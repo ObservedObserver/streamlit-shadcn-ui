@@ -46,12 +46,13 @@ class PublicApiContractTests(unittest.TestCase):
         self.runtime_patch.start()
         self.addCleanup(self.runtime_patch.stop)
 
-    def test_namespace_exports_wave1_and_wave2_widgets(
+    def test_namespace_exports_accepted_widgets(
         self,
     ) -> None:
         self.assertEqual(
             public_api.__all__,
             [
+                "accordion",
                 "alert",
                 "aspect_ratio",
                 "avatar",
@@ -59,16 +60,29 @@ class PublicApiContractTests(unittest.TestCase):
                 "badges",
                 "breadcrumb",
                 "button",
+                "calendar",
                 "card",
                 "checkbox",
+                "collapsible",
                 "dropdown_menu",
+                "input",
+                "input_otp",
                 "link_button",
                 "metric_card",
+                "pagination",
                 "progress",
+                "radio_group",
+                "scroll_area",
                 "select",
                 "separator",
                 "skeleton",
+                "slider",
+                "switch",
                 "table",
+                "tabs",
+                "textarea",
+                "toggle",
+                "toggle_group",
             ],
         )
 
@@ -419,6 +433,192 @@ class PublicApiContractTests(unittest.TestCase):
                     {"key": "name"},
                 ],
                 key="duplicate-columns",
+            )
+
+    def test_wave3_widgets_emit_revisioned_or_stateless_envelopes(
+        self,
+    ) -> None:
+        captured = []
+
+        with patch.object(
+            common_module,
+            "mount",
+            side_effect=lambda **kwargs: captured.append(kwargs),
+        ):
+            values = [
+                public_api.input(
+                    "Ada",
+                    key="wave3-input",
+                    label="Name",
+                ),
+                public_api.textarea(
+                    "Notes",
+                    key="wave3-textarea",
+                ),
+                public_api.accordion(
+                    [{"trigger": "Question", "content": "Answer"}],
+                    key="wave3-accordion",
+                    default_values=["0"],
+                ),
+                public_api.collapsible(
+                    "Details",
+                    "First",
+                    ["Second"],
+                    key="wave3-collapsible",
+                    default_open=True,
+                ),
+                public_api.input_otp(
+                    "123",
+                    6,
+                    key="wave3-otp",
+                ),
+                public_api.pagination(
+                    key="wave3-pagination",
+                    total_pages=20,
+                    initial_page=3,
+                ),
+                public_api.radio_group(
+                    [
+                        {"label": "Alpha", "value": "a"},
+                        {"label": "Beta", "value": "b"},
+                    ],
+                    "b",
+                    key="wave3-radio",
+                ),
+                public_api.scroll_area(
+                    "Tags",
+                    ["one", "two"],
+                    key="wave3-scroll",
+                ),
+                public_api.slider(
+                    [20, 80],
+                    0,
+                    100,
+                    2,
+                    "Range",
+                    key="wave3-slider",
+                ),
+                public_api.switch(
+                    True,
+                    "Enabled",
+                    key="wave3-switch",
+                ),
+                public_api.tabs(
+                    ["One", "Two"],
+                    "Two",
+                    key="wave3-tabs",
+                ),
+                public_api.toggle(
+                    True,
+                    "italic",
+                    key="wave3-toggle",
+                ),
+                public_api.toggle_group(
+                    ["bold"],
+                    key="wave3-toggle-group",
+                ),
+                public_api.calendar(
+                    key="wave3-calendar",
+                    value="2026-07-30",
+                ),
+            ]
+
+        self.assertEqual(
+            values,
+            [
+                "Ada",
+                "Notes",
+                ["0"],
+                True,
+                "123",
+                3,
+                "b",
+                None,
+                [20.0, 80.0],
+                True,
+                "Two",
+                True,
+                ["bold"],
+                "2026-07-30",
+            ],
+        )
+        expected_kinds = [
+            "input",
+            "textarea",
+            "accordion",
+            "collapsible",
+            "input_otp",
+            "pagination",
+            "radio_group",
+            "scroll_area",
+            "slider",
+            "switch",
+            "tabs",
+            "toggle",
+            "toggle_group",
+            "calendar",
+        ]
+        self.assertEqual(
+            [call["data"]["kind"] for call in captured],
+            expected_kinds,
+        )
+        for call, kind in zip(captured, expected_kinds):
+            self.assertEqual(
+                call["default"]["meta"],
+                {"protocolVersion": 1, "kind": kind},
+            )
+            if kind == "scroll_area":
+                self.assertNotIn("state", call["default"])
+                self.assertNotIn("callbacks", call)
+            else:
+                self.assertEqual(
+                    set(call["callbacks"]),
+                    {"on_state_change"},
+                )
+                self.assertEqual(
+                    call["default"]["state"]["kind"],
+                    kind,
+                )
+
+    def test_wave3_boundaries_fail_closed(self) -> None:
+        with self.assertRaisesRegex(ValueError, "max_length"):
+            public_api.input(
+                "too long",
+                key="bad-input",
+                max_length=2,
+            )
+        with self.assertRaisesRegex(ValueError, "max_length"):
+            public_api.input(
+                "😀",
+                key="utf16-input",
+                max_length=1,
+            )
+        with self.assertRaisesRegex(ValueError, "unique"):
+            public_api.radio_group(
+                ["same", "same"],
+                key="bad-radio",
+            )
+        with self.assertRaisesRegex(ValueError, "one or two"):
+            public_api.slider(
+                [1, 2, 3],
+                key="bad-slider",
+            )
+        with self.assertRaisesRegex(TypeError, "must be numbers"):
+            public_api.slider(
+                [True],
+                key="boolean-slider",
+            )
+        with self.assertRaisesRegex(ValueError, "present"):
+            public_api.tabs(
+                ["One"],
+                "Missing",
+                key="bad-tabs",
+            )
+        with self.assertRaisesRegex(ValueError, "calendar bounds"):
+            public_api.calendar(
+                key="bad-calendar",
+                value="2026-01-01",
+                min_date="2026-02-01",
             )
 
 

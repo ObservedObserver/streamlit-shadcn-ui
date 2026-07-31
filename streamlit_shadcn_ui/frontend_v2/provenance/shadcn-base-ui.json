@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "capturedAt": "2026-07-31T05:45:04.313Z",
+  "capturedAt": "2026-07-31T06:09:19.827Z",
   "generator": {
     "name": "shadcn",
     "version": "4.16.0",
@@ -24,6 +24,11 @@
     "shadowCssSchema": 1
   },
   "registry": {
+    "accordion": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/accordion.json",
+      "sha256": "ecb8e864a54894642c7f008ff95efae1885a7c0338c5eb64c9474e213cb9d36d",
+      "primitive": "base-ui"
+    },
     "alert": {
       "url": "https://ui.shadcn.com/r/styles/base-nova/alert.json",
       "sha256": "f48151ef5f0a8a77d503d382bcf833c25b4d3b1a8e956dd7a0e30af8048b60de",
@@ -54,6 +59,11 @@
       "sha256": "434eb70c9158f687770752468a88fd9e164417620ab7047da10d06fe923a04bc",
       "primitive": "base-ui"
     },
+    "calendar": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/calendar.json",
+      "sha256": "c54f51b2d6fbe894200a424107eba58b5e37ff380adb9fed6dde7111487c96aa",
+      "primitive": "react"
+    },
     "card": {
       "url": "https://ui.shadcn.com/r/styles/base-nova/card.json",
       "sha256": "62f890e9a241abb694eb2cdbfe1c2560298352c8a13618de7d973661ebf98a04",
@@ -64,14 +74,44 @@
       "sha256": "88da4986fb88c20601369ce3bbf138c8baf7834bc760893bd4ed553e0c50187b",
       "primitive": "base-ui"
     },
+    "collapsible": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/collapsible.json",
+      "sha256": "74f78cd88a30185243847968977cf1de9ffbf576547f2ec1f14b5ef55505b90d",
+      "primitive": "base-ui"
+    },
     "dropdown-menu": {
       "url": "https://ui.shadcn.com/r/styles/base-nova/dropdown-menu.json",
       "sha256": "0a7909c9c8ce8dcbcfb4b355071daad0aae56cf31dfde808253309346e5fdd64",
       "primitive": "base-ui"
     },
+    "input": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/input.json",
+      "sha256": "00e3d8e2bbf597b632bafde6cc1b6006d2f759b9083b32bfd024f0b2edeb2fc1",
+      "primitive": "base-ui"
+    },
+    "input-otp": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/input-otp.json",
+      "sha256": "06014de9816bc5e6836bdb180a4f75763281fa62d560a587f69d64ff9d540ef7",
+      "primitive": "react"
+    },
+    "pagination": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/pagination.json",
+      "sha256": "30fdca8ec4a5fa3d9175f29e3933443583ee39f638a478e25da56896bd799777",
+      "primitive": "react"
+    },
     "progress": {
       "url": "https://ui.shadcn.com/r/styles/base-nova/progress.json",
       "sha256": "dc9dffcae98fb6f012095e8eb2f74a16d79b62e6a3276d5ef02df4ebbebbe9cc",
+      "primitive": "base-ui"
+    },
+    "radio-group": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/radio-group.json",
+      "sha256": "7f38176aec0d25ee2e4261bd7f3571514e509ca796f02879a221ca7cbddfee53",
+      "primitive": "base-ui"
+    },
+    "scroll-area": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/scroll-area.json",
+      "sha256": "284e5d896b1fed19c4c2a7469c9bf7dfd658edf10d802014a9bfdcc19a61106b",
       "primitive": "base-ui"
     },
     "select": {
@@ -89,11 +129,41 @@
       "sha256": "f049b762673185353721b8904115941e80acd09cd38721be0d171ff1b75c9c48",
       "primitive": "react"
     },
+    "slider": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/slider.json",
+      "sha256": "d334fd798f85e866228f74550a7c315071f8346db1fe442aca2a9ec4d12b63bd",
+      "primitive": "base-ui"
+    },
+    "switch": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/switch.json",
+      "sha256": "954741233ca5c0eac9eb42e3928c4e8087846e71d2b0b781e65ca072767456fb",
+      "primitive": "base-ui"
+    },
     "table": {
       "url": "https://ui.shadcn.com/r/styles/base-nova/table.json",
       "sha256": "8d3a3822ecf010dc37638f2c438f18804b461b1b8168252024987ce8a55cab3b",
       "primitive": "react"
+    },
+    "tabs": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/tabs.json",
+      "sha256": "2d55e20ae416ce9ca89253b5b4e5288a23b5a36013293685c8d5ebd3e9331ecb",
+      "primitive": "base-ui"
+    },
+    "textarea": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/textarea.json",
+      "sha256": "8bd80124e0c845fef615f7d1da05f77521ee50bb4be15676860aa48a74a9f8d8",
+      "primitive": "react"
+    },
+    "toggle": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/toggle.json",
+      "sha256": "b763397b40e49430614d2ea525e19f64c9e0ebad75b41080aa49292b861a953c",
+      "primitive": "base-ui"
+    },
+    "toggle-group": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/toggle-group.json",
+      "sha256": "de923fb386aefd1829ae22586413fa35436181acc65af9a06c1608935c69b5a4",
+      "primitive": "base-ui"
     }
   },
-  "snapshotRevision": 2
+  "snapshotRevision": 3
 }
