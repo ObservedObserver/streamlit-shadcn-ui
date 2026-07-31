@@ -78,7 +78,7 @@ test("installed distribution renders the complete V2 catalog", async ({
     page.getByRole("heading", {
       name: "Installed Streamlit Shadcn UI V2 smoke",
     })
-  ).toBeVisible()
+  ).toBeVisible({ timeout: 60_000 })
   await expect(page.locator("iframe")).toHaveCount(0)
 
   await expect

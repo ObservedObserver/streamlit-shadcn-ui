@@ -117,6 +117,7 @@ See the
 [Wave 5 modal decision](docs/adr/007-v2-alert-dialog-modal-effects.md),
 [V1/V2 compatibility matrix](docs/v2-compatibility-matrix.md),
 [cutover and rollback decision](docs/adr/008-v2-cutover-and-session-state.md),
+[Wave 6 release-readiness record](docs/v2-wave6-release-readiness.md),
 [full migration tracker](docs/v2-full-migration-tracker.md),
 [anchored-overlay decision](docs/adr/001-v2-anchored-overlay-host.md), and
 [migration plan](docs/v2-production-migration-plan.md). Waves 1–5 and the

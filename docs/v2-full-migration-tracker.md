@@ -68,7 +68,9 @@ Wave 5 evidence is recorded in the
 The cutover and rollback decision is
 [ADR-008](./adr/008-v2-cutover-and-session-state.md). The repository is
 technically ready for an opt-in release candidate; an unpublished local run
-does not satisfy the real-world feedback requirement.
+does not satisfy the real-world feedback requirement. Final regression,
+performance, and distribution evidence is recorded in the
+[Wave 6 release-readiness record](./v2-wave6-release-readiness.md).
 
 ## Compatibility-only or undocumented V1 surfaces
 
