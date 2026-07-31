@@ -948,7 +948,7 @@ test("cleanup, bounded errors, multipage navigation, and 100 rerenders are stabl
   })
 
   await page.getByRole("button", {
-    name: "View 28 more",
+    name: /View \d+ more/,
   }).click()
   const lifecycleLink = page.getByRole("link", {
     name: /V2 Lifecycle/i,
@@ -956,7 +956,7 @@ test("cleanup, bounded errors, multipage navigation, and 100 rerenders are stabl
   await lifecycleLink.click()
   await expect(
     page.getByRole("heading", {
-      name: "V2 multipage lifecycle fixture",
+      name: "Multipage lifecycle fixture",
     })
   ).toBeVisible()
   const multipage = page.getByRole("combobox", {

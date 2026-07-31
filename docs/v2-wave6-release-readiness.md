@@ -105,10 +105,10 @@ renderers.
 
 | Renderer | Initial samples | Median ready | 100 rerenders | Per rerender |
 |---|---:|---:|---:|---:|
-| Archived direct Base UI POC | 925.91 / 298.81 / 297.19 ms | 298.81 ms | 1,317.93 ms | 13.18 ms |
-| Generated shadcn + Base UI | 911.49 / 305.97 / 302.64 ms | 305.97 ms | 1,294.10 ms | 12.94 ms |
+| Archived direct Base UI POC | 959.79 / 312.18 / 305.49 ms | 312.18 ms | 1,306.57 ms | 13.07 ms |
+| Generated shadcn + Base UI | 1,001.21 / 310.42 / 320.18 ms | 320.18 ms | 1,299.82 ms | 13.00 ms |
 
-The shadcn median-ready ratio is 1.024 and its per-rerender ratio is 0.982.
+The shadcn median-ready ratio is 1.026 and its per-rerender ratio is 0.995.
 This local benchmark does not assign meaning to sub-millisecond noise; it
 proves that the owned shadcn composition boundary introduces no material
 regression relative to the direct Base UI diagnostic. The direct fixture and
@@ -121,15 +121,15 @@ the requested benchmark instances:
 
 | Requested instances | Total hosts | Ready time | Style bytes per host | Component asset requests |
 |---:|---:|---:|---:|---:|
-| 1 | 22 | 1,030 ms | 111,120 | 1 |
-| 10 | 31 | 518 ms | 111,120 | 1 |
-| 50 | 71 | 907 ms | 111,120 | 1 |
-| 100 | 121 | 1,610 ms | 111,120 | 1 |
+| 1 | 22 | 1,057 ms | 114,487 | 1 |
+| 10 | 31 | 537 ms | 114,487 | 1 |
+| 50 | 71 | 951 ms | 114,487 | 1 |
+| 100 | 121 | 1,660 ms | 114,487 | 1 |
 
 Every host had exactly one inline ShadowRoot stylesheet. Runtime component
 stylesheet links in ShadowRoots and `document.head` remained zero.
 
-The 100-rerun Chromium fixture completed in 1,844 ms, or 18.44 ms per rerun.
+The 100-rerun Chromium fixture completed in 1,847 ms, or 18.47 ms per rerun.
 Component host, ShadowRoot node, stylesheet, overlay-child, and open-top-layer
 counts stayed stable.
 
