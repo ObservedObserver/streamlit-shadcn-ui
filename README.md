@@ -85,8 +85,9 @@ V2 requires Python 3.10 or newer and Streamlit 1.60 or newer. V1 keeps its
 existing package-wide compatibility floor.
 
 The stable catalog implementation is complete, but V2 intentionally remains
-opt-in for its first published feedback cycle. The package root still points
-to V1. Applications can also make that rollback choice explicit:
+opt-in while the Windows NVDA/Firefox promotion check and first published
+feedback cycle remain open. The package root still points to V1. Applications
+can also make that rollback choice explicit:
 
 ```py
 import streamlit_shadcn_ui.v1 as ui
@@ -121,8 +122,9 @@ See the
 [full migration tracker](docs/v2-full-migration-tracker.md),
 [anchored-overlay decision](docs/adr/001-v2-anchored-overlay-host.md), and
 [migration plan](docs/v2-production-migration-plan.md). Waves 1–5 and the
-Wave 6 technical compatibility decision are complete. A real opt-in release
-and feedback window remains the deliberate gate before any default cutover.
+Wave 6 technical compatibility decision are complete. A Windows NVDA/Firefox
+promotion check plus a real opt-in release and feedback window remain the
+deliberate gates before any default cutover.
 
 ## Components
 

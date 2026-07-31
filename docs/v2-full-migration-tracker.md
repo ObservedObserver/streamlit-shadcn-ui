@@ -1,6 +1,6 @@
 # Components V2 full migration tracker
 
-Status: **Stable catalog implementation complete; opt-in release feedback pending**
+Status: **Stable catalog implementation complete; Windows and release feedback pending**
 
 Date: 2026-07-30
 
@@ -62,8 +62,8 @@ Wave 5 evidence is recorded in the
   contracts are return values and callbacks.
 - `streamlit_shadcn_ui.v1` is an exact explicit rollback namespace.
 - The package root stays on V1, the global runtime floors stay unchanged, and
-  V2 stays opt-in until one published feedback cycle and the remaining
-  default-cutover gates pass.
+  V2 stays opt-in until the Windows NVDA/Firefox smoke, one published feedback
+  cycle, and the remaining default-cutover gates pass.
 
 The cutover and rollback decision is
 [ADR-008](./adr/008-v2-cutover-and-session-state.md). The repository is

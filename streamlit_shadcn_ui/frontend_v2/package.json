@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "pnpm run check:generated && tsc --noEmit && vite build && node scripts/verify-dist.mjs",
+    "build:benchmark:direct-poc": "node scripts/build-direct-poc-benchmark.mjs",
     "build:watch": "vite build --watch --mode development",
     "capture:registry": "node scripts/capture-registry.mjs",
     "check": "pnpm run test && pnpm run build",
@@ -23,6 +24,8 @@
     "test:e2e:wave3": "SSUI_V2_E2E_APP=V2_WAVE3.py SSUI_V2_E2E_SUITE=wave3 playwright test",
     "test:e2e:wave4": "SSUI_V2_E2E_APP=V2_WAVE4.py SSUI_V2_E2E_SUITE=wave4 playwright test",
     "test:e2e:wave5": "SSUI_V2_E2E_APP=V2_WAVE5.py SSUI_V2_E2E_SUITE=wave5 playwright test",
+    "test:e2e:asset-upgrade": "SSUI_V2_E2E_SUITE=asset-upgrade playwright test",
+    "test:e2e:performance-comparison": "SSUI_V2_E2E_SUITE=performance-comparison playwright test",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest"
   },

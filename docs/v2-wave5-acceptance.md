@@ -66,6 +66,22 @@ Chromium, Firefox, and WebKit prove:
 The Chromium visual contract is stored at
 `frontend_v2/e2e/wave5.spec.ts-snapshots/wave5-alert-dialog-chromium-darwin.png`.
 
+## VoiceOver and Safari
+
+On 2026-07-31 the final bundle passed an interactive Safari 26.5 smoke with
+macOS VoiceOver enabled. Opening the primary Alert Dialog reduced the
+VoiceOver navigation tree to the modal subtree and exposed:
+
+- the `Ship the V2 migration?` heading;
+- the focus-trap description;
+- the `Keep reviewing` and `Ship it` actions;
+- named focus boundaries around the modal content.
+
+Activating `Keep reviewing` restored the background tree, made the
+`Open primary dialog` trigger available again, and produced the expected
+`Primary decision: False` result. VoiceOver was confirmed off after the
+session. NVDA/Firefox remains a separate Windows-only promotion check.
+
 ## Distribution evidence
 
 Wheel and sdist were built from a clean git archive. The release verifier

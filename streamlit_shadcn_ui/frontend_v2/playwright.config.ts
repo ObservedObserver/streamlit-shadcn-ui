@@ -15,6 +15,10 @@ const baseURL =
 const python = process.env.SSUI_V2_PYTHON ?? "python3"
 const app = process.env.SSUI_V2_E2E_APP ?? "V2_POC.py"
 const suite = process.env.SSUI_V2_E2E_SUITE
+const selfManagedServer = new Set([
+  "asset-upgrade",
+  "performance-comparison",
+]).has(suite ?? "")
 
 export default defineConfig({
   expect: {
@@ -54,12 +58,15 @@ export default defineConfig({
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
   },
-  webServer: {
-    command: `"${python}" -m streamlit run "${app}" --server.headless true --server.address 127.0.0.1 --server.port ${port} --browser.gatherUsageStats false`,
-    cwd: repositoryRoot,
-    reuseExistingServer: !process.env.CI,
-    timeout: 60_000,
-    url: baseURL,
-  },
+  webServer:
+    selfManagedServer
+      ? undefined
+      : {
+          command: `"${python}" -m streamlit run "${app}" --server.headless true --server.address 127.0.0.1 --server.port ${port} --browser.gatherUsageStats false`,
+          cwd: repositoryRoot,
+          reuseExistingServer: !process.env.CI,
+          timeout: 60_000,
+          url: baseURL,
+        },
   workers: 1,
 })

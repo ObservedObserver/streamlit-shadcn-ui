@@ -1,14 +1,17 @@
 # V2 Wave 1 acceptance record
 
-Status: **Automated technical gates passed; maintainer decision pending**
+Status: **Accepted by maintainer; Wave 1 checkpoint complete**
 
 Date: 2026-07-30
+
+Maintainer decision recorded: 2026-07-31
 
 Scope: Select, Dropdown Menu, Checkbox, and Button in the opt-in
 `streamlit_shadcn_ui.v2` namespace.
 
-This is the required Wave 1 stop point. No Wave 2 component work is authorized
-until the maintainer accepts or rejects this POC.
+This was the required Wave 1 stop point. After reviewing the running POC, the
+maintainer accepted its visual and interaction result and authorized the
+remaining migration. Waves 2–6 proceeded under that decision.
 
 ## What was delivered
 
@@ -206,16 +209,25 @@ Firefox emits one known engine diagnostic for fixed anchored positioning:
 `This site appears to use a scroll-linked positioning effect`. Only that exact
 message is allowlisted; any other warning or error fails the suite.
 
-### Human accessibility sign-off still required
+### Assistive-technology and browser-chrome sign-off
 
-Automated ARIA, axe, focus, and keyboard gates are green. A manual
-VoiceOver/Safari and NVDA/Firefox smoke pass has not been performed in this
-workspace. NVDA requires a Windows test environment. Actual browser-chrome
-200% zoom should also receive one human spot check; the automated suite uses
-equivalent viewport/device-scale metrics because Playwright does not expose
-browser UI zoom consistently across all engines.
+Automated ARIA, axe, focus, and keyboard gates are green. On 2026-07-31 the
+final installed catalog also passed an interactive Safari 26.5 smoke with
+macOS VoiceOver enabled:
 
-These are explicit promotion sign-offs, not hidden automated claims.
+- Select was exposed as the named `Installed Select` combobox with value
+  `Alpha`;
+- opening it exposed the expanded state, list, and selected option;
+- closing it restored the collapsed value and removed transient focus guards.
+
+The same Safari session passed a real browser-chrome 200% zoom spot check.
+Select remained usable, its popup was visible without clipping, and Escape
+closed it. Safari was restored to Actual Size and VoiceOver was confirmed off
+after the check.
+
+NVDA/Firefox remains an explicit promotion sign-off because NVDA requires a
+Windows test environment unavailable in this workspace. It is not represented
+by an automated or inferred result.
 
 ## ShadowRoot and overlay evidence
 
@@ -333,14 +345,15 @@ Key evidence:
 
 ## Maintainer checkpoint
 
-Please evaluate the POC specifically for:
+Decision: **Accepted**
+
+The maintainer confirmed that the running POC had no outstanding issues and
+authorized the remaining migration. This closes the Wave 1 checkpoint.
+
+The accepted criteria were:
 
 1. whether the shadcn + Base UI visual and interaction result is acceptable;
 2. whether Select fully replaces the V1 double-iframe experience;
 3. whether the frozen Wave 1 Python/result shape is a sound foundation;
 4. whether the measured per-instance CSS cost is acceptable for the opt-in
    phase.
-
-Decision options are accept Wave 1 and authorize planning Wave 2, reject it, or
-request a bounded Wave 1 revision. Until that decision, implementation stops
-here.
