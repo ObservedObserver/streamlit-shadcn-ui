@@ -20,7 +20,7 @@ afterEach(() => {
   document.body.replaceChildren()
 })
 
-describe("Streamlit host theme mapping", () => {
+describe("shadcn color-scheme bridge", () => {
   it("detects light and dark semantic backgrounds", () => {
     const light = createShadowHost()
     light.host.style.setProperty(
@@ -65,24 +65,18 @@ describe("Streamlit host theme mapping", () => {
     expect(host.lang).toBe("ar")
   })
 
-  it("chooses an accessible foreground for light and dark primary colors", () => {
-    const lightPrimary = createShadowHost()
-    lightPrimary.host.style.setProperty("--st-primary-color", "#facc15")
-    applyHostTheme(lightPrimary.shadowRoot)
-    expect(
-      lightPrimary.host.style.getPropertyValue(
-        "--ssui-v2-primary-foreground"
-      )
-    ).toBe("#000000")
+  it("does not copy Streamlit brand or radius tokens into shadcn", () => {
+    const { host, shadowRoot } = createShadowHost()
+    host.style.setProperty("--st-primary-color", "#ff4b4b")
+    host.style.setProperty("--st-base-radius", "2rem")
 
-    const darkPrimary = createShadowHost()
-    darkPrimary.host.style.setProperty("--st-primary-color", "#1d4ed8")
-    applyHostTheme(darkPrimary.shadowRoot)
+    applyHostTheme(shadowRoot)
+
+    expect(host.style.getPropertyValue("--primary")).toBe("")
+    expect(host.style.getPropertyValue("--radius")).toBe("")
     expect(
-      darkPrimary.host.style.getPropertyValue(
-        "--ssui-v2-primary-foreground"
-      )
-    ).toBe("#ffffff")
+      host.style.getPropertyValue("--ssui-v2-primary-foreground")
+    ).toBe("")
   })
 
   it("restores the exact pre-mount host attributes and inline style", () => {
@@ -96,11 +90,6 @@ describe("Streamlit host theme mapping", () => {
       "--st-background-color",
       "rgb(10, 10, 10)"
     )
-    host.style.setProperty(
-      "--ssui-v2-primary-foreground",
-      "CanvasText",
-      "important"
-    )
 
     applyHostTheme(shadowRoot)
     applyHostTheme(shadowRoot)
@@ -112,12 +101,6 @@ describe("Streamlit host theme mapping", () => {
     expect(host.lang).toBe("zh")
     expect(host.style.getPropertyValue("color-scheme")).toBe("light")
     expect(host.style.getPropertyPriority("color-scheme")).toBe("important")
-    expect(
-      host.style.getPropertyValue("--ssui-v2-primary-foreground")
-    ).toBe("CanvasText")
-    expect(
-      host.style.getPropertyPriority("--ssui-v2-primary-foreground")
-    ).toBe("important")
   })
 
   it("makes cleanup idempotent", () => {

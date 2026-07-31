@@ -70,6 +70,12 @@ Component source is generated from a pinned, checked-in shadcn Base UI
 registry snapshot; Base UI remains the interaction and accessibility
 primitive. This is not a from-scratch replacement for shadcn.
 
+V2 also keeps shadcn's Nova/neutral visual system: its standard light/dark
+semantic colors and radius are not replaced by Streamlit's primary color,
+font, or radius. Streamlit supplies the surrounding color scheme, direction,
+and language; shadcn owns the component styling. See
+[ADR-009](docs/adr/009-v2-shadcn-owned-visual-theme.md).
+
 Select, Dropdown Menu, Popover, Hover Card, and Date Picker portal into an
 instance-owned overlay root in the same Streamlit ShadowRoot. The native
 Popover top layer escapes Streamlit clipping and stacking contexts without an
@@ -118,6 +124,7 @@ See the
 [Wave 5 modal decision](docs/adr/007-v2-alert-dialog-modal-effects.md),
 [V1/V2 compatibility matrix](docs/v2-compatibility-matrix.md),
 [cutover and rollback decision](docs/adr/008-v2-cutover-and-session-state.md),
+[shadcn visual-theme decision](docs/adr/009-v2-shadcn-owned-visual-theme.md),
 [Wave 6 release-readiness record](docs/v2-wave6-release-readiness.md),
 [full migration tracker](docs/v2-full-migration-tracker.md),
 [anchored-overlay decision](docs/adr/001-v2-anchored-overlay-host.md), and

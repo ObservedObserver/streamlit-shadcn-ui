@@ -66,8 +66,6 @@ type HostThemeSnapshot = {
   dataTheme: string | null
   dir: string | null
   lang: string | null
-  primaryForeground: string
-  primaryForegroundPriority: string
 }
 
 const hostThemeSnapshots = new WeakMap<HTMLElement, HostThemeSnapshot>()
@@ -91,27 +89,16 @@ function syncHostTheme(host: HTMLElement): void {
     styles.getPropertyValue("--st-background-color").trim() ||
     styles.backgroundColor
   const luminance = luminanceFromColor(background)
-  const primary =
-    styles.getPropertyValue("--st-primary-color").trim() || "#ff4b4b"
-  const primaryLuminance = luminanceFromColor(primary)
   const theme =
     luminance === null
       ? "light"
       : luminance < 0.18
         ? "dark"
         : "light"
-  const primaryForeground =
-    primaryLuminance !== null && primaryLuminance >= 0.179
-      ? "#000000"
-      : "#ffffff"
 
   host.dataset.ssuiV2Host = ""
   host.dataset.theme = theme
   host.style.colorScheme = theme
-  host.style.setProperty(
-    "--ssui-v2-primary-foreground",
-    primaryForeground
-  )
   host.dir = document.documentElement.dir || "ltr"
   host.lang = document.documentElement.lang || "en"
 }
@@ -129,12 +116,6 @@ export function applyHostTheme(
       dataTheme: host.getAttribute("data-theme"),
       dir: host.getAttribute("dir"),
       lang: host.getAttribute("lang"),
-      primaryForeground: host.style.getPropertyValue(
-        "--ssui-v2-primary-foreground"
-      ),
-      primaryForegroundPriority: host.style.getPropertyPriority(
-        "--ssui-v2-primary-foreground"
-      ),
     })
   }
 
@@ -180,15 +161,6 @@ export function clearHostTheme(
     )
   } else {
     host.style.removeProperty("color-scheme")
-  }
-  if (snapshot.primaryForeground) {
-    host.style.setProperty(
-      "--ssui-v2-primary-foreground",
-      snapshot.primaryForeground,
-      snapshot.primaryForegroundPriority
-    )
-  } else {
-    host.style.removeProperty("--ssui-v2-primary-foreground")
   }
   hostThemeSnapshots.delete(host)
 }

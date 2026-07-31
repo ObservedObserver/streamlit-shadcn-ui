@@ -27679,8 +27679,8 @@ function ST(e, t, n) {
 	n === null ? e.removeAttribute(t) : e.setAttribute(t, n);
 }
 function CT(e) {
-	let t = getComputedStyle(e), n = vT(t.getPropertyValue("--st-background-color").trim() || t.backgroundColor), r = vT(t.getPropertyValue("--st-primary-color").trim() || "#ff4b4b"), i = n === null ? "light" : n < .18 ? "dark" : "light", a = r !== null && r >= .179 ? "#000000" : "#ffffff";
-	e.dataset.ssuiV2Host = "", e.dataset.theme = i, e.style.colorScheme = i, e.style.setProperty("--ssui-v2-primary-foreground", a), e.dir = document.documentElement.dir || "ltr", e.lang = document.documentElement.lang || "en";
+	let t = getComputedStyle(e), n = vT(t.getPropertyValue("--st-background-color").trim() || t.backgroundColor), r = n === null ? "light" : n < .18 ? "dark" : "light";
+	e.dataset.ssuiV2Host = "", e.dataset.theme = r, e.style.colorScheme = r, e.dir = document.documentElement.dir || "ltr", e.lang = document.documentElement.lang || "en";
 }
 function wT(e) {
 	let t = yT(e);
@@ -27690,9 +27690,7 @@ function wT(e) {
 		dataSsuiV2Host: t.getAttribute("data-ssui-v2-host"),
 		dataTheme: t.getAttribute("data-theme"),
 		dir: t.getAttribute("dir"),
-		lang: t.getAttribute("lang"),
-		primaryForeground: t.style.getPropertyValue("--ssui-v2-primary-foreground"),
-		primaryForegroundPriority: t.style.getPropertyPriority("--ssui-v2-primary-foreground")
+		lang: t.getAttribute("lang")
 	}), CT(t);
 	let n = xT.get(t);
 	n !== void 0 && cancelAnimationFrame(n), xT.set(t, requestAnimationFrame(() => {
@@ -27703,7 +27701,7 @@ function TT(e) {
 	let t = yT(e), n = xT.get(t);
 	n !== void 0 && (cancelAnimationFrame(n), xT.delete(t));
 	let r = bT.get(t);
-	r && (ST(t, "data-ssui-v2-host", r.dataSsuiV2Host), ST(t, "data-theme", r.dataTheme), ST(t, "dir", r.dir), ST(t, "lang", r.lang), r.colorScheme ? t.style.setProperty("color-scheme", r.colorScheme, r.colorSchemePriority) : t.style.removeProperty("color-scheme"), r.primaryForeground ? t.style.setProperty("--ssui-v2-primary-foreground", r.primaryForeground, r.primaryForegroundPriority) : t.style.removeProperty("--ssui-v2-primary-foreground"), bT.delete(t));
+	r && (ST(t, "data-ssui-v2-host", r.dataSsuiV2Host), ST(t, "data-theme", r.dataTheme), ST(t, "dir", r.dir), ST(t, "lang", r.lang), r.colorScheme ? t.style.setProperty("color-scheme", r.colorScheme, r.colorSchemePriority) : t.style.removeProperty("color-scheme"), bT.delete(t));
 }
 function ET(e) {
 	return typeof e == "object" && !!e && !Array.isArray(e);

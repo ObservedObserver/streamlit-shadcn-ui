@@ -94,6 +94,28 @@ test("installed distribution renders the complete V2 catalog", async ({
   expect(state.kinds).toContain("alert-dialog")
   expect(state.kinds).toContain("date-picker")
   expect(state.kinds).toContain("select")
+
+  const selectTheme = await page
+    .getByRole("combobox", { name: "Installed Select" })
+    .evaluate((element) => {
+      const host = (element.getRootNode() as ShadowRoot).host as HTMLElement
+      const styles = getComputedStyle(host)
+      return {
+        fontFamily: styles.fontFamily,
+        primary: styles.getPropertyValue("--primary").trim(),
+        radius: styles.getPropertyValue("--radius").trim(),
+        streamlitPrimary: styles
+          .getPropertyValue("--st-primary-color")
+          .trim(),
+      }
+    })
+  expect(selectTheme).toMatchObject({
+    primary: "oklch(20.5% 0 0)",
+    radius: ".625rem",
+    streamlitPrimary: "#ff4b4b",
+  })
+  expect(selectTheme.fontFamily).toContain('"Geist Variable"')
+  expect(selectTheme.fontFamily).not.toContain("Source Sans")
   expect(diagnostics).toEqual({
     consoleMessages: [],
     pageErrors: [],

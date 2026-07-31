@@ -103,8 +103,12 @@ browser diagnostic.
 
 | Asset | Raw | Deterministic gzip | SHA-256 |
 |---|---:|---:|---|
-| `entry-CUDaOqbm.js` | 924,315 B | 229,028 B | `838fb0d993e8d3725237254d5b8b0fa616ed925bd9e9ddbbdd065540adcbf008` |
-| `style-D0zcpX2B.css` | 103,173 B | 14,572 B | `30819796ca62efb94c052d5911a30f857f8f26ee0492b6c0d1718902497b4ca3` |
+| `entry-N_BsFLGy.js` | 923,785 B | 228,913 B | `704f4529e5e99c9c2f7287dfed91f229c5016c54a1abe6b9aed53637fc456cba` |
+| `style--8f7rCKt.css` | 104,025 B | 14,745 B | `5be72532d7a2a9060bc6362be2b68aed853e3ca00189c8429f5689244d05359f` |
+
+These current hashes include ADR-009's standard shadcn visual-theme
+correction; the Wave 5 component and modal implementation is otherwise
+unchanged.
 
 The Wave 5 dependency audit found that the pinned shadcn CLI 4.16.0, Base UI
 1.6.0, and Streamlit 1.60.0 were already the current versions, so no runtime

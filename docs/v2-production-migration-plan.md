@@ -544,32 +544,39 @@ Chromium, Firefox, and WebKit.
 
 ### 7.7 Theme and sizing policy
 
-The host maps shadcn semantic tokens to the per-instance Streamlit variables:
+ADR-009 supersedes the original Streamlit-token mapping in this section.
+shadcn owns the V2 visual identity. The host contains the exact semantic
+tokens from the pinned shadcn CLI 4.16.0 Nova/neutral preset:
 
 ```css
 :host {
-  --background: var(--st-background-color);
-  --foreground: var(--st-text-color);
-  --primary: var(--st-primary-color);
-  --border: var(--st-border-color);
-  --radius: var(--st-base-radius);
-  --font-sans: var(--st-font);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --border: oklch(0.922 0 0);
+  --radius: 0.625rem;
 }
 ```
 
-Missing tokens are derived from semantic Streamlit colors with `color-mix()`
-and a tested static fallback. Theme mode is not inferred from a `.dark`
-ancestor outside the ShadowRoot.
+The complete light and dark token maps are fail-closed in the Shadow CSS
+contract test. Production CSS may not reference Streamlit color, radius, or
+font variables. The runtime reads the Streamlit background only to select the
+standard shadcn light or dark map, then synchronizes `color-scheme`, direction,
+and language. A custom Streamlit primary color, font, border, radius, or base
+font size does not restyle V2.
+
+The preferred font stack begins with host-resolved Geist and falls back to
+the platform sans-serif. The single-inline-stylesheet ShadowRoot contract does
+not duplicate a bundled webfont into every component instance.
 
 Sizing is explicit:
 
 - CSS `rem` continues to mean the browser document root; V2 does not rewrite
   the CSS unit.
-- typography tokens are mapped from `--st-base-font-size` where supplied;
 - spacing remains stable browser-root `rem` unless a component-specific design
   requirement proves otherwise;
-- light, dark, sidebar, and a custom theme with non-default primary, font,
-  border, radius, and base font size all receive visual snapshots.
+- light, dark, sidebar, and custom Streamlit hosts receive visual snapshots;
+  custom host branding changes only the light/dark selection.
 
 ### 7.8 Layout and layers
 
@@ -893,7 +900,7 @@ Each family must satisfy ADR-002 or a successor ADR.
 - AST portal rule;
 - CSS selector, custom-property, keyframe, and layer audit;
 - renderer lifecycle and idempotent cleanup;
-- theme token mapping;
+- exact shadcn theme contract and one-way color-scheme bridge;
 - Python defaults, callbacks, keys, forms, and session state;
 - generated-source provenance and offline regeneration;
 - shadcn -> Base UI import-graph assertion.
@@ -912,7 +919,8 @@ Playwright runs Chromium, Firefox, and WebKit against a real Streamlit app:
 - multiple instances and component-kind replacement;
 - main page, sidebar, columns, tabs, expanders, scroll containers, fragments,
   and multipage navigation;
-- light, dark, custom theme, RTL, mobile viewport, and 200% zoom;
+- standard shadcn light/dark inside default and custom Streamlit hosts, RTL,
+  mobile viewport, and 200% zoom;
 - no console error, warning, unhandled rejection, root warning, or leaked
   document mutation.
 

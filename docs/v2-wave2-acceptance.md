@@ -1,5 +1,9 @@
 # V2 Wave 2 acceptance record
 
+Theme note: ADR-009 supersedes this wave's original Streamlit-derived color
+mapping. The component and interaction acceptance remains valid; current V2
+uses the exact shadcn Nova/neutral visual tokens.
+
 Status: **Automated technical gates passed**
 
 Date: 2026-07-30
@@ -83,10 +87,11 @@ The browser suite proves:
 - Breadcrumb reaches Python, then survives an unrelated Streamlit slider
   rerun;
 - Progress updates from the rerun value;
-- explicit dark Streamlit tokens remain instance-local;
+- an explicit dark Streamlit host selects the standard shadcn dark tokens and
+  remains instance-local;
 - Link Button remains a native anchor with `noopener noreferrer`;
 - no page error, console warning, or console error;
-- axe reports no serious or critical issue in component roots or the
+- axe reports no serious or critical semantic issue in component roots or the
   Streamlit main-content scope.
 
 The required post-snapshot Wave 1 regression also passed: 21 cases passed and
@@ -94,10 +99,13 @@ the six Chromium-only performance, visual, and 100-rerender cases were skipped
 as designed on Firefox/WebKit. Select and Dropdown Menu therefore retain the
 accepted ADR-001 behavior after the registry and theme-token changes.
 
-The first accessibility pass correctly rejected the initial theme derivation:
-muted and destructive text measured just under the WCAG 4.5:1 threshold. The
-shared theme tokens now use a 72% opaque foreground mix and a darker light-mode
-destructive color; all three engines pass without an axe allowlist.
+The original implementation darkened muted and destructive colors to satisfy
+axe. ADR-009 reverses that visual override because the product default is now
+the exact upstream shadcn preset. That preset's muted-on-muted combination is
+approximately 4.34:1 and its generated destructive Badge is approximately
+4.0:1. Tests keep all non-color serious/critical checks enabled and record
+this standard-palette exception explicitly rather than hiding it in modified
+tokens.
 
 ## Bundle
 

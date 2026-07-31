@@ -324,24 +324,33 @@ test("ADR-001 placements, scrolling, and theme tokens remain instance-local", as
 
   const themeCases = [
     {
-      background: "#ffffff",
+      background: "oklch(100% 0 0)",
       name: "Light theme Select",
-      primary: "#2563eb",
-      radius: "0.5rem",
+      primary: "oklch(20.5% 0 0)",
+      radius: ".625rem",
+      streamlitBackground: "#ffffff",
+      streamlitPrimary: "#2563eb",
+      streamlitRadius: "0.5rem",
       theme: "light",
     },
     {
-      background: "#10141c",
+      background: "oklch(14.5% 0 0)",
       name: "Dark theme Select",
-      primary: "#7dd3fc",
-      radius: "0.75rem",
+      primary: "oklch(92.2% 0 0)",
+      radius: ".625rem",
+      streamlitBackground: "#10141c",
+      streamlitPrimary: "#7dd3fc",
+      streamlitRadius: "0.75rem",
       theme: "dark",
     },
     {
-      background: "#fffaf0",
+      background: "oklch(100% 0 0)",
       name: "Custom theme Select",
-      primary: "#7c3aed",
-      radius: "1rem",
+      primary: "oklch(20.5% 0 0)",
+      radius: ".625rem",
+      streamlitBackground: "#fffaf0",
+      streamlitPrimary: "#7c3aed",
+      streamlitRadius: "1rem",
       theme: "light",
     },
   ] as const
@@ -355,11 +364,18 @@ test("ADR-001 placements, scrolling, and theme tokens remain instance-local", as
       const host = root.host as HTMLElement
       const styles = getComputedStyle(host)
       return {
-        background: styles
+        background: styles.getPropertyValue("--background").trim(),
+        primary: styles.getPropertyValue("--primary").trim(),
+        radius: styles.getPropertyValue("--radius").trim(),
+        streamlitBackground: styles
           .getPropertyValue("--st-background-color")
           .trim(),
-        primary: styles.getPropertyValue("--st-primary-color").trim(),
-        radius: styles.getPropertyValue("--st-base-radius").trim(),
+        streamlitPrimary: styles
+          .getPropertyValue("--st-primary-color")
+          .trim(),
+        streamlitRadius: styles
+          .getPropertyValue("--st-base-radius")
+          .trim(),
         theme: host.dataset.theme,
       }
     })
@@ -367,6 +383,9 @@ test("ADR-001 placements, scrolling, and theme tokens remain instance-local", as
       background: expected.background,
       primary: expected.primary,
       radius: expected.radius,
+      streamlitBackground: expected.streamlitBackground,
+      streamlitPrimary: expected.streamlitPrimary,
+      streamlitRadius: expected.streamlitRadius,
       theme: expected.theme,
     })
 
@@ -609,8 +628,10 @@ test("Select keyboard, focus restoration, and ShadowRoot accessibility pass", as
     .getByTestId("stMainBlockContainer")
     .getByRole("combobox", { name: "Fruit" })
   await fruit.click()
+  await expect(page.getByRole("option", { name: "Apple" })).toBeFocused()
   await expect(page.getByRole("option", { name: "Banana" })).toBeVisible()
   await page.keyboard.press("ArrowDown")
+  await expect(page.getByRole("option", { name: "Banana" })).toBeFocused()
   await page.keyboard.press("Enter")
   await expect(fruit).toContainText("Banana")
 

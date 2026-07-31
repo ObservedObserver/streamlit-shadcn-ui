@@ -6,6 +6,10 @@ Date: 2026-07-30
 
 Maintainer decision recorded: 2026-07-31
 
+Visual-theme correction recorded: 2026-07-31. ADR-009 supersedes the original
+Streamlit-token mapping while preserving this record's component, overlay,
+state, and interaction acceptance.
+
 Scope: Select, Dropdown Menu, Checkbox, and Button in the opt-in
 `streamlit_shadcn_ui.v2` namespace.
 
@@ -191,19 +195,24 @@ Covered placements and interactions include:
   focus return, and open-popup reruns;
 - light, dark, custom, sidebar, RTL, 200% text scaling, and
   200%-browser-zoom-equivalent viewport metrics;
-- primary-button foreground derived from the Streamlit primary color's
-  relative luminance, with exact host-style restoration on cleanup;
+- exact shadcn Nova/neutral light and dark tokens, independent of Streamlit
+  primary color and radius, with exact host-style restoration on cleanup;
 - conditional unmount, fragments, multipage navigation, bounded diagnostics,
   and 100 rerenders;
 - zero iframe, zero popup in `document.body`, same-ShadowRoot portal
   ownership, and no body style, `inert`, or `aria-hidden` mutation.
 
-Automated axe checks found no serious or critical issue in every component
-ShadowRoot or the Streamlit main-content scope. Color contrast is covered by
-theme-token assertions and six Chromium visual snapshots:
+Automated axe checks found no serious or critical issue in every Wave 1
+component ShadowRoot or the Streamlit main-content scope. The exact standard
+palette is covered by a fail-closed token contract and six Chromium visual
+snapshots:
 
 - Select trigger and open popup;
 - light, dark, and custom themes.
+
+The Wave 2 display catalog exposes two upstream neutral-palette combinations
+below axe's AA threshold; ADR-009 records that explicit standard-style
+tradeoff rather than silently changing shadcn's colors.
 
 Firefox emits one known engine diagnostic for fixed anchored positioning:
 `This site appears to use a scroll-linked positioning effect`. Only that exact

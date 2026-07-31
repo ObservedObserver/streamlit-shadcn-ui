@@ -1,8 +1,8 @@
 # V2 Wave 6 release readiness
 
-Status: **Technical migration complete; Windows and release-feedback gates open**
+Status: **Technical migration complete; visual re-validation, Windows, and release-feedback gates open**
 
-Date: 2026-07-30
+Date: 2026-07-31
 
 Wave 6 closes the repository-side migration of the stable component catalog.
 It does not claim that local automation is a substitute for publishing an
@@ -25,7 +25,11 @@ opt-in release and observing real applications.
 
 The detailed contract is the
 [compatibility matrix](./v2-compatibility-matrix.md), and the decision is
-[ADR-008](./adr/008-v2-cutover-and-session-state.md).
+[ADR-008](./adr/008-v2-cutover-and-session-state.md). The corrected visual
+ownership boundary is
+[ADR-009](./adr/009-v2-shadcn-owned-visual-theme.md): V2 uses the standard
+shadcn Nova/neutral palette and radius, while Streamlit supplies only the
+light/dark environment, direction, and language.
 
 ## Release inventory
 
@@ -102,10 +106,10 @@ renderers.
 
 | Renderer | Initial samples | Median ready | 100 rerenders | Per rerender |
 |---|---:|---:|---:|---:|
-| Archived direct Base UI POC | 937.47 / 308.29 / 314.69 ms | 314.69 ms | 1,834.22 ms | 18.34 ms |
-| Generated shadcn + Base UI | 928.37 / 316.43 / 328.60 ms | 328.60 ms | 1,809.63 ms | 18.10 ms |
+| Archived direct Base UI POC | 925.91 / 298.81 / 297.19 ms | 298.81 ms | 1,317.93 ms | 13.18 ms |
+| Generated shadcn + Base UI | 911.49 / 305.97 / 302.64 ms | 305.97 ms | 1,294.10 ms | 12.94 ms |
 
-The shadcn median-ready ratio is 1.044 and its per-rerender ratio is 0.987.
+The shadcn median-ready ratio is 1.024 and its per-rerender ratio is 0.982.
 This local benchmark does not assign meaning to sub-millisecond noise; it
 proves that the owned shadcn composition boundary introduces no material
 regression relative to the direct Base UI diagnostic. The direct fixture and
@@ -118,15 +122,15 @@ the requested benchmark instances:
 
 | Requested instances | Total hosts | Ready time | Style bytes per host | Component asset requests |
 |---:|---:|---:|---:|---:|
-| 1 | 22 | 1,573 ms | 110,197 | 1 |
-| 10 | 31 | 555 ms | 110,197 | 1 |
-| 50 | 71 | 975 ms | 110,197 | 1 |
-| 100 | 121 | 1,675 ms | 110,197 | 1 |
+| 1 | 22 | 1,030 ms | 111,120 | 1 |
+| 10 | 31 | 518 ms | 111,120 | 1 |
+| 50 | 71 | 907 ms | 111,120 | 1 |
+| 100 | 121 | 1,610 ms | 111,120 | 1 |
 
 Every host had exactly one inline ShadowRoot stylesheet. Runtime component
 stylesheet links in ShadowRoots and `document.head` remained zero.
 
-The 100-rerun Chromium fixture completed in 1,845 ms, or 18.45 ms per rerun.
+The 100-rerun Chromium fixture completed in 1,844 ms, or 18.44 ms per rerun.
 Component host, ShadowRoot node, stylesheet, overlay-child, and open-top-layer
 counts stayed stable.
 
@@ -138,8 +142,8 @@ checked-in dist is clean after the build.
 
 | Asset | Raw | Deterministic gzip | SHA-256 |
 |---|---:|---:|---|
-| `entry-CUDaOqbm.js` | 924,315 B | 229,028 B | `838fb0d993e8d3725237254d5b8b0fa616ed925bd9e9ddbbdd065540adcbf008` |
-| `style-D0zcpX2B.css` | 103,173 B | 14,572 B | `30819796ca62efb94c052d5911a30f857f8f26ee0492b6c0d1718902497b4ca3` |
+| `entry-N_BsFLGy.js` | 923,785 B | 228,913 B | `704f4529e5e99c9c2f7287dfed91f229c5016c54a1abe6b9aed53637fc456cba` |
+| `style--8f7rCKt.css` | 104,025 B | 14,745 B | `5be72532d7a2a9060bc6362be2b68aed853e3ca00189c8429f5689244d05359f` |
 
 Both archives contain:
 
@@ -184,6 +188,12 @@ Safari was restored to Actual Size and VoiceOver was confirmed off afterward.
 The Windows-only NVDA/Firefox check has not run in this workspace and remains
 an explicit promotion gate.
 
+The exact standard shadcn neutral palette includes muted-on-muted and
+destructive-Badge combinations that axe measures at approximately 4.34:1 and
+4.0:1. ADR-009 records this upstream visual baseline. Semantic, focus,
+keyboard, ARIA, and other serious/critical checks remain fail-closed; the
+standard palette is not silently darkened to make the report green.
+
 ## Reproduce the final repository gates
 
 Use the frozen Node 22.20.0 and pnpm 11.18.0 toolchain:
@@ -209,10 +219,11 @@ release credentials, neither of which is inferred by this migration task.
 The opt-in promotion still requires the NVDA/Firefox smoke on Windows. Default
 cutover additionally remains blocked until:
 
-1. the opt-in artifact completes a documented real-user feedback window;
-2. Checkbox group and Card/`element` dispositions are accepted or adapted;
-3. the exact proposed breaking artifact repeats these gates;
-4. the maintainer explicitly approves the root switch and global floors.
+1. the maintainer completes interactive visual re-validation of ADR-009;
+2. the opt-in artifact completes a documented real-user feedback window;
+3. Checkbox group and Card/`element` dispositions are accepted or adapted;
+4. the exact proposed breaking artifact repeats these gates;
+5. the maintainer explicitly approves the root switch and global floors.
 
 V1 must remain available through `streamlit_shadcn_ui.v1` for at least two
 published releases after any future default cutover.
