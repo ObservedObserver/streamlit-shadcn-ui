@@ -58,12 +58,12 @@
   --muted: var(--st-secondary-background-color, #f0f2f6);
   --muted-foreground: color-mix(
     in srgb,
-    var(--st-text-color, #31333f) 66%,
-    transparent
+    var(--st-text-color, #31333f) 72%,
+    var(--st-background-color, #ffffff)
   );
   --accent: var(--st-secondary-background-color, #f0f2f6);
   --accent-foreground: var(--st-text-color, #31333f);
-  --destructive: #dc2626;
+  --destructive: #b91c1c;
   --border: var(
     --st-border-color,
     color-mix(

@@ -1,5 +1,41 @@
 """Opt-in Streamlit Components V2 widgets backed by shadcn and Base UI."""
 
-from .widgets import button, checkbox, dropdown_menu, select
+from .widgets import (
+    alert,
+    aspect_ratio,
+    avatar,
+    badge,
+    badges,
+    breadcrumb,
+    button,
+    card,
+    checkbox,
+    dropdown_menu,
+    link_button,
+    metric_card,
+    progress,
+    select,
+    separator,
+    skeleton,
+    table,
+)
 
-__all__ = ["button", "checkbox", "dropdown_menu", "select"]
+__all__ = [
+    "alert",
+    "aspect_ratio",
+    "avatar",
+    "badge",
+    "badges",
+    "breadcrumb",
+    "button",
+    "card",
+    "checkbox",
+    "dropdown_menu",
+    "link_button",
+    "metric_card",
+    "progress",
+    "select",
+    "separator",
+    "skeleton",
+    "table",
+]

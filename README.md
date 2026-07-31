@@ -24,16 +24,23 @@ ui.alert_dialog(show=trigger_btn, title="Alert Dialog", description="This is an 
 
 ```
 
-## Components V2 POC
+## Components V2 migration
 
-Wave 1 is an opt-in production POC in a separate namespace. Install its
-Streamlit floor explicitly:
+The accepted V2 architecture is available through an opt-in namespace. Install
+its Streamlit floor explicitly:
 
 ```sh
 pip install "streamlit-shadcn-ui[components-v2]"
 ```
 
-Then use one of the four frozen Wave 1 APIs:
+Select, Dropdown Menu, Checkbox, and Button form the accepted Wave 1. Wave 2
+adds the low-risk display catalog:
+
+`alert`, `avatar`, `badge`, `badges`, `breadcrumb`, `card`, `metric_card`,
+`aspect_ratio`, `progress`, `separator`, `skeleton`, `table`, and
+`link_button`.
+
+For example:
 
 ```py
 import streamlit_shadcn_ui.v2 as ui
@@ -45,10 +52,9 @@ fruit = ui.select(
 )
 ```
 
-The POC contains `select`, `dropdown_menu`, `checkbox`, and `button`. Its
-component source is generated from a pinned, checked-in shadcn Base UI
+Component source is generated from a pinned, checked-in shadcn Base UI
 registry snapshot; Base UI remains the interaction and accessibility
-primitive. It is not a from-scratch replacement for shadcn.
+primitive. This is not a from-scratch replacement for shadcn.
 
 Select and Dropdown Menu portal into an instance-owned overlay root in the
 same Streamlit ShadowRoot. The native Popover top layer escapes Streamlit
@@ -58,17 +64,20 @@ popup in `document.body`.
 V2 requires Python 3.10 or newer and Streamlit 1.60 or newer. V1 keeps its
 existing package-wide compatibility floor.
 
-Run the full acceptance page with:
+Run the Wave 1 or Wave 2 acceptance page with:
 
 ```sh
 ./scripts/poc_v2.sh
+./scripts/wave2_v2.sh
 ```
 
 See the
 [Wave 1 acceptance record](docs/v2-wave1-acceptance.md),
+[Wave 2 acceptance record](docs/v2-wave2-acceptance.md),
+[full migration tracker](docs/v2-full-migration-tracker.md),
 [anchored-overlay decision](docs/adr/001-v2-anchored-overlay-host.md), and
-[migration plan](docs/v2-production-migration-plan.md). Broad migration is
-paused until the maintainer accepts this POC.
+[migration plan](docs/v2-production-migration-plan.md). Wave 1 has been
+accepted; Waves 3–6 remain opt-in migration work and V1 remains the rollback.
 
 ## Components
 
@@ -147,6 +156,7 @@ There are several scripts in `scripts` folder to help you develop this project.
 ./scripts/frontend.sh # frontend dev server
 ./scripts/frontend_v2.sh # V2 frontend watch build
 ./scripts/poc_v2.sh # build and run the independent V2 POC
+./scripts/wave2_v2.sh # build and run the Wave 2 acceptance catalog
 ./scripts/dev.sh # streamlit dev server
 ```
 

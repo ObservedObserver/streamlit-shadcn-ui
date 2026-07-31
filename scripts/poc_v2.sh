@@ -13,7 +13,7 @@ cleanup() {
 trap cleanup EXIT
 
 if [[ "$(node --version)" != "v22.20.0" ]]; then
-  echo "Wave 1 requires Node v22.20.0 (see frontend_v2/.node-version)." >&2
+  echo "Components V2 requires Node v22.20.0 (see frontend_v2/.node-version)." >&2
   exit 1
 fi
 

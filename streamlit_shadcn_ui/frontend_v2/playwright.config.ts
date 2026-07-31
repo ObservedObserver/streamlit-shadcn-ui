@@ -13,6 +13,8 @@ const baseURL =
   process.env.SSUI_V2_E2E_BASE_URL ??
   `http://127.0.0.1:${port}`
 const python = process.env.SSUI_V2_PYTHON ?? "python3"
+const app = process.env.SSUI_V2_E2E_APP ?? "V2_POC.py"
+const suite = process.env.SSUI_V2_E2E_SUITE
 
 export default defineConfig({
   expect: {
@@ -24,7 +26,7 @@ export default defineConfig({
     repositoryRoot,
     "output",
     "playwright",
-    "wave1-automated"
+    `${suite ?? "wave1"}-automated`
   ),
   projects: [
     {
@@ -43,6 +45,9 @@ export default defineConfig({
   reporter: [["list"]],
   retries: process.env.CI ? 1 : 0,
   testDir: "./e2e",
+  testMatch: suite
+    ? `${suite}.spec.ts`
+    : ["wave1.spec.ts", "performance.spec.ts"],
   timeout: 60_000,
   use: {
     baseURL,
@@ -50,7 +55,7 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: `"${python}" -m streamlit run V2_POC.py --server.headless true --server.address 127.0.0.1 --server.port ${port} --browser.gatherUsageStats false`,
+    command: `"${python}" -m streamlit run "${app}" --server.headless true --server.address 127.0.0.1 --server.port ${port} --browser.gatherUsageStats false`,
     cwd: repositoryRoot,
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,

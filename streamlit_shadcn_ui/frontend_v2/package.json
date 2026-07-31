@@ -11,12 +11,15 @@
   "scripts": {
     "build": "pnpm run check:generated && tsc --noEmit && vite build && node scripts/verify-dist.mjs",
     "build:watch": "vite build --watch --mode development",
+    "capture:registry": "node scripts/capture-registry.mjs",
     "check": "pnpm run test && pnpm run build",
     "check:generated": "node scripts/generate-from-vendored-registry.mjs --check && node scripts/verify-generated-source.mjs && node scripts/verify-import-graph.mjs",
     "generate": "node scripts/generate-from-vendored-registry.mjs --write",
     "test": "pnpm run test:unit && pnpm run test:css",
     "test:css": "node scripts/test-shadow-css.mjs",
     "test:e2e": "playwright test",
+    "test:e2e:wave1": "SSUI_V2_E2E_APP=V2_POC.py SSUI_V2_E2E_SUITE=wave1 playwright test",
+    "test:e2e:wave2": "SSUI_V2_E2E_APP=V2_WAVE2.py SSUI_V2_E2E_SUITE=wave2 playwright test",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest"
   },

@@ -1,5 +1,13 @@
 import { createHash } from "node:crypto"
-import { mkdtemp, readFile, rm, writeFile, mkdir } from "node:fs/promises"
+import {
+  mkdir,
+  mkdtemp,
+  readFile,
+  readdir,
+  rm,
+  unlink,
+  writeFile,
+} from "node:fs/promises"
 import os from "node:os"
 import path from "node:path"
 import process from "node:process"
@@ -29,8 +37,6 @@ const checkedSourceDir = path.join(
   "components",
   "ui"
 )
-const items = ["select", "dropdown-menu", "checkbox", "button"]
-
 function sha256(content) {
   return createHash("sha256").update(content).digest("hex")
 }
@@ -241,7 +247,17 @@ async function loadManifest() {
 
 async function generateInto(outputDir) {
   const manifest = await loadManifest()
+  const items = Object.keys(manifest.registry).sort()
   await mkdir(outputDir, { recursive: true })
+
+  for (const file of await readdir(outputDir)) {
+    if (
+      file.endsWith(".tsx") &&
+      !items.includes(file.slice(0, -".tsx".length))
+    ) {
+      await unlink(path.join(outputDir, file))
+    }
+  }
 
   for (const item of items) {
     const registryPath = path.join(registryDir, `${item}.json`)
@@ -269,6 +285,8 @@ async function generateInto(outputDir) {
 }
 
 async function checkGenerated() {
+  const manifest = await loadManifest()
+  const items = Object.keys(manifest.registry).sort()
   const temporaryRoot = await mkdtemp(
     path.join(os.tmpdir(), "ssui-v2-generated-")
   )

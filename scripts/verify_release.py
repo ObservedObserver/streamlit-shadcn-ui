@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed release checks for the Wave 1 source tree and archives."""
+"""Fail-closed release checks for the Components V2 tree and archives."""
 
 from __future__ import annotations
 
@@ -114,7 +114,8 @@ def _verify_v2_files(files: Mapping[str, bytes]) -> Tuple[str, str]:
     unexpected = sorted(set(files) - {entry, stylesheet})
     if unexpected:
         raise AssertionError(
-            "Wave 1 V2 dist contains unexpected release files: %r" % unexpected
+            "Components V2 dist contains unexpected release files: %r"
+            % unexpected
         )
     if b"sourceMappingURL" in files[entry]:
         raise AssertionError("Production V2 entry unexpectedly references a source map")

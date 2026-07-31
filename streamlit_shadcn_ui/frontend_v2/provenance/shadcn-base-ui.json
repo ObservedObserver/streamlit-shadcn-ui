@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "capturedAt": "2026-07-30",
+  "capturedAt": "2026-07-31T05:45:04.313Z",
   "generator": {
     "name": "shadcn",
     "version": "4.16.0",
@@ -13,7 +13,7 @@
   },
   "upstream": {
     "repository": "https://github.com/shadcn-ui/ui",
-    "commit": "b28e5b4d9e90b72a222fff7eb70043a52856012d"
+    "commit": "705ce5961080264830471ddd885c01b907706068"
   },
   "versions": {
     "@base-ui/react": "1.6.0",
@@ -24,21 +24,76 @@
     "shadowCssSchema": 1
   },
   "registry": {
-    "select": {
-      "url": "https://ui.shadcn.com/r/styles/base-nova/select.json",
-      "sha256": "a3f9e9486195651b70fa500361c9d61d839a3fe4d650ffdda2f7e2ce1c03b780"
+    "alert": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/alert.json",
+      "sha256": "f48151ef5f0a8a77d503d382bcf833c25b4d3b1a8e956dd7a0e30af8048b60de",
+      "primitive": "react"
     },
-    "dropdown-menu": {
-      "url": "https://ui.shadcn.com/r/styles/base-nova/dropdown-menu.json",
-      "sha256": "1904bd0ff0fe2e5bbfacf83b5b31d580e88eca799b8445cadae779cbabec1edd"
+    "aspect-ratio": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/aspect-ratio.json",
+      "sha256": "1a11ce16a93dca33c50f166c2ae0194e4f164c21cdea2c76e0d6ecd5abd93a6f",
+      "primitive": "react"
     },
-    "checkbox": {
-      "url": "https://ui.shadcn.com/r/styles/base-nova/checkbox.json",
-      "sha256": "73da4a5c5bdb610bac7a0b5d9f3b1d260956da687c2d99959e95519f43fc621b"
+    "avatar": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/avatar.json",
+      "sha256": "879a6109286241f81739a7b52254ae6c2d7fb7cfdd66ee435837196d539a92f2",
+      "primitive": "base-ui"
+    },
+    "badge": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/badge.json",
+      "sha256": "a8ceb87a9ea72b744909215319a48d9a69983a76dca94831bf66bab21d8d85fb",
+      "primitive": "base-ui"
+    },
+    "breadcrumb": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/breadcrumb.json",
+      "sha256": "72e58fe971e46db1d33104c6a7773509d8b04f09a1206ddfd8028a968d5edd77",
+      "primitive": "base-ui"
     },
     "button": {
       "url": "https://ui.shadcn.com/r/styles/base-nova/button.json",
-      "sha256": "35f59d5e2aab0723f09896bea748496ee4766bc8b4c642ae49bd2eb6cc7bc5eb"
+      "sha256": "434eb70c9158f687770752468a88fd9e164417620ab7047da10d06fe923a04bc",
+      "primitive": "base-ui"
+    },
+    "card": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/card.json",
+      "sha256": "62f890e9a241abb694eb2cdbfe1c2560298352c8a13618de7d973661ebf98a04",
+      "primitive": "react"
+    },
+    "checkbox": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/checkbox.json",
+      "sha256": "88da4986fb88c20601369ce3bbf138c8baf7834bc760893bd4ed553e0c50187b",
+      "primitive": "base-ui"
+    },
+    "dropdown-menu": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/dropdown-menu.json",
+      "sha256": "0a7909c9c8ce8dcbcfb4b355071daad0aae56cf31dfde808253309346e5fdd64",
+      "primitive": "base-ui"
+    },
+    "progress": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/progress.json",
+      "sha256": "dc9dffcae98fb6f012095e8eb2f74a16d79b62e6a3276d5ef02df4ebbebbe9cc",
+      "primitive": "base-ui"
+    },
+    "select": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/select.json",
+      "sha256": "bac6f97b9dd3ad2c2f1fb587099fc4dbfc06d66b8d5b3f535486225550843997",
+      "primitive": "base-ui"
+    },
+    "separator": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/separator.json",
+      "sha256": "11022cc2607efcaf8394b5b927c1926475624dc0db920557d51ab06e96343032",
+      "primitive": "base-ui"
+    },
+    "skeleton": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/skeleton.json",
+      "sha256": "f049b762673185353721b8904115941e80acd09cd38721be0d171ff1b75c9c48",
+      "primitive": "react"
+    },
+    "table": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/table.json",
+      "sha256": "8d3a3822ecf010dc37638f2c438f18804b461b1b8168252024987ce8a55cab3b",
+      "primitive": "react"
     }
-  }
+  },
+  "snapshotRevision": 2
 }

@@ -22,6 +22,12 @@ button_module = importlib.import_module(
 menu_module = importlib.import_module(
     "streamlit_shadcn_ui.v2.widgets.dropdown_menu"
 )
+common_module = importlib.import_module(
+    "streamlit_shadcn_ui.v2.widgets._common"
+)
+breadcrumb_module = importlib.import_module(
+    "streamlit_shadcn_ui.v2.widgets.breadcrumb"
+)
 
 
 class _FakeStreamlit:
@@ -40,12 +46,30 @@ class PublicApiContractTests(unittest.TestCase):
         self.runtime_patch.start()
         self.addCleanup(self.runtime_patch.stop)
 
-    def test_wave1_namespace_exports_only_the_four_approved_widgets(
+    def test_namespace_exports_wave1_and_wave2_widgets(
         self,
     ) -> None:
         self.assertEqual(
             public_api.__all__,
-            ["button", "checkbox", "dropdown_menu", "select"],
+            [
+                "alert",
+                "aspect_ratio",
+                "avatar",
+                "badge",
+                "badges",
+                "breadcrumb",
+                "button",
+                "card",
+                "checkbox",
+                "dropdown_menu",
+                "link_button",
+                "metric_card",
+                "progress",
+                "select",
+                "separator",
+                "skeleton",
+                "table",
+            ],
         )
 
     def test_public_signatures_are_frozen_for_the_opt_in_poc(self) -> None:
@@ -237,6 +261,164 @@ class PublicApiContractTests(unittest.TestCase):
                 "Fruit",
                 ["Apple", "Apple"],
                 key="duplicate",
+            )
+
+    def test_wave2_stateless_widgets_emit_metadata_envelopes(self) -> None:
+        captured = []
+
+        def mount(**kwargs):
+            captured.append(kwargs)
+
+        with patch.object(common_module, "mount", side_effect=mount):
+            public_api.alert("Heads up", key="alert")
+            public_api.aspect_ratio(
+                "https://example.com/image.png",
+                "Example",
+                key="ratio",
+            )
+            public_api.avatar(
+                fallback="OO",
+                key="avatar",
+            )
+            public_api.badges(
+                [("Stable", "default"), ("Risk", "destructive")],
+                key="badges",
+            )
+            public_api.card(
+                "Card",
+                "Content",
+                "Description",
+                key="card",
+            )
+            public_api.metric_card(
+                "Revenue",
+                "$42",
+                "+5%",
+                key="metric",
+            )
+            public_api.link_button(
+                "Docs",
+                "https://example.com/docs",
+                key="link",
+            )
+            public_api.progress(
+                42,
+                key="progress",
+                label="Upload",
+                show_value=True,
+            )
+            public_api.separator(key="separator")
+            public_api.skeleton(
+                key="skeleton",
+                width_px="10rem",
+                height_px=24,
+            )
+            public_api.table(
+                [{"name": "Ada", "score": 10}],
+                key="table",
+                caption="Scores",
+            )
+
+        expected_kinds = [
+            "alert",
+            "aspect_ratio",
+            "avatar",
+            "badge",
+            "card",
+            "metric_card",
+            "link_button",
+            "progress",
+            "separator",
+            "skeleton",
+            "table",
+        ]
+        self.assertEqual(
+            [call["data"]["kind"] for call in captured],
+            expected_kinds,
+        )
+        for call, kind in zip(captured, expected_kinds):
+            self.assertEqual(
+                call["default"],
+                {"meta": {"protocolVersion": 1, "kind": kind}},
+            )
+
+    def test_breadcrumb_returns_only_a_valid_transient_action(self) -> None:
+        items = [
+            {"text": "Home", "href": "/"},
+            {"text": "Current", "isCurrentPage": True},
+        ]
+        with patch.object(
+            breadcrumb_module,
+            "fail_if_trigger_in_form",
+        ), patch.object(
+            breadcrumb_module,
+            "register_kind",
+        ), patch.object(
+            breadcrumb_module,
+            "mount",
+            return_value={
+                "action": {"text": "Home", "href": "/", "index": 0}
+            },
+        ):
+            self.assertEqual(
+                public_api.breadcrumb(items, key="crumbs"),
+                {"text": "Home", "href": "/", "index": 0},
+            )
+
+        with patch.object(
+            breadcrumb_module,
+            "fail_if_trigger_in_form",
+        ), patch.object(
+            breadcrumb_module,
+            "register_kind",
+        ), patch.object(
+            breadcrumb_module,
+            "mount",
+            return_value={
+                "action": {
+                    "text": "forged",
+                    "href": "/",
+                    "index": 0,
+                }
+            },
+        ):
+            self.assertIsNone(
+                public_api.breadcrumb(items, key="other-crumbs")
+            )
+
+    def test_wave2_boundaries_fail_closed(self) -> None:
+        with self.assertRaisesRegex(ValueError, "http"):
+            public_api.link_button(
+                "Unsafe",
+                "javascript:alert(1)",
+                key="unsafe-link",
+            )
+        with self.assertRaisesRegex(ValueError, "image data URL"):
+            public_api.avatar(
+                "javascript:alert(1)",
+                key="unsafe-avatar",
+            )
+        with self.assertRaisesRegex(ValueError, "image data URL"):
+            public_api.aspect_ratio(
+                "file:///tmp/private.png",
+                "Unsafe image",
+                key="unsafe-aspect-ratio",
+            )
+        with self.assertRaisesRegex(ValueError, "0 to 100"):
+            public_api.progress(101, key="invalid-progress")
+        with self.assertRaisesRegex(ValueError, "units"):
+            public_api.skeleton(
+                key="invalid-skeleton",
+                width_px="calc(100% - 1rem)",
+            )
+        with self.assertRaisesRegex(ValueError, "unique"):
+            public_api.table(
+                [{"name": "Ada"}],
+                [
+                    {"key": "name"},
+                    {"key": "name"},
+                ],
+                key="duplicate-columns",
             )
 
 

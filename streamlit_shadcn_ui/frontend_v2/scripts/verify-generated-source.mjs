@@ -9,11 +9,23 @@ const projectRoot = path.resolve(
   ".."
 )
 const uiDir = path.join(projectRoot, "src", "components", "ui")
+const manifest = JSON.parse(
+  await readFile(
+    path.join(
+      projectRoot,
+      "provenance",
+      "shadcn-base-ui.json"
+    ),
+    "utf8"
+  )
+)
 const files = (await readdir(uiDir))
   .filter((file) => file.endsWith(".tsx"))
   .sort()
 
-const expected = ["button.tsx", "checkbox.tsx", "dropdown-menu.tsx", "select.tsx"]
+const expected = Object.keys(manifest.registry)
+  .map((item) => `${item}.tsx`)
+  .sort()
 if (files.join(",") !== expected.join(",")) {
   throw new Error(
     `Unexpected shadcn source set: ${files.join(", ")}; expected ${expected.join(
@@ -27,8 +39,16 @@ for (const file of files) {
   if (source.includes("streamlit") || source.includes("@radix-ui")) {
     throw new Error(`${file} crosses the generated-source boundary.`)
   }
-  if (!source.includes("@base-ui/react")) {
+  const item = file.slice(0, -".tsx".length)
+  const primitive = manifest.registry[item]?.primitive
+  if (!["base-ui", "react"].includes(primitive)) {
+    throw new Error(`${file} has no declared primitive provenance.`)
+  }
+  if (primitive === "base-ui" && !source.includes("@base-ui/react")) {
     throw new Error(`${file} does not import Base UI.`)
+  }
+  if (primitive === "react" && source.includes("@base-ui/react")) {
+    throw new Error(`${file} unexpectedly imports Base UI.`)
   }
 
   const project = new Project({ useInMemoryFileSystem: true })

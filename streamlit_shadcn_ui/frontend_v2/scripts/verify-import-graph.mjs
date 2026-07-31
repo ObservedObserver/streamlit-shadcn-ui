@@ -13,10 +13,21 @@ const adaptersDir = path.join(
   "streamlit"
 )
 const expectedEdges = {
+  "alert.tsx": '@/components/ui/alert',
+  "aspect-ratio.tsx": '@/components/ui/aspect-ratio',
+  "avatar.tsx": '@/components/ui/avatar',
+  "badge.tsx": '@/components/ui/badge',
+  "breadcrumb.tsx": '@/components/ui/breadcrumb',
   "button.tsx": '@/components/ui/button',
+  "card.tsx": '@/components/ui/card',
   "checkbox.tsx": '@/components/ui/checkbox',
   "dropdown-menu.tsx": '@/components/ui/dropdown-menu',
+  "link-button.tsx": '@/components/ui/button',
+  "progress.tsx": '@/components/ui/progress',
   "select.tsx": '@/components/ui/select',
+  "separator.tsx": '@/components/ui/separator',
+  "skeleton.tsx": '@/components/ui/skeleton',
+  "table.tsx": '@/components/ui/table',
 }
 
 const adapterFiles = (await readdir(adaptersDir))
