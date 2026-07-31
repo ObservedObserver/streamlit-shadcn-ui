@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "capturedAt": "2026-07-31T06:43:29.038Z",
+  "capturedAt": "2026-07-31T07:12:23.013Z",
   "generator": {
     "name": "shadcn",
     "version": "4.16.0",
@@ -33,6 +33,11 @@
       "url": "https://ui.shadcn.com/r/styles/base-nova/alert.json",
       "sha256": "f48151ef5f0a8a77d503d382bcf833c25b4d3b1a8e956dd7a0e30af8048b60de",
       "primitive": "react"
+    },
+    "alert-dialog": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/alert-dialog.json",
+      "sha256": "3a3af9f62265a2b9bbe2cd9c30e91e09ee72303734cefe67423627e541f49978",
+      "primitive": "base-ui"
     },
     "aspect-ratio": {
       "url": "https://ui.shadcn.com/r/styles/base-nova/aspect-ratio.json",
@@ -175,5 +180,5 @@
       "primitive": "base-ui"
     }
   },
-  "snapshotRevision": 4
+  "snapshotRevision": 5
 }

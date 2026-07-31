@@ -45,7 +45,7 @@ real Streamlit browser and packaging gates are green.
 | `popover` | 4 | Accepted | stateless anchored non-modal overlay |
 | `hover_card` | 4 | Accepted | stateless hover/focus non-modal overlay; text content |
 | `date_picker` | 4 | Accepted | persistent ISO date or ordered range; range commits on Apply; supported in forms |
-| `alert_dialog` | 5 | Planned | modal transient decision; rejected in forms |
+| `alert_dialog` | 5 | Accepted | rising-edge modal request; transient `None` / `bool` decision; rejected in forms |
 
 ## Compatibility-only or undocumented V1 surfaces
 

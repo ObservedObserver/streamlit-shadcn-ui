@@ -1,5 +1,6 @@
 from .accordion import accordion
 from .alert import alert
+from .alert_dialog import alert_dialog
 from .aspect_ratio import aspect_ratio
 from .avatar import avatar
 from .badge import badge, badges
@@ -34,6 +35,7 @@ from .toggle_group import toggle_group
 __all__ = [
     "accordion",
     "alert",
+    "alert_dialog",
     "aspect_ratio",
     "avatar",
     "badge",

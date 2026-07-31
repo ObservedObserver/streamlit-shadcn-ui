@@ -1,6 +1,6 @@
 # ADR-002: V2 modal overlay strategy
 
-Status: **Accepted deferral**
+Status: **Partially superseded by ADR-007**
 
 Date: 2026-07-30
 
@@ -21,6 +21,11 @@ proof of correct modal semantics.
 
 Wave 1 contains no modal component, so choosing an unproven global-effects
 model would add risk without contributing to its acceptance goal.
+
+[ADR-007](./007-v2-alert-dialog-modal-effects.md) supplies the required
+implementation decision and browser evidence for Alert Dialog. The deferral
+continues to apply to Dialog, Sheet, Drawer, Toast, and any other modal or
+viewport family until its own accepted successor explicitly covers it.
 
 ## Options considered
 
@@ -72,4 +77,3 @@ semantically interchangeable with a modal.
 - Wave 1 can be accepted without claiming modal support.
 - A future modal implementation is a new evidence-producing gate, not a minor
   component addition.
-

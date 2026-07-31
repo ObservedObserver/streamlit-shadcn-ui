@@ -28,6 +28,9 @@ common_module = importlib.import_module(
 breadcrumb_module = importlib.import_module(
     "streamlit_shadcn_ui.v2.widgets.breadcrumb"
 )
+alert_dialog_module = importlib.import_module(
+    "streamlit_shadcn_ui.v2.widgets.alert_dialog"
+)
 
 
 class _FakeStreamlit:
@@ -54,6 +57,7 @@ class PublicApiContractTests(unittest.TestCase):
             [
                 "accordion",
                 "alert",
+                "alert_dialog",
                 "aspect_ratio",
                 "avatar",
                 "badge",
@@ -126,6 +130,16 @@ class PublicApiContractTests(unittest.TestCase):
                 ("disabled", False),
                 ("on_change", None),
                 ("width", "stretch"),
+            ],
+            "alert_dialog": [
+                ("show", inspect.Parameter.empty),
+                ("title", inspect.Parameter.empty),
+                ("description", inspect.Parameter.empty),
+                ("confirm_label", None),
+                ("cancel_label", None),
+                ("key", inspect.Parameter.empty),
+                ("on_decision", None),
+                ("width", "content"),
             ],
         }
         for name, contract in expected.items():
@@ -706,6 +720,129 @@ class PublicApiContractTests(unittest.TestCase):
                 min_date="2026-07-15",
                 key="bounded-date",
             )
+
+    def test_alert_dialog_uses_edge_requests_and_returns_bool_decisions(
+        self,
+    ) -> None:
+        captured = []
+        results = iter([None, {"decision": True}, None, None])
+
+        with patch.object(
+            alert_dialog_module,
+            "fail_if_trigger_in_form",
+        ), patch.object(
+            alert_dialog_module,
+            "mount",
+            side_effect=lambda **kwargs: (
+                captured.append(kwargs) or next(results)
+            ),
+        ):
+            self.assertIsNone(
+                public_api.alert_dialog(
+                    True,
+                    "Delete?",
+                    "This cannot be undone.",
+                    key="wave5-dialog",
+                )
+            )
+            self.assertIs(
+                public_api.alert_dialog(
+                    True,
+                    "Delete?",
+                    "This cannot be undone.",
+                    key="wave5-dialog",
+                ),
+                True,
+            )
+            self.assertIsNone(
+                public_api.alert_dialog(
+                    True,
+                    "Delete?",
+                    "This cannot be undone.",
+                    key="wave5-dialog",
+                )
+            )
+            self.assertIsNone(
+                public_api.alert_dialog(
+                    False,
+                    "Delete?",
+                    "This cannot be undone.",
+                    key="wave5-dialog",
+                )
+            )
+
+        self.assertEqual(
+            [
+                call["data"]["props"]["openRequestId"]
+                for call in captured
+            ],
+            [1, 1, 1, 1],
+        )
+        self.assertEqual(
+            captured[0]["data"]["props"]["resolvedRequestId"],
+            0,
+        )
+        self.assertEqual(
+            captured[2]["data"]["props"]["resolvedRequestId"],
+            1,
+        )
+        self.assertEqual(
+            captured[3]["data"]["props"]["resolvedRequestId"],
+            1,
+        )
+        self.assertEqual(
+            captured[0]["data"]["props"]["confirmLabel"],
+            "Confirm",
+        )
+        self.assertEqual(
+            captured[0]["data"]["props"]["cancelLabel"],
+            "Cancel",
+        )
+        self.assertEqual(
+            set(captured[0]["callbacks"]),
+            {"on_decision_change"},
+        )
+
+    def test_alert_dialog_rearms_only_after_show_is_false(self) -> None:
+        captured = []
+        with patch.object(
+            alert_dialog_module,
+            "fail_if_trigger_in_form",
+        ), patch.object(
+            alert_dialog_module,
+            "mount",
+            side_effect=lambda **kwargs: captured.append(kwargs),
+        ):
+            for show in [True, True, False, True]:
+                public_api.alert_dialog(
+                    show,
+                    "Archive?",
+                    "Confirm archive.",
+                    key="wave5-rearm",
+                )
+
+        self.assertEqual(
+            [
+                call["data"]["props"]["openRequestId"]
+                for call in captured
+            ],
+            [1, 1, 1, 2],
+        )
+
+    def test_alert_dialog_rejects_streamlit_forms(self) -> None:
+        with patch.object(
+            alert_dialog_module,
+            "fail_if_trigger_in_form",
+            side_effect=RuntimeError("inside form"),
+        ), patch.object(alert_dialog_module, "mount") as mount:
+            with self.assertRaisesRegex(RuntimeError, "inside form"):
+                public_api.alert_dialog(
+                    True,
+                    "Delete?",
+                    "Confirm delete.",
+                    key="wave5-form-dialog",
+                )
+        mount.assert_not_called()
 
 
 if __name__ == "__main__":

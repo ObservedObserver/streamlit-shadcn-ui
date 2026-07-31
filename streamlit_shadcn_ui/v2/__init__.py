@@ -3,6 +3,7 @@
 from .widgets import (
     accordion,
     alert,
+    alert_dialog,
     aspect_ratio,
     avatar,
     badge,
@@ -40,6 +41,7 @@ from .widgets import (
 __all__ = [
     "accordion",
     "alert",
+    "alert_dialog",
     "aspect_ratio",
     "avatar",
     "badge",

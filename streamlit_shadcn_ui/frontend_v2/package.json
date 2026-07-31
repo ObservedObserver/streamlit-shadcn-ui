@@ -22,6 +22,7 @@
     "test:e2e:wave2": "SSUI_V2_E2E_APP=V2_WAVE2.py SSUI_V2_E2E_SUITE=wave2 playwright test",
     "test:e2e:wave3": "SSUI_V2_E2E_APP=V2_WAVE3.py SSUI_V2_E2E_SUITE=wave3 playwright test",
     "test:e2e:wave4": "SSUI_V2_E2E_APP=V2_WAVE4.py SSUI_V2_E2E_SUITE=wave4 playwright test",
+    "test:e2e:wave5": "SSUI_V2_E2E_APP=V2_WAVE5.py SSUI_V2_E2E_SUITE=wave5 playwright test",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest"
   },

@@ -390,6 +390,22 @@ function wave4Envelopes() {
   ]
 }
 
+function wave5Envelope() {
+  return {
+    protocolVersion: 1,
+    kind: "alert_dialog",
+    props: {
+      show: true,
+      openRequestId: 2,
+      resolvedRequestId: 1,
+      title: "Delete release?",
+      description: "This action cannot be undone.",
+      confirmLabel: "Delete",
+      cancelLabel: "Cancel",
+    },
+  }
+}
+
 describe("parseEnvelope", () => {
   it("accepts and normalizes a valid Select envelope", () => {
     const parsed = parseEnvelope(selectEnvelope())
@@ -749,6 +765,50 @@ describe("parseEnvelope", () => {
       },
     ],
   ])("rejects malformed Wave 4 input: %s", (_name, envelope) => {
+    expect(parseEnvelope(envelope).ok).toBe(false)
+  })
+
+  it("accepts and normalizes the Wave 5 Alert Dialog envelope", () => {
+    const envelope = wave5Envelope()
+    expect(parseEnvelope(envelope)).toEqual({
+      ok: true,
+      envelope,
+    })
+  })
+
+  it.each([
+    [
+      "resolved request above open request",
+      {
+        ...wave5Envelope(),
+        props: {
+          ...wave5Envelope().props,
+          openRequestId: 2,
+          resolvedRequestId: 3,
+        },
+      },
+    ],
+    [
+      "fractional request id",
+      {
+        ...wave5Envelope(),
+        props: {
+          ...wave5Envelope().props,
+          openRequestId: 1.5,
+        },
+      },
+    ],
+    [
+      "non-boolean visibility",
+      {
+        ...wave5Envelope(),
+        props: {
+          ...wave5Envelope().props,
+          show: "yes",
+        },
+      },
+    ],
+  ])("rejects malformed Wave 5 input: %s", (_name, envelope) => {
     expect(parseEnvelope(envelope).ok).toBe(false)
   })
 })

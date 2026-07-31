@@ -9,6 +9,7 @@ export type ComponentKind =
   | "checkbox"
   | "button"
   | "alert"
+  | "alert_dialog"
   | "avatar"
   | "badge"
   | "breadcrumb"
@@ -118,6 +119,20 @@ export type AlertEnvelope = {
     title: string
     description: string | null
     variant: AlertVariant
+  }
+}
+
+export type AlertDialogEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "alert_dialog"
+  props: {
+    show: boolean
+    openRequestId: number
+    resolvedRequestId: number
+    title: string
+    description: string
+    confirmLabel: string
+    cancelLabel: string
   }
 }
 
@@ -484,6 +499,7 @@ export type Envelope =
   | CheckboxEnvelope
   | ButtonEnvelope
   | AlertEnvelope
+  | AlertDialogEnvelope
   | AvatarEnvelope
   | BadgeEnvelope
   | BreadcrumbEnvelope
@@ -1845,6 +1861,38 @@ function parseHoverCard(
   }
 }
 
+function parseAlertDialog(
+  value: Record<string, unknown>
+): AlertDialogEnvelope | null {
+  const props = value.props
+  if (
+    !isRecord(props) ||
+    typeof props.show !== "boolean" ||
+    !isRevision(props.openRequestId) ||
+    !isRevision(props.resolvedRequestId) ||
+    props.resolvedRequestId > props.openRequestId ||
+    !isBoundedText(props.title) ||
+    !isBoundedText(props.description) ||
+    !isBoundedText(props.confirmLabel) ||
+    !isBoundedText(props.cancelLabel)
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "alert_dialog",
+    props: {
+      show: props.show,
+      openRequestId: props.openRequestId,
+      resolvedRequestId: props.resolvedRequestId,
+      title: props.title,
+      description: props.description,
+      confirmLabel: props.confirmLabel,
+      cancelLabel: props.cancelLabel,
+    },
+  }
+}
+
 function isDatePickerValue(
   value: unknown
 ): value is DatePickerValue {
@@ -1944,6 +1992,8 @@ function parseKnownEnvelope(
       return parseButton(value)
     case "alert":
       return parseAlert(value)
+    case "alert_dialog":
+      return parseAlertDialog(value)
     case "avatar":
       return parseAvatar(value)
     case "badge":

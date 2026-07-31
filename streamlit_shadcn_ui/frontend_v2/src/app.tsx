@@ -1,6 +1,7 @@
 import type { FrontendRendererArgs } from "@streamlit/component-v2-lib"
 
 import { AlertView } from "@/components/streamlit/alert"
+import { AlertDialogView } from "@/components/streamlit/alert-dialog"
 import { AccordionView } from "@/components/streamlit/accordion"
 import { AspectRatioView } from "@/components/streamlit/aspect-ratio"
 import { AvatarView } from "@/components/streamlit/avatar"
@@ -85,6 +86,13 @@ export function V2App({
       )
     case "alert":
       return <AlertView envelope={envelope} />
+    case "alert_dialog":
+      return (
+        <AlertDialogView
+          envelope={envelope}
+          setTriggerValue={setTriggerValue}
+        />
+      )
     case "avatar":
       return <AvatarView envelope={envelope} />
     case "badge":

@@ -50,6 +50,10 @@ Wave 4 completes the stable anchored-overlay catalog:
 
 `popover`, `hover_card`, and single/range `date_picker`.
 
+Wave 5 migrates the stable modal API:
+
+`alert_dialog`.
+
 For example:
 
 ```py
@@ -71,6 +75,12 @@ instance-owned overlay root in the same Streamlit ShadowRoot. The native
 Popover top layer escapes Streamlit clipping and stacking contexts without an
 iframe, a second popup iframe, or a popup in `document.body`.
 
+Alert Dialog uses generated shadcn source backed by Base UI. Its popup stays in
+the same ShadowRoot top-layer host. A versioned modal coordinator adds native
+background `inert`, independent-root stacking, exact document-style
+restoration, and WebKit launch-focus recovery without replacing the Base UI
+dialog kernel.
+
 V2 requires Python 3.10 or newer and Streamlit 1.60 or newer. V1 keeps its
 existing package-wide compatibility floor.
 
@@ -81,6 +91,7 @@ Run a completed-wave acceptance page with:
 ./scripts/wave2_v2.sh
 ./scripts/wave3_v2.sh
 ./scripts/wave4_v2.sh
+./scripts/wave5_v2.sh
 ```
 
 See the
@@ -90,10 +101,13 @@ See the
 [Wave 3 state contract](docs/v2-wave3-state-contract.md),
 [Wave 4 acceptance record](docs/v2-wave4-acceptance.md),
 [Wave 4 state and overlay contract](docs/v2-wave4-state-and-overlay-contract.md),
+[Wave 5 modal contract](docs/v2-wave5-modal-contract.md),
+[Wave 5 modal decision](docs/adr/007-v2-alert-dialog-modal-effects.md),
 [full migration tracker](docs/v2-full-migration-tracker.md),
 [anchored-overlay decision](docs/adr/001-v2-anchored-overlay-host.md), and
-[migration plan](docs/v2-production-migration-plan.md). Waves 1–4 have been
-accepted; Waves 5–6 remain opt-in migration work and V1 remains the rollback.
+[migration plan](docs/v2-production-migration-plan.md). Waves 1–5 have been
+accepted; Wave 6 remains compatibility and release work, and V1 remains the
+rollback.
 
 ## Components
 
