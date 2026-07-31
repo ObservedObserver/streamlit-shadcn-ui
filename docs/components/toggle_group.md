@@ -2,7 +2,7 @@
 
 ```py
 import streamlit as st
-import streamlit_shadcn_ui as ui
+import streamlit_shadcn_ui.v2 as ui
 
 toggle_group_value = ui.toggle_group(default_values=["bold"], key="toggle_group1")
 

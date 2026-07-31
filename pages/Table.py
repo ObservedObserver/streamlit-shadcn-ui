@@ -1,6 +1,7 @@
 import pandas as pd
-import streamlit_shadcn_ui as ui
 import streamlit as st
+
+import streamlit_shadcn_ui.v2 as ui
 
 st.header("Table")
 with open("docs/components/table.md", "r") as f:
@@ -19,6 +20,11 @@ data = [
 # Creating a DataFrame
 invoice_df = pd.DataFrame(data)
 
-ui.table(data=invoice_df, maxHeight=300)
+ui.table(
+    data=invoice_df,
+    key="invoice_table",
+    caption="Recent invoices",
+    max_height=300,
+)
 
 st.write(ui.table)

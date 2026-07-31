@@ -1,6 +1,6 @@
 # ADR-008: V2 cutover, session state, and rollback
 
-Status: **Accepted**
+Status: **Superseded by [ADR-010](./010-v2-1.0-single-track-cutover.md)**
 
 Date: 2026-07-30
 

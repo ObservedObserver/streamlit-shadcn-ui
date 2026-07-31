@@ -1,19 +1,37 @@
 import streamlit as st
-import streamlit_shadcn_ui as ui
+
+import streamlit_shadcn_ui.v2 as ui
+
 
 st.header("Separator")
 
 with open("docs/components/separator.md", "r") as f:
     st.markdown(f.read())
 
-with ui.element("div", key="base_ele_div_s1", className="space-y-1"):
-    ui.element("h4", key="header_1", className="text-sm font-medium leading-none", children="Streamlit Shadcn UI")
-    ui.element("p", key="p_1", className="text-sm text-muted-foreground", children="An open-source UI component library.")
-    ui.element("separator", key="separator_0",orientation="horizontal")
-    with ui.element("div", key="base_ele_div_s2", className="flex h-5 items-center space-x-4 text-sm"):
-        ui.element("div", key="base_ele_div_s3",children="Blog")
-        ui.element("separator", key="separator_1",orientation="vertical",className="h-5")
-        ui.element("div", key="base_ele_div_s4",children="Docs")
-        ui.element("separator", key="separator_2",orientation="vertical",className="h-5")
-        ui.element("div", key="base_ele_div_s5",children="Source")
+st.subheader("Horizontal")
+st.write("Streamlit Shadcn UI")
+ui.separator(key="horizontal_separator")
+st.caption("An open-source UI component library.")
 
+st.subheader("Vertical")
+navigation_columns = st.columns([1, 0.1, 1, 0.1, 1])
+with navigation_columns[0]:
+    st.write("Blog")
+with navigation_columns[1]:
+    ui.separator(
+        key="vertical_separator_1",
+        orientation="vertical",
+        width="content",
+    )
+with navigation_columns[2]:
+    st.write("Docs")
+with navigation_columns[3]:
+    ui.separator(
+        key="vertical_separator_2",
+        orientation="vertical",
+        width="content",
+    )
+with navigation_columns[4]:
+    st.write("Source")
+
+st.write(ui.separator)

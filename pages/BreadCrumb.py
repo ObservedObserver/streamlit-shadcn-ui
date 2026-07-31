@@ -1,6 +1,6 @@
 import streamlit as st
 
-import streamlit_shadcn_ui as ui
+import streamlit_shadcn_ui.v2 as ui
 
 st.header("Breadcrumb")
 
@@ -13,7 +13,6 @@ clicked = ui.breadcrumb(
         {"text": "Components", "href": "/components"},
         {"text": "Breadcrumb", "isCurrentPage": True},
     ],
-    class_name="flex gap-2 text-sm",
     key="breadcrumb1"
 )
 
@@ -42,7 +41,6 @@ for i, page in enumerate(pages):
 
 clicked2 = ui.breadcrumb(
     breadcrumb_items=breadcrumb_items,
-    class_name="flex gap-2 text-sm",
     key="breadcrumb2"
 )
 

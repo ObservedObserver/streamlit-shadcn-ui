@@ -2,7 +2,7 @@
 
 ```py
 import pandas as pd
-import streamlit_shadcn_ui as ui
+import streamlit_shadcn_ui.v2 as ui
 # Sample data
 data = [
     {"invoice": "INV001", "paymentStatus": "Paid", "totalAmount": 500, "paymentMethod": "Credit Card"},
@@ -16,6 +16,11 @@ data = [
 # Creating a DataFrame
 invoice_df = pd.DataFrame(data)
 
-ui.table(data=invoice_df, maxHeight=300)
+ui.table(
+    data=invoice_df,
+    key="invoice_table",
+    caption="Recent invoices",
+    max_height=300,
+)
 
 ```

@@ -1,8 +1,8 @@
 # Components V2 full migration tracker
 
-Status: **Stable catalog implementation complete; Windows and release feedback pending**
+Status: **Canonical V2 examples complete; V1 deletion and root cutover pending**
 
-Date: 2026-07-30
+Date: 2026-07-31
 
 The source of truth for architecture and gates is the
 [production migration plan](./v2-production-migration-plan.md). This tracker
@@ -60,16 +60,18 @@ Wave 5 evidence is recorded in the
 - Experimental `element` composition remains compatibility-only.
 - Raw `st.session_state[key]` is a private V2 protocol envelope; the public
   contracts are return values and callbacks.
-- `streamlit_shadcn_ui.v1` is an exact explicit rollback namespace.
-- The package root stays on V1, the global runtime floors stay unchanged, and
-  V2 stays opt-in until the Windows NVDA/Firefox smoke, one published feedback
-  cycle, and the remaining default-cutover gates pass.
+- `Home.py`, all component pages, and all thirty-five embedded component API
+  documents now use the explicit V2 namespace and contain no `element()` or
+  legacy argument forms.
+- `streamlit_shadcn_ui.v1` remains temporarily available only until the
+  dedicated V1 cleanup phase.
+- The accepted release target is a V2-only `1.0.0`; the root switch, global
+  runtime floor increase, and version bump happen after V1 deletion.
 
 The cutover and rollback decision is
-[ADR-008](./adr/008-v2-cutover-and-session-state.md). The repository is
-technically ready for an opt-in release candidate; an unpublished local run
-does not satisfy the real-world feedback requirement. Final regression,
-performance, and distribution evidence is recorded in the
+[ADR-010](./adr/010-v2-1.0-single-track-cutover.md). The repository is not yet
+ready to publish 1.0 because V1 cleanup and the public root collapse remain.
+Final regression, performance, and distribution evidence is recorded in the
 [Wave 6 release-readiness record](./v2-wave6-release-readiness.md).
 
 ## Compatibility-only or undocumented V1 surfaces

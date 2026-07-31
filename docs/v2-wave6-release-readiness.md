@@ -210,20 +210,24 @@ pnpm run test:e2e:performance-comparison
 The two browser suites own temporary Streamlit ports and directories, clean
 them up on completion, and do not modify the production bundle.
 
-## External release gate
+## 1.0 release gate
 
-The next authorized release should remain opt-in and use
-`streamlit_shadcn_ui.v2`. Publishing requires a new package version and
-release credentials, neither of which is inferred by this migration task.
+[ADR-010](./adr/010-v2-1.0-single-track-cutover.md) supersedes the opt-in and
+two-release rollback policy that this record originally evaluated. The
+maintainer has approved a breaking V2-only `1.0.0` target.
 
-The opt-in promotion still requires the NVDA/Firefox smoke on Windows. Default
-cutover additionally remains blocked until:
+The release remains blocked until:
 
-1. the maintainer completes interactive visual re-validation of ADR-009;
-2. the opt-in artifact completes a documented real-user feedback window;
-3. Checkbox group and Card/`element` dispositions are accepted or adapted;
-4. the exact proposed breaking artifact repeats these gates;
-5. the maintainer explicitly approves the root switch and global floors.
+1. canonical Home, component pages, and embedded API examples use V2 and pass
+   Python plus real-browser verification;
+2. all V1-only Python, React, iframe assets, package data, baselines, and tests
+   are removed;
+3. the package root exports V2, global runtime floors match the V2 guard, and
+   the compatibility documentation describes the approved breaking changes;
+4. the exact proposed wheel and sdist repeat the full unit, browser,
+   accessibility, performance, and clean-install gates;
+5. release metadata is set to `1.0.0` and the maintainer approves publishing.
 
-V1 must remain available through `streamlit_shadcn_ui.v1` for at least two
-published releases after any future default cutover.
+The Windows NVDA/Firefox smoke remains a documented follow-up rather than a
+blocking 1.0 condition. No release credentials or publication action are
+inferred by the migration work itself.

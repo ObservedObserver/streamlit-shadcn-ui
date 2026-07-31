@@ -2,7 +2,7 @@
 
 ```py
 import streamlit as st
-import streamlit_shadcn_ui as ui
+import streamlit_shadcn_ui.v2 as ui
 
 toggle_value_bold = ui.toggle(default_checked=False, icon="bold", key="toggle_bold")
 st.write("Bold Toggle is On:", toggle_value_bold)

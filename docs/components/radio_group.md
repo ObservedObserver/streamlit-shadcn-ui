@@ -2,7 +2,7 @@
 
 ```py
 import streamlit as st
-import streamlit_shadcn_ui as ui
+import streamlit_shadcn_ui.v2 as ui
 
 # Radio Group Component
 radio_options = [
@@ -11,7 +11,12 @@ radio_options = [
     {"label": "Option C", "value": "C", "id": "r3"},
     {"label": "Option D", "value": "D", "id": "r4"}
 ]
-radio_value = ui.radio_group(options=radio_options, default_value="B", key="radio1")
+radio_value = ui.radio_group(
+    options=radio_options,
+    default_value="B",
+    label="Choose an option",
+    key="radio1",
+)
 st.write("Selected Radio Option:", radio_value)
 
 st.write(ui.radio_group)

@@ -1,13 +1,32 @@
 import streamlit as st
-import streamlit_shadcn_ui as ui
+
+import streamlit_shadcn_ui.v2 as ui
+
 
 st.header("Skeleton")
 
 with open("docs/components/skeleton.md", "r") as f:
     st.markdown(f.read())
 
-with ui.element("div", key="base_ele_div_l2", className="flex items-center space-x-4"):
-    ui.element("circle", key="skeleton_circle_1",className="h-12 w-12")
-    with ui.element("div", key="base_ele_div_l3", className="space-y-2"): 
-        ui.element("rectangle", key="skeleton_rectangle_1",className="h-4 w-48")
-        ui.element("rectangle", key="skeleton_rectangle_2",className="h-4 w-44")
+skeleton_columns = st.columns([1, 4])
+with skeleton_columns[0]:
+    ui.skeleton(
+        key="skeleton_circle",
+        width_px=48,
+        height_px=48,
+        shape="circle",
+        width="content",
+    )
+with skeleton_columns[1]:
+    ui.skeleton(
+        key="skeleton_line_1",
+        width_px="100%",
+        height_px=16,
+    )
+    ui.skeleton(
+        key="skeleton_line_2",
+        width_px="80%",
+        height_px=16,
+    )
+
+st.write(ui.skeleton)

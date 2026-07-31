@@ -2,9 +2,12 @@
 
 ```py
 import streamlit as st
-import streamlit_shadcn_ui as ui
+import streamlit_shadcn_ui.v2 as ui
 
-progress_value = ui.progress(data=30, key="progress1")
-
-st.write(ui.progress)
+ui.progress(
+    value=30,
+    label="Upload progress",
+    show_value=True,
+    key="progress1",
+)
 ```

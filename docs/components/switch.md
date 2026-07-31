@@ -2,7 +2,7 @@
 
 ```py
 import streamlit as st
-import streamlit_shadcn_ui as ui
+import streamlit_shadcn_ui.v2 as ui
 
 
 switch_value = ui.switch(default_checked=True, label="Toggle Switch", key="switch1")

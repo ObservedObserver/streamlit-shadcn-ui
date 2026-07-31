@@ -1,27 +1,51 @@
 import streamlit as st
 
-import streamlit_shadcn_ui as ui
+import streamlit_shadcn_ui.v2 as ui
+
 
 st.header("Tabs")
 
 with open("docs/components/tabs.md", "r") as f:
     st.markdown(f.read())
 
-value = ui.tabs(options=['PyGWalker', 'Graphic Walker', 'GWalkR', 'RATH'], default_value='PyGWalker', key="kanaries")
+products = {
+    "PyGWalker": {
+        "description": "Turn a pandas DataFrame into an exploratory visual interface.",
+        "url": "https://github.com/Kanaries/pygwalker",
+    },
+    "Graphic Walker": {
+        "description": "Embed a grammar-of-graphics visual analytics interface.",
+        "url": "https://github.com/Kanaries/graphic-walker",
+    },
+    "GWalkR": {
+        "description": "Use the Graphic Walker workflow from an R environment.",
+        "url": "https://github.com/Kanaries/gwalkr",
+    },
+    "RATH": {
+        "description": "Explore automated insights and visual data analysis.",
+        "url": "https://github.com/Kanaries/Rath",
+    },
+}
 
-with ui.card(key="image"):
-    if value == "PyGWalker":
-        ui.element("img", src="https://pub-8e7aa5bf51e049199c78b4bc744533f8.r2.dev/pygwalker-banner.png", className="w-full")
-        ui.element("link_button", text=value + " Github", url="https://github.com/Kanaries/pygwalker", className="mt-2", key="btn2")
-    elif value == "Graphic Walker":
-        ui.element("img", src="https://pub-8e7aa5bf51e049199c78b4bc744533f8.r2.dev/graphic-walker-banner.png", className="w-full")
-        ui.element("link_button", text=value + " Github", url="https://github.com/Kanaries/graphic-walker", className="mt-2", key="btn2")
-    elif value == "GWalkR":
-        ui.element("img", src="https://pub-8e7aa5bf51e049199c78b4bc744533f8.r2.dev/gwalkr-banner.png", className="w-full")
-        ui.element("link_button", text=value + " Github", url="https://github.com/Kanaries/gwalkr", className="mt-2", key="btn2")
-    elif value == "RATH":
-        ui.element("img", src="https://pub-8e7aa5bf51e049199c78b4bc744533f8.r2.dev/rath-painter.png", className="w-full")
-        ui.element("link_button", text=value + " Github", url="https://github.com/Kanaries/Rath", className="mt-2", key="btn2")
-    st.write("Selected:", value)
+value = ui.tabs(
+    options=products,
+    default_value="PyGWalker",
+    key="kanaries_tabs",
+)
+selected_product = products[value]
+
+ui.card(
+    title=value,
+    content=selected_product["description"],
+    description="Selected tab",
+    key="selected_product_card",
+)
+ui.link_button(
+    f"{value} GitHub",
+    selected_product["url"],
+    key="product_link",
+    variant="outline",
+)
+st.write("Selected:", value)
 
 st.write(ui.tabs)

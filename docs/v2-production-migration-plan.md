@@ -6,8 +6,10 @@ Date: 2026-07-30
 
 Owners: streamlit-shadcn-ui maintainers
 
-Decision scope: the opt-in `streamlit_shadcn_ui.v2` implementation. V1 remains
-the released fallback until the cutover gate.
+Decision scope: the `streamlit_shadcn_ui.v2` implementation. The implementation
+architecture remains authoritative; its original opt-in release strategy is
+superseded by the V2-only 1.0 cutover in
+[ADR-010](./adr/010-v2-1.0-single-track-cutover.md).
 
 ## 1. Executive decision
 

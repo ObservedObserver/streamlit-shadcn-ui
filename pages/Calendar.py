@@ -1,12 +1,12 @@
 import streamlit as st
-import streamlit_shadcn_ui as ui
+import streamlit_shadcn_ui.v2 as ui
 
 st.header("Calendar")
 
 with open("docs/components/calendar.md", "r") as f:
     st.markdown(f.read())
     
-calendar_calue = ui.calendar(class_name=None, key="calendar")
-st.write("Calendar value is:", calendar_calue)
+calendar_value = ui.calendar(key="calendar")
+st.write("Calendar value is:", calendar_value)
 
 st.write(ui.calendar)
