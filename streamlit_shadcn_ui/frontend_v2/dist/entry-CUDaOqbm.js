@@ -15213,10 +15213,10 @@ function nd() {
 //#endregion
 //#region src/components/streamlit/alert-dialog.tsx
 function rd({ envelope: e, setTriggerValue: t }) {
-	let { openRequestId: n, resolvedRequestId: r, show: i } = e.props, [a, o] = (0, C.useState)(r), s = (0, C.useRef)(r), c = (0, C.useRef)(0), l = (0, C.useRef)(null), u = (0, C.useRef)(null), d = (0, C.useRef)(null);
-	r > s.current && (s.current = r);
-	let f = i && n > r && n > a;
+	let { openRequestId: n, resolvedRequestId: r, show: i } = e.props, [a, o] = (0, C.useState)(r), s = (0, C.useRef)(r), c = (0, C.useRef)(0), l = (0, C.useRef)(null), u = (0, C.useRef)(null), d = (0, C.useRef)(null), f = i && n > r && n > a;
 	(0, C.useLayoutEffect)(() => {
+		r > s.current && (s.current = r);
+	}, [r]), (0, C.useLayoutEffect)(() => {
 		f && c.current !== n && (c.current = n, l.current = nd());
 	}, [n, f]);
 	let p = ed(f, d), m = (0, C.useCallback)((e) => {

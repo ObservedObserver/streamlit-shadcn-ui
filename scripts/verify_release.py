@@ -8,6 +8,7 @@ import gzip
 import hashlib
 import json
 import re
+import subprocess
 import tarfile
 import zipfile
 from pathlib import Path
@@ -76,6 +77,34 @@ def _verify_versions() -> str:
             % sorted(versions)
         )
     return root_version
+
+
+def _verify_checked_in_dist_is_current() -> None:
+    relative_dist = V2_DIST.relative_to(ROOT).as_posix()
+    process = subprocess.run(
+        [
+            "git",
+            "status",
+            "--porcelain",
+            "--untracked-files=all",
+            "--",
+            relative_dist,
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    if process.returncode != 0:
+        raise AssertionError(
+            "Unable to inspect the checked-in V2 dist: %s"
+            % process.stderr.strip()
+        )
+    if process.stdout.strip():
+        raise AssertionError(
+            "The checked-in V2 dist differs from the release build:\n%s"
+            % process.stdout.rstrip()
+        )
 
 
 def _verify_v1_files(files: Mapping[str, bytes]) -> None:
@@ -199,6 +228,19 @@ def _verify_archive(
     if 'version = "%s"' % version not in nested_text:
         raise AssertionError("%s has a mismatched nested version" % path.name)
 
+    required_namespaces = [
+        package_prefix + "v1/__init__.py",
+        package_prefix + "v2/__init__.py",
+    ]
+    missing_namespaces = [
+        name for name in required_namespaces if name not in files
+    ]
+    if missing_namespaces:
+        raise AssertionError(
+            "%s omits required compatibility namespaces %r"
+            % (path.name, missing_namespaces)
+        )
+
     forbidden = [
         name
         for name in files
@@ -248,9 +290,19 @@ def main() -> None:
         type=Path,
         help="Optional wheel and/or sdist paths to inspect.",
     )
+    parser.add_argument(
+        "--require-clean-dist",
+        action="store_true",
+        help=(
+            "Require the checked-in V2 dist to be clean after a frontend "
+            "release build."
+        ),
+    )
     args = parser.parse_args()
 
     version = _verify_versions()
+    if args.require_clean_dist:
+        _verify_checked_in_dist_is_current()
     v1_files = _files_under(V1_DIST)
     v2_files = _files_under(V2_DIST)
     _verify_v1_files(v1_files)

@@ -1,6 +1,6 @@
 # Components V2 full migration tracker
 
-Status: **In progress**
+Status: **Stable catalog implementation complete; opt-in release feedback pending**
 
 Date: 2026-07-30
 
@@ -47,6 +47,29 @@ real Streamlit browser and packaging gates are green.
 | `date_picker` | 4 | Accepted | persistent ISO date or ordered range; range commits on Apply; supported in forms |
 | `alert_dialog` | 5 | Accepted | rising-edge modal request; transient `None` / `bool` decision; rejected in forms |
 
+Wave 5 evidence is recorded in the
+[acceptance record](./v2-wave5-acceptance.md).
+
+## Wave 6 compatibility disposition
+
+- The [compatibility matrix](./v2-compatibility-matrix.md) covers all
+  thirty-three V1 root exports and all thirty-five V2 exports.
+- Thirty-two stable V1 component roles have V2 implementations. V1
+  `checkbox` groups and context-managed `card` usage need application-level
+  adapters.
+- Experimental `element` composition remains compatibility-only.
+- Raw `st.session_state[key]` is a private V2 protocol envelope; the public
+  contracts are return values and callbacks.
+- `streamlit_shadcn_ui.v1` is an exact explicit rollback namespace.
+- The package root stays on V1, the global runtime floors stay unchanged, and
+  V2 stays opt-in until one published feedback cycle and the remaining
+  default-cutover gates pass.
+
+The cutover and rollback decision is
+[ADR-008](./adr/008-v2-cutover-and-session-state.md). The repository is
+technically ready for an opt-in release candidate; an unpublished local run
+does not satisfy the real-world feedback requirement.
+
 ## Compatibility-only or undocumented V1 surfaces
 
 The V1 package also exposes low-level helpers such as `select_trigger`,
@@ -57,9 +80,7 @@ and the experimental `element` composition API. They are implementation
 details of the iframe architecture, not direct one-for-one V2 migration
 targets.
 
-Wave 6 will publish the final argument, return value, callback, session-state,
-and visual compatibility table and decide whether any low-level name receives
-an explicit adapter or a documented removal. README-only names with no stable
+Wave 6 assigns no V2 adapter to these helpers. README-only names with no stable
 V1 Python wrapper—Carousel, Command, Dialog, Resizable, and Toast—are treated
 as new-product candidates rather than silently claimed parity.
 

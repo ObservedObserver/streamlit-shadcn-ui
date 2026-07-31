@@ -84,6 +84,17 @@ dialog kernel.
 V2 requires Python 3.10 or newer and Streamlit 1.60 or newer. V1 keeps its
 existing package-wide compatibility floor.
 
+The stable catalog implementation is complete, but V2 intentionally remains
+opt-in for its first published feedback cycle. The package root still points
+to V1. Applications can also make that rollback choice explicit:
+
+```py
+import streamlit_shadcn_ui.v1 as ui
+```
+
+V2 return values and callbacks are public; its raw
+`st.session_state[key]` protocol envelope is not.
+
 Run a completed-wave acceptance page with:
 
 ```sh
@@ -101,13 +112,16 @@ See the
 [Wave 3 state contract](docs/v2-wave3-state-contract.md),
 [Wave 4 acceptance record](docs/v2-wave4-acceptance.md),
 [Wave 4 state and overlay contract](docs/v2-wave4-state-and-overlay-contract.md),
+[Wave 5 acceptance record](docs/v2-wave5-acceptance.md),
 [Wave 5 modal contract](docs/v2-wave5-modal-contract.md),
 [Wave 5 modal decision](docs/adr/007-v2-alert-dialog-modal-effects.md),
+[V1/V2 compatibility matrix](docs/v2-compatibility-matrix.md),
+[cutover and rollback decision](docs/adr/008-v2-cutover-and-session-state.md),
 [full migration tracker](docs/v2-full-migration-tracker.md),
 [anchored-overlay decision](docs/adr/001-v2-anchored-overlay-host.md), and
-[migration plan](docs/v2-production-migration-plan.md). Waves 1–5 have been
-accepted; Wave 6 remains compatibility and release work, and V1 remains the
-rollback.
+[migration plan](docs/v2-production-migration-plan.md). Waves 1–5 and the
+Wave 6 technical compatibility decision are complete. A real opt-in release
+and feedback window remains the deliberate gate before any default cutover.
 
 ## Components
 
@@ -189,6 +203,7 @@ There are several scripts in `scripts` folder to help you develop this project.
 ./scripts/wave2_v2.sh # build and run the Wave 2 acceptance catalog
 ./scripts/wave3_v2.sh # build and run the Wave 3 state/form catalog
 ./scripts/wave4_v2.sh # build and run the Wave 4 anchored-overlay catalog
+./scripts/wave5_v2.sh # build and run the Wave 5 modal catalog
 ./scripts/dev.sh # streamlit dev server
 ```
 

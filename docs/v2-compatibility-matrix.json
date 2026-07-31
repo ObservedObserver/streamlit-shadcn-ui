@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "sessionStatePolicy": "private_protocol_envelope",
+  "v1PublicExports": {
+    "accordion": {
+      "v2": "accordion",
+      "disposition": "migrated"
+    },
+    "alert": {
+      "v2": "alert",
+      "disposition": "migrated"
+    },
+    "alert_dialog": {
+      "v2": "alert_dialog",
+      "disposition": "migrated"
+    },
+    "aspect_ratio": {
+      "v2": "aspect_ratio",
+      "disposition": "migrated"
+    },
+    "avatar": {
+      "v2": "avatar",
+      "disposition": "migrated"
+    },
+    "badges": {
+      "v2": "badges",
+      "disposition": "migrated"
+    },
+    "breadcrumb": {
+      "v2": "breadcrumb",
+      "disposition": "migrated"
+    },
+    "button": {
+      "v2": "button",
+      "disposition": "migrated"
+    },
+    "calendar": {
+      "v2": "calendar",
+      "disposition": "migrated"
+    },
+    "card": {
+      "v2": "card",
+      "disposition": "adapter_required"
+    },
+    "checkbox": {
+      "v2": "checkbox",
+      "disposition": "adapter_required"
+    },
+    "collapsible": {
+      "v2": "collapsible",
+      "disposition": "migrated"
+    },
+    "date_picker": {
+      "v2": "date_picker",
+      "disposition": "migrated"
+    },
+    "dropdown_menu": {
+      "v2": "dropdown_menu",
+      "disposition": "migrated"
+    },
+    "element": {
+      "v2": null,
+      "disposition": "compatibility_only"
+    },
+    "hover_card": {
+      "v2": "hover_card",
+      "disposition": "migrated"
+    },
+    "input": {
+      "v2": "input",
+      "disposition": "migrated"
+    },
+    "input_otp": {
+      "v2": "input_otp",
+      "disposition": "migrated"
+    },
+    "link_button": {
+      "v2": "link_button",
+      "disposition": "migrated"
+    },
+    "metric_card": {
+      "v2": "metric_card",
+      "disposition": "migrated"
+    },
+    "pagination": {
+      "v2": "pagination",
+      "disposition": "migrated"
+    },
+    "popover": {
+      "v2": "popover",
+      "disposition": "migrated"
+    },
+    "progress": {
+      "v2": "progress",
+      "disposition": "migrated"
+    },
+    "radio_group": {
+      "v2": "radio_group",
+      "disposition": "migrated"
+    },
+    "scroll_area": {
+      "v2": "scroll_area",
+      "disposition": "migrated"
+    },
+    "select": {
+      "v2": "select",
+      "disposition": "migrated"
+    },
+    "slider": {
+      "v2": "slider",
+      "disposition": "migrated"
+    },
+    "switch": {
+      "v2": "switch",
+      "disposition": "migrated"
+    },
+    "table": {
+      "v2": "table",
+      "disposition": "migrated"
+    },
+    "tabs": {
+      "v2": "tabs",
+      "disposition": "migrated"
+    },
+    "textarea": {
+      "v2": "textarea",
+      "disposition": "migrated"
+    },
+    "toggle": {
+      "v2": "toggle",
+      "disposition": "migrated"
+    },
+    "toggle_group": {
+      "v2": "toggle_group",
+      "disposition": "migrated"
+    }
+  },
+  "v2Additions": {
+    "badge": "single-item convenience API",
+    "separator": "V2-only public display primitive",
+    "skeleton": "V2-only public display primitive"
+  },
+  "v1ModuleOnlySurfaces": [
+    "date_choosen_handler",
+    "date_picker_content",
+    "date_picker_trigger",
+    "dialog_layer",
+    "dropdown_menu_content",
+    "dropdown_menu_trigger",
+    "hover_card_content",
+    "hover_card_trigger",
+    "option_choosen_handler",
+    "popover_content",
+    "popover_trigger",
+    "select_options",
+    "select_trigger"
+  ],
+  "readmeOnlyCandidates": [
+    "carousel",
+    "command",
+    "dialog",
+    "resizable",
+    "toast"
+  ]
+}
