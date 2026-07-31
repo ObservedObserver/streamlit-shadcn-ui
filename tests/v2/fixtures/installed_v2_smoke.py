@@ -39,6 +39,12 @@ ui.alert(
     "Wheel or sdist display source is available.",
     key="installed_alert",
 )
+alert_dialog_value = ui.alert_dialog(
+    False,
+    "Installed Alert Dialog",
+    "Installed modal source is available.",
+    key="installed_alert_dialog",
+)
 ui.avatar(fallback="V2", key="installed_avatar")
 ui.badges(
     [("Installed", "default"), ("Ready", "secondary")],
@@ -183,6 +189,7 @@ date_picker_value = ui.date_picker(
 st.write(
     {
         "accordion": accordion_value,
+        "alert_dialog": alert_dialog_value,
         "selected": selected,
         "action": action,
         "calendar": calendar_value,
