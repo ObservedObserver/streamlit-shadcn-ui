@@ -6,8 +6,6 @@ const CSS_SCHEMA = "1"
 const TAILWIND_PREFIX = `--ssui-v2-${CSS_SCHEMA}-tw-`
 const REGISTERED_PROPERTY_PREFIX = `--ssui-v2-${CSS_SCHEMA}-`
 const KEYFRAME_PREFIX = `ssui-v2-${CSS_SCHEMA}-`
-const SHADOW_PROPERTY_DEFAULTS_SELECTOR =
-  ":host, *, ::before, ::after, ::backdrop"
 
 function parseSelectorNode(selector) {
   const ast = selectorParser().astSync(selector)
@@ -146,78 +144,110 @@ function namespaceRegisteredProperties(root) {
   })
 }
 
-// ShadowRoot-local @property rules do not supply their initial values to
-// descendants. Tailwind 4 relies on those values for composite utilities such
-// as border, translate, ring, and shadow, so mirror non-inheriting defaults in
-// the lowest cascade layer while retaining the registrations for browsers that
-// can apply them.
-function seedShadowRegisteredPropertyDefaults(root) {
-  const defaults = new Map()
+function isRootPropertiesLayer(node, root) {
+  return (
+    node?.type === "atrule" &&
+    node.name === "layer" &&
+    node.params.trim() === "properties" &&
+    node.parent === root
+  )
+}
 
-  root.walkAtRules("property", (atRule) => {
-    const propertyName = atRule.params.trim()
-    const inherits = atRule.nodes?.find(
-      (node) => node.type === "decl" && node.prop === "inherits"
-    )
-    const initialValue = atRule.nodes?.find(
-      (node) =>
-        node.type === "decl" && node.prop === "initial-value"
-    )
+function selectorKey(rule) {
+  return rule.selector.replaceAll(" ", "")
+}
 
-    if (
-      propertyName.startsWith("--") &&
-      inherits?.value.trim() === "false" &&
-      initialValue?.value.trim()
-    ) {
-      defaults.set(propertyName, initialValue.value)
+function isRegisteredPropertyFallback(rule) {
+  const declarations =
+    rule.nodes?.filter((node) => node.type === "decl") ?? []
+  return (
+    declarations.length > 0 &&
+    declarations.every((declaration) =>
+      declaration.prop.startsWith(REGISTERED_PROPERTY_PREFIX)
+    )
+  )
+}
+
+function isLegacyShadowDefaultsRule(rule, root) {
+  if (!isRootPropertiesLayer(rule.parent, root)) {
+    return false
+  }
+  const selectors = new Set(rule.selectors)
+  return (
+    selectors.has(":host") &&
+    selectors.has("*") &&
+    (selectors.has(":before") || selectors.has("::before")) &&
+    (selectors.has(":after") || selectors.has("::after")) &&
+    selectors.has("::backdrop")
+  )
+}
+
+// Tailwind emits type-correct compatibility defaults behind an @supports
+// condition for browsers without @property. A ShadowRoot can report @property
+// support while still ignoring registrations declared inside the shadow tree.
+// Promote Tailwind's own fallback rules into the lowest cascade layer so
+// composite utilities retain computed values such as <length> zero -> 0px.
+function promoteShadowPropertyFallbacks(root) {
+  const fallbackRules = []
+
+  root.walkAtRules("supports", (atRule) => {
+    if (!isRootPropertiesLayer(atRule.parent, root)) {
+      return
+    }
+    for (const node of atRule.nodes ?? []) {
+      if (node.type === "rule" && isRegisteredPropertyFallback(node)) {
+        fallbackRules.push(node)
+      }
     }
   })
 
-  if (defaults.size === 0) {
+  const hasRegisteredProperties = root.nodes.some(
+    (node) => node.type === "atrule" && node.name === "property"
+  )
+  if (fallbackRules.length === 0) {
+    if (hasRegisteredProperties) {
+      throw new Error(
+        "Compiled Shadow CSS has @property registrations without Tailwind compatibility defaults."
+      )
+    }
     return
   }
 
-  const normalizedSelector = SHADOW_PROPERTY_DEFAULTS_SELECTOR.replaceAll(
-    " ",
-    ""
-  )
-  let defaultsRule
   root.walkRules((rule) => {
-    if (
-      !defaultsRule &&
-      rule.selector.replaceAll(" ", "") === normalizedSelector &&
-      rule.parent?.type === "atrule" &&
-      rule.parent.name === "layer" &&
-      rule.parent.params.trim() === "properties"
-    ) {
-      defaultsRule = rule
+    if (isLegacyShadowDefaultsRule(rule, root)) {
+      rule.remove()
     }
   })
 
-  if (!defaultsRule) {
-    const propertiesLayer = postcss.atRule({
-      name: "layer",
-      params: "properties",
-    })
-    defaultsRule = postcss.rule({
-      selector: SHADOW_PROPERTY_DEFAULTS_SELECTOR,
-    })
-    propertiesLayer.append(defaultsRule)
-    root.append(propertiesLayer)
-  }
-
-  const existingProperties = new Set(
-    defaultsRule.nodes
-      ?.filter((node) => node.type === "decl")
-      .map((node) => node.prop) ?? []
-  )
-  for (const [propertyName, initialValue] of defaults) {
-    if (!existingProperties.has(propertyName)) {
-      defaultsRule.append({
-        prop: propertyName,
-        value: initialValue,
-      })
+  const unconditionalRules = new Map()
+  root.walkRules((rule) => {
+    if (isRootPropertiesLayer(rule.parent, root)) {
+      unconditionalRules.set(selectorKey(rule), rule)
     }
+  })
+
+  let outputLayer
+  for (const fallbackRule of fallbackRules) {
+    const key = selectorKey(fallbackRule)
+    const existingRule = unconditionalRules.get(key)
+    if (existingRule) {
+      existingRule.removeAll()
+      existingRule.append(
+        fallbackRule.nodes.map((node) => node.clone())
+      )
+      continue
+    }
+
+    if (!outputLayer) {
+      outputLayer = postcss.atRule({
+        name: "layer",
+        params: "properties",
+      })
+      root.append(outputLayer)
+    }
+    const promotedRule = fallbackRule.clone()
+    outputLayer.append(promotedRule)
+    unconditionalRules.set(key, promotedRule)
   }
 }
 
@@ -326,7 +356,7 @@ export function normalizeCompiledShadowCss(css) {
   normalizeSelectors(root)
   namespaceTailwindProperties(root)
   namespaceRegisteredProperties(root)
-  seedShadowRegisteredPropertyDefaults(root)
+  promoteShadowPropertyFallbacks(root)
   namespaceKeyframes(root)
   auditCompiledCss(root)
   return root.toString()

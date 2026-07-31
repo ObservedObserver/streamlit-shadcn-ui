@@ -20,12 +20,27 @@ body .dark .sentinel {
   inherits: false;
   initial-value: 0;
 }
+@property --tw-ring-offset-width {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0;
+}
 @property --inherited-accent {
   syntax: "<color>";
   inherits: true;
   initial-value: red;
 }
 @property --shimmer-image { syntax: "<image>"; inherits: false; }
+@layer properties {
+  @supports (display: grid) {
+    :host { --inherited-accent: red; }
+    *, ::before, ::after, ::backdrop {
+      --tw-translate-x: 0;
+      --tw-ring-offset-width: 0px;
+      --shimmer-image: initial;
+    }
+  }
+}
 @keyframes spin { to { transform: rotate(360deg); } }
 `
 
@@ -40,13 +55,48 @@ assert.match(normalized, /--ssui-v2-1-tw-ring-color/)
 assert.match(normalized, /@property --ssui-v2-1-tw-translate-x/)
 assert.match(normalized, /@property --ssui-v2-1-shimmer-image/)
 assert.match(normalized, /var\(--ssui-v2-1-shimmer-image\)/)
-assert.match(
-  normalized,
-  /@layer properties\s*\{\s*:host, \*, ::before, ::after, ::backdrop\s*\{[^}]*--ssui-v2-1-tw-translate-x:\s*0/s
+const normalizedRoot = postcss.parse(normalized)
+const unconditionalPropertyRules = []
+normalizedRoot.walkRules((rule) => {
+  if (
+    rule.parent?.type === "atrule" &&
+    rule.parent.name === "layer" &&
+    rule.parent.params.trim() === "properties" &&
+    rule.parent.parent === normalizedRoot
+  ) {
+    unconditionalPropertyRules.push(rule)
+  }
+})
+const hostDefaults = unconditionalPropertyRules.find(
+  (rule) => rule.selector === ":host"
 )
-assert.doesNotMatch(
-  normalized,
-  /:host, \*, ::before, ::after, ::backdrop\s*\{[^}]*--ssui-v2-1-inherited-accent:/s
+const universalDefaults = unconditionalPropertyRules.find((rule) => {
+  const selectors = new Set(rule.selectors)
+  return (
+    selectors.has("*") &&
+    selectors.has("::before") &&
+    selectors.has("::after") &&
+    selectors.has("::backdrop")
+  )
+})
+assert.equal(
+  hostDefaults?.nodes.find(
+    (node) => node.type === "decl" && node.prop.endsWith("inherited-accent")
+  )?.value,
+  "red"
+)
+assert.equal(
+  universalDefaults?.nodes.find(
+    (node) => node.type === "decl" && node.prop.endsWith("tw-translate-x")
+  )?.value,
+  "0"
+)
+assert.equal(
+  universalDefaults?.nodes.find(
+    (node) =>
+      node.type === "decl" && node.prop.endsWith("tw-ring-offset-width")
+  )?.value,
+  "0px"
 )
 assert.match(normalized, /@keyframes ssui-v2-1-spin/)
 assert.match(normalized, /animation: ssui-v2-1-spin/)
