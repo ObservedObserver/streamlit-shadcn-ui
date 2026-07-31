@@ -51,7 +51,7 @@ export function CalendarView({
   return (
     <div
       aria-label={envelope.props.label}
-      className="w-fit rounded-lg border"
+      className="w-fit overflow-hidden rounded-lg border"
       data-ssui-component="calendar"
       data-testid="ssui-v2-calendar"
       role="group"

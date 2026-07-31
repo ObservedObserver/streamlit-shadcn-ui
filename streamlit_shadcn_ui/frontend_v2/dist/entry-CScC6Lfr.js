@@ -22480,7 +22480,7 @@ function sb({ envelope: e, setStateValue: t }) {
 	let u = e.props.disabled ? !0 : l.length > 0 ? l : void 0;
 	return /* @__PURE__ */ (0, Y.jsx)("div", {
 		"aria-label": e.props.label,
-		className: "w-fit rounded-lg border",
+		className: "w-fit overflow-hidden rounded-lg border",
 		"data-ssui-component": "calendar",
 		"data-testid": "ssui-v2-calendar",
 		role: "group",
