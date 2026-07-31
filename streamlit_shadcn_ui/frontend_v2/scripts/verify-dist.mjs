@@ -2,6 +2,8 @@ import { readdir, readFile } from "node:fs/promises"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
+import postcss from "postcss"
+
 const projectRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   ".."
@@ -25,6 +27,41 @@ const css = await readFile(path.join(distDir, styles[0]), "utf8")
 for (const forbidden of [":root", " html", " body", "--tw-", "@import"]) {
   if (css.includes(forbidden)) {
     throw new Error(`Compiled Shadow CSS contains forbidden token: ${forbidden}`)
+  }
+}
+
+const cssRoot = postcss.parse(css)
+let shadowPropertyDefaults
+cssRoot.walkRules((rule) => {
+  const selectors = new Set(rule.selectors)
+  if (
+    rule.parent?.type === "atrule" &&
+    rule.parent.name === "layer" &&
+    rule.parent.params.trim() === "properties" &&
+    rule.parent.parent === cssRoot &&
+    [":host", "*", "::before", "::after", "::backdrop"].every(
+      (selector) => selectors.has(selector)
+    )
+  ) {
+    shadowPropertyDefaults = new Map(
+      rule.nodes
+        .filter((node) => node.type === "decl")
+        .map((node) => [node.prop, node.value])
+    )
+  }
+})
+
+const requiredShadowPropertyDefaults = new Map([
+  ["--ssui-v2-1-tw-border-style", "solid"],
+  ["--ssui-v2-1-tw-translate-x", "0"],
+  ["--ssui-v2-1-tw-translate-y", "0"],
+  ["--ssui-v2-1-tw-ring-shadow", "0 0 #0000"],
+])
+for (const [propertyName, expectedValue] of requiredShadowPropertyDefaults) {
+  if (shadowPropertyDefaults?.get(propertyName) !== expectedValue) {
+    throw new Error(
+      `Compiled Shadow CSS is missing the unconditional ${propertyName}:${expectedValue} default.`
+    )
   }
 }
 

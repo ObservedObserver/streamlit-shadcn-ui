@@ -15,7 +15,16 @@ body .dark .sentinel {
   color: var(--tw-ring-color);
   background: var(--shimmer-image);
 }
-@property --tw-translate-x { syntax: "*"; inherits: false; }
+@property --tw-translate-x {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --inherited-accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: red;
+}
 @property --shimmer-image { syntax: "<image>"; inherits: false; }
 @keyframes spin { to { transform: rotate(360deg); } }
 `
@@ -31,6 +40,14 @@ assert.match(normalized, /--ssui-v2-1-tw-ring-color/)
 assert.match(normalized, /@property --ssui-v2-1-tw-translate-x/)
 assert.match(normalized, /@property --ssui-v2-1-shimmer-image/)
 assert.match(normalized, /var\(--ssui-v2-1-shimmer-image\)/)
+assert.match(
+  normalized,
+  /@layer properties\s*\{\s*:host, \*, ::before, ::after, ::backdrop\s*\{[^}]*--ssui-v2-1-tw-translate-x:\s*0/s
+)
+assert.doesNotMatch(
+  normalized,
+  /:host, \*, ::before, ::after, ::backdrop\s*\{[^}]*--ssui-v2-1-inherited-accent:/s
+)
 assert.match(normalized, /@keyframes ssui-v2-1-spin/)
 assert.match(normalized, /animation: ssui-v2-1-spin/)
 assert.equal(normalizeCompiledShadowCss(normalized), normalized)

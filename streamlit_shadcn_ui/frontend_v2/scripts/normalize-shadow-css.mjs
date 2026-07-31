@@ -6,6 +6,8 @@ const CSS_SCHEMA = "1"
 const TAILWIND_PREFIX = `--ssui-v2-${CSS_SCHEMA}-tw-`
 const REGISTERED_PROPERTY_PREFIX = `--ssui-v2-${CSS_SCHEMA}-`
 const KEYFRAME_PREFIX = `ssui-v2-${CSS_SCHEMA}-`
+const SHADOW_PROPERTY_DEFAULTS_SELECTOR =
+  ":host, *, ::before, ::after, ::backdrop"
 
 function parseSelectorNode(selector) {
   const ast = selectorParser().astSync(selector)
@@ -144,6 +146,81 @@ function namespaceRegisteredProperties(root) {
   })
 }
 
+// ShadowRoot-local @property rules do not supply their initial values to
+// descendants. Tailwind 4 relies on those values for composite utilities such
+// as border, translate, ring, and shadow, so mirror non-inheriting defaults in
+// the lowest cascade layer while retaining the registrations for browsers that
+// can apply them.
+function seedShadowRegisteredPropertyDefaults(root) {
+  const defaults = new Map()
+
+  root.walkAtRules("property", (atRule) => {
+    const propertyName = atRule.params.trim()
+    const inherits = atRule.nodes?.find(
+      (node) => node.type === "decl" && node.prop === "inherits"
+    )
+    const initialValue = atRule.nodes?.find(
+      (node) =>
+        node.type === "decl" && node.prop === "initial-value"
+    )
+
+    if (
+      propertyName.startsWith("--") &&
+      inherits?.value.trim() === "false" &&
+      initialValue?.value.trim()
+    ) {
+      defaults.set(propertyName, initialValue.value)
+    }
+  })
+
+  if (defaults.size === 0) {
+    return
+  }
+
+  const normalizedSelector = SHADOW_PROPERTY_DEFAULTS_SELECTOR.replaceAll(
+    " ",
+    ""
+  )
+  let defaultsRule
+  root.walkRules((rule) => {
+    if (
+      !defaultsRule &&
+      rule.selector.replaceAll(" ", "") === normalizedSelector &&
+      rule.parent?.type === "atrule" &&
+      rule.parent.name === "layer" &&
+      rule.parent.params.trim() === "properties"
+    ) {
+      defaultsRule = rule
+    }
+  })
+
+  if (!defaultsRule) {
+    const propertiesLayer = postcss.atRule({
+      name: "layer",
+      params: "properties",
+    })
+    defaultsRule = postcss.rule({
+      selector: SHADOW_PROPERTY_DEFAULTS_SELECTOR,
+    })
+    propertiesLayer.append(defaultsRule)
+    root.append(propertiesLayer)
+  }
+
+  const existingProperties = new Set(
+    defaultsRule.nodes
+      ?.filter((node) => node.type === "decl")
+      .map((node) => node.prop) ?? []
+  )
+  for (const [propertyName, initialValue] of defaults) {
+    if (!existingProperties.has(propertyName)) {
+      defaultsRule.append({
+        prop: propertyName,
+        value: initialValue,
+      })
+    }
+  }
+}
+
 function namespaceKeyframes(root) {
   const keyframes = new Map()
 
@@ -249,6 +326,7 @@ export function normalizeCompiledShadowCss(css) {
   normalizeSelectors(root)
   namespaceTailwindProperties(root)
   namespaceRegisteredProperties(root)
+  seedShadowRegisteredPropertyDefaults(root)
   namespaceKeyframes(root)
   auditCompiledCss(root)
   return root.toString()

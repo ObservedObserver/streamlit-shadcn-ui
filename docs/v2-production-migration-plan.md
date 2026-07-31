@@ -526,6 +526,10 @@ The ShadowRoot stylesheet is a build artifact with four explicit stages:
      Tailwind Preflight or `@theme` into the owned `:host`/app-root scope;
    - Tailwind-private custom properties and their `@property` registrations get
      a versioned `--ssui-v2-<css-schema>-*` prefix;
+   - because browsers do not apply ShadowRoot-local `@property` initial values
+     to shadow descendants, non-inheriting registered properties with an
+     explicit initial value are also seeded on every shadow element and
+     pseudo-element in the lowest `properties` cascade layer;
    - emitted keyframe names and animation references get the same namespace;
    - layer ordering is deterministic;
    - unscoped `:root`, `html`, `body`, document IDs, `@import`, and external
