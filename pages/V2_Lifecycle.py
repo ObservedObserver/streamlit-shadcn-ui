@@ -1,11 +1,11 @@
 import streamlit as st
 
-import streamlit_shadcn_ui.v2 as ui
+import streamlit_shadcn_ui as ui
 
-st.title("V2 multipage lifecycle fixture")
+st.title("Multipage lifecycle fixture")
 st.caption(
-    "This page verifies that the V2 runtime remains opt-in and that component "
-    "identity is session-scoped across Streamlit pages."
+    "This page verifies that component identity is session-scoped across "
+    "Streamlit pages in the V2-only 1.0 runtime."
 )
 
 page_value = ui.select(

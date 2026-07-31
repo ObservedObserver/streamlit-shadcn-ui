@@ -2,13 +2,7 @@
 
 import streamlit as st
 
-import streamlit_shadcn_ui as package
-import streamlit_shadcn_ui.v1 as legacy
-import streamlit_shadcn_ui.v2 as ui
-
-
-if legacy.button is not package.button:
-    raise RuntimeError("The explicit V1 rollback namespace is not an alias.")
+import streamlit_shadcn_ui as ui
 
 st.title("Installed Streamlit Shadcn UI V2 smoke")
 

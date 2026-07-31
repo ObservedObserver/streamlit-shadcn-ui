@@ -4,7 +4,7 @@ The breadcrumb component returns a click event when a user clicks on any breadcr
 
 ```py
 import streamlit as st
-import streamlit_shadcn_ui.v2 as ui
+import streamlit_shadcn_ui as ui
 
 clicked = ui.breadcrumb([
     ui.BreadcrumbItem("Home", href="/"),
@@ -20,7 +20,7 @@ if clicked:
 
 ```py
 import streamlit as st
-import streamlit_shadcn_ui.v2 as ui
+import streamlit_shadcn_ui as ui
 
 # Initialize current page in session state
 if "current_page" not in st.session_state:

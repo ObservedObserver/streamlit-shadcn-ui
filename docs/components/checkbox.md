@@ -4,7 +4,7 @@ Each V2 checkbox owns one boolean value. Compose several checkboxes when the use
 
 ```python
 import streamlit as st
-import streamlit_shadcn_ui.v2 as ui
+import streamlit_shadcn_ui as ui
 
 accepted = ui.checkbox(
     "Accept the terms",

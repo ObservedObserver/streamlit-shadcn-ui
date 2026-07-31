@@ -2,7 +2,7 @@
 
 ```py
 import streamlit as st
-import streamlit_shadcn_ui.v2 as ui
+import streamlit_shadcn_ui as ui
 
 # Slider Component
 slider_value = ui.slider("Select a Value", min_value=0, max_value=100, value=20, step=2)

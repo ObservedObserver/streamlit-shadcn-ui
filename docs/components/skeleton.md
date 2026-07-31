@@ -2,7 +2,7 @@
 
 ```python
 import streamlit as st
-import streamlit_shadcn_ui.v2 as ui
+import streamlit_shadcn_ui as ui
 
 columns = st.columns([1, 4])
 with columns[0]:

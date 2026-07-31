@@ -45,7 +45,7 @@ class RuntimeCompatibilityTests(unittest.TestCase):
         ):
             _streamlit_compat.fail_if_trigger_in_form("dropdown_menu")
 
-    def test_package_sources_parse_with_python_37_grammar(self) -> None:
+    def test_package_sources_parse_with_python_310_grammar(self) -> None:
         package_root = (
             Path(__file__).resolve().parents[2] / "streamlit_shadcn_ui"
         )
@@ -55,23 +55,26 @@ class RuntimeCompatibilityTests(unittest.TestCase):
                 ast.parse(
                     source_path.read_text(encoding="utf-8"),
                     filename=str(source_path),
-                    feature_version=(3, 7),
+                    feature_version=(3, 10),
                 )
             except SyntaxError as error:
                 failures.append("%s: %s" % (source_path, error))
 
         self.assertEqual(failures, [])
 
-    def test_v1_namespace_does_not_eagerly_import_v2(self) -> None:
+    def test_package_root_loads_v2_without_legacy_modules(self) -> None:
         process = subprocess.run(
             [
                 sys.executable,
                 "-c",
                 (
                     "import sys, streamlit_shadcn_ui as package; "
-                    "assert callable(package.button); "
+                    "import streamlit_shadcn_ui.v2 as v2; "
+                    "assert package.button is v2.button; "
+                    "assert 'streamlit_shadcn_ui.v1' not in sys.modules; "
                     "assert not any(name.startswith("
-                    "'streamlit_shadcn_ui.v2') for name in sys.modules)"
+                    "'streamlit_shadcn_ui.py_components') "
+                    "for name in sys.modules)"
                 ),
             ],
             capture_output=True,

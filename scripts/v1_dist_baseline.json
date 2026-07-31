@@ -1,9 +1,0 @@
-{
-  "baselineCommit": "63f5120701d06838e47e5c779d55c85c8fd46b2d",
-  "capturedFor": "Wave 0/1 pre-migration V1 rollback artifact",
-  "files": {
-    "assets/index-K5oQX8BC.css": "1b4bf35a37d233fb147c0b454e0cec66a29d6421930e1d023ce652e3d99d4fda",
-    "assets/index-kpofO78I.js": "b8c7741fcbcb29550f945ed7acf1d36efc7bafb371ce0b6b7957274b9a9093ba",
-    "index.html": "757cb80695f38271d576cf2f6f1200a48ce9db4d01ea42ce903a940e6d34200b"
-  }
-}

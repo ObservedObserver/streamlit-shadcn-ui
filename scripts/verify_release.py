@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed release checks for the Components V2 tree and archives."""
+"""Fail-closed checks for the V2-only 1.0 source tree and archives."""
 
 from __future__ import annotations
 
@@ -17,9 +17,14 @@ from typing import Dict, Iterable, Mapping, Tuple
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ROOT = ROOT / "streamlit_shadcn_ui"
-V1_DIST = PACKAGE_ROOT / "components" / "packages" / "frontend" / "dist"
 V2_DIST = PACKAGE_ROOT / "frontend_v2" / "dist"
-BASELINE_PATH = ROOT / "scripts" / "v1_dist_baseline.json"
+LEGACY_TRACKED_PREFIXES = (
+    "e2e/",
+    "local_components/",
+    "streamlit_shadcn_ui/components/",
+    "streamlit_shadcn_ui/py_components/",
+    "streamlit_shadcn_ui/v1/",
+)
 
 
 def _sha256(data: bytes) -> str:
@@ -71,12 +76,43 @@ def _verify_versions() -> str:
         )
     )["version"]
     versions = {root_version, nested_version, frontend_version}
-    if len(versions) != 1:
+    if versions != {"1.0.0"}:
         raise AssertionError(
-            "Root, nested component, and frontend versions differ: %r"
+            "Root, component, and frontend versions must all be 1.0.0: %r"
             % sorted(versions)
         )
     return root_version
+
+
+def _verify_no_tracked_legacy_sources() -> None:
+    process = subprocess.run(
+        ["git", "ls-files"],
+        cwd=ROOT,
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    if process.returncode != 0:
+        raise AssertionError("Unable to inspect tracked source files.")
+    legacy = sorted(
+        path
+        for path in process.stdout.splitlines()
+        if (ROOT / path).exists()
+        and (
+            path.startswith(LEGACY_TRACKED_PREFIXES)
+            or path
+            in {
+                "docs/_Playground.py",
+                "scripts/build_frontend.sh",
+                "scripts/frontend.sh",
+                "scripts/v1_dist_baseline.json",
+                "scripts/verify_v1_build.sh",
+                "tests/v2/fixtures/v1_smoke.py",
+            }
+        )
+    )
+    if legacy:
+        raise AssertionError("Tracked V1-only files remain: %r" % legacy)
 
 
 def _verify_checked_in_dist_is_current() -> None:
@@ -96,36 +132,11 @@ def _verify_checked_in_dist_is_current() -> None:
         text=True,
     )
     if process.returncode != 0:
-        raise AssertionError(
-            "Unable to inspect the checked-in V2 dist: %s"
-            % process.stderr.strip()
-        )
+        raise AssertionError("Unable to inspect the checked-in V2 dist.")
     if process.stdout.strip():
         raise AssertionError(
             "The checked-in V2 dist differs from the release build:\n%s"
             % process.stdout.rstrip()
-        )
-
-
-def _verify_v1_files(files: Mapping[str, bytes]) -> None:
-    baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))["files"]
-    if set(files) != set(baseline):
-        raise AssertionError(
-            "V1 dist file set changed: expected %r, found %r"
-            % (sorted(baseline), sorted(files))
-        )
-    mismatches = {
-        name: {
-            "expected": baseline[name],
-            "actual": _sha256(files[name]),
-        }
-        for name in sorted(files)
-        if _sha256(files[name]) != baseline[name]
-    }
-    if mismatches:
-        raise AssertionError(
-            "V1 rollback artifact checksum changed: %s"
-            % json.dumps(mismatches, sort_keys=True)
         )
 
 
@@ -142,14 +153,11 @@ def _verify_v2_files(files: Mapping[str, bytes]) -> Tuple[str, str]:
     )
     unexpected = sorted(set(files) - {entry, stylesheet})
     if unexpected:
-        raise AssertionError(
-            "Components V2 dist contains unexpected release files: %r"
-            % unexpected
-        )
+        raise AssertionError("V2 dist contains unexpected files: %r" % unexpected)
     if b"sourceMappingURL" in files[entry]:
-        raise AssertionError("Production V2 entry unexpectedly references a source map")
+        raise AssertionError("Production V2 entry references a source map.")
     if b"@import" in files[stylesheet]:
-        raise AssertionError("Production V2 CSS must not contain @import")
+        raise AssertionError("Production V2 CSS must not contain @import.")
     return entry, stylesheet
 
 
@@ -180,7 +188,7 @@ def _archive_files(path: Path) -> Dict[str, bytes]:
 def _strip_sdist_prefix(files: Mapping[str, bytes]) -> Dict[str, bytes]:
     roots = {name.split("/", 1)[0] for name in files}
     if len(roots) != 1:
-        raise AssertionError("sdist must contain exactly one top-level directory")
+        raise AssertionError("sdist must contain one top-level directory.")
     prefix = next(iter(roots)) + "/"
     return {
         name[len(prefix) :]: content
@@ -192,65 +200,56 @@ def _strip_sdist_prefix(files: Mapping[str, bytes]) -> Dict[str, bytes]:
 def _verify_archive(
     path: Path,
     version: str,
-    source_v1: Mapping[str, bytes],
     source_v2: Mapping[str, bytes],
 ) -> None:
     archive_files = _archive_files(path)
     wheel = path.suffix == ".whl"
     files = archive_files if wheel else _strip_sdist_prefix(archive_files)
-
     package_prefix = "streamlit_shadcn_ui/"
-    archived_v1 = {
-        name.split("/components/packages/frontend/dist/", 1)[1]: content
-        for name, content in files.items()
-        if name.startswith(
-            package_prefix + "components/packages/frontend/dist/"
-        )
-    }
+
     archived_v2 = {
         name.split("/frontend_v2/dist/", 1)[1]: content
         for name, content in files.items()
         if name.startswith(package_prefix + "frontend_v2/dist/")
     }
-    _verify_v1_files(archived_v1)
     _verify_v2_files(archived_v2)
-    if archived_v1 != source_v1:
-        raise AssertionError("%s contains different V1 bytes" % path.name)
     if archived_v2 != source_v2:
-        raise AssertionError("%s contains different V2 bytes" % path.name)
+        raise AssertionError("%s contains different V2 bytes." % path.name)
 
     nested_manifest = files.get(package_prefix + "pyproject.toml")
     if nested_manifest is None:
-        raise AssertionError("%s omits the nested component manifest" % path.name)
+        raise AssertionError("%s omits the component manifest." % path.name)
     nested_text = nested_manifest.decode("utf-8")
     if 'asset_dir = "frontend_v2/dist"' not in nested_text:
-        raise AssertionError("%s has the wrong V2 asset_dir" % path.name)
+        raise AssertionError("%s has the wrong V2 asset_dir." % path.name)
     if 'version = "%s"' % version not in nested_text:
-        raise AssertionError("%s has a mismatched nested version" % path.name)
+        raise AssertionError("%s has a mismatched component version." % path.name)
 
-    required_namespaces = [
-        package_prefix + "v1/__init__.py",
+    required = {
+        package_prefix + "__init__.py",
         package_prefix + "v2/__init__.py",
-    ]
-    missing_namespaces = [
-        name for name in required_namespaces if name not in files
-    ]
-    if missing_namespaces:
-        raise AssertionError(
-            "%s omits required compatibility namespaces %r"
-            % (path.name, missing_namespaces)
-        )
+    }
+    missing = sorted(required - set(files))
+    if missing:
+        raise AssertionError("%s omits public package files %r" % (path.name, missing))
 
     forbidden = [
         name
         for name in files
-        if "/node_modules/" in ("/" + name)
+        if name.startswith(
+            (
+                package_prefix + "components/",
+                package_prefix + "py_components/",
+                package_prefix + "v1/",
+            )
+        )
+        or "/node_modules/" in ("/" + name)
         or name.startswith(package_prefix + "frontend_v2/src/")
         or name.endswith((".ts", ".tsx", ".map"))
     ]
     if forbidden:
         raise AssertionError(
-            "%s contains development-only frontend files: %r"
+            "%s contains legacy or development files: %r"
             % (path.name, forbidden[:10])
         )
 
@@ -259,69 +258,40 @@ def _verify_archive(
             name for name in files if name.endswith(".dist-info/METADATA")
         ]
         if len(metadata_names) != 1:
-            raise AssertionError("%s has ambiguous wheel metadata" % path.name)
+            raise AssertionError("%s has ambiguous wheel metadata." % path.name)
         metadata = files[metadata_names[0]].decode("utf-8")
+        lines = set(metadata.splitlines())
         required_lines = {
-            "Requires-Python: >=3.7",
-            "Requires-Dist: streamlit>=0.63",
-            (
-                'Requires-Dist: streamlit_extras>=0.3.5; '
-                'python_version >= "3.8"'
-            ),
-            (
-                'Requires-Dist: streamlit>=1.60; '
-                'extra == "components-v2"'
-            ),
+            "Requires-Python: >=3.10",
+            "Requires-Dist: streamlit>=1.60",
         }
-        missing = sorted(
-            line for line in required_lines if line not in metadata.splitlines()
-        )
-        if missing:
+        missing_lines = sorted(required_lines - lines)
+        if missing_lines:
             raise AssertionError(
-                "%s wheel metadata is missing %r" % (path.name, missing)
+                "%s wheel metadata is missing %r" % (path.name, missing_lines)
             )
+        if "streamlit_extras" in metadata or "components-v2" in metadata:
+            raise AssertionError("%s retains a legacy dependency or extra." % path.name)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "archives",
-        nargs="*",
-        type=Path,
-        help="Optional wheel and/or sdist paths to inspect.",
-    )
-    parser.add_argument(
-        "--require-clean-dist",
-        action="store_true",
-        help=(
-            "Require the checked-in V2 dist to be clean after a frontend "
-            "release build."
-        ),
-    )
+    parser.add_argument("archives", nargs="*", type=Path)
+    parser.add_argument("--require-clean-dist", action="store_true")
     args = parser.parse_args()
 
     version = _verify_versions()
+    _verify_no_tracked_legacy_sources()
     if args.require_clean_dist:
         _verify_checked_in_dist_is_current()
-    v1_files = _files_under(V1_DIST)
     v2_files = _files_under(V2_DIST)
-    _verify_v1_files(v1_files)
     entry, stylesheet = _verify_v2_files(v2_files)
-
     for archive in args.archives:
-        _verify_archive(
-            archive.resolve(),
-            version,
-            v1_files,
-            v2_files,
-        )
+        _verify_archive(archive.resolve(), version, v2_files)
 
     summary = {
+        "architecture": "streamlit-components-v2",
         "archives": [archive.name for archive in args.archives],
-        "v1Files": {
-            name: _sha256(content)
-            for name, content in sorted(v1_files.items())
-        },
         "v2": {
             "entry": {
                 "gzipBytes": len(gzip.compress(v2_files[entry], mtime=0)),

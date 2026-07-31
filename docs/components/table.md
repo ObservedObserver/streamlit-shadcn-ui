@@ -2,7 +2,7 @@
 
 ```py
 import pandas as pd
-import streamlit_shadcn_ui.v2 as ui
+import streamlit_shadcn_ui as ui
 # Sample data
 data = [
     {"invoice": "INV001", "paymentStatus": "Paid", "totalAmount": 500, "paymentMethod": "Credit Card"},

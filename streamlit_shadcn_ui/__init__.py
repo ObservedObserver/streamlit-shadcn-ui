@@ -1,4 +1,4 @@
-import os
-import streamlit.components.v1 as components
+"""shadcn components for Streamlit's Components V2 runtime."""
 
-from .py_components import *
+from .v2 import *
+from .v2 import __all__

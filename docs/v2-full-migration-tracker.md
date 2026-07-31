@@ -1,12 +1,12 @@
 # Components V2 full migration tracker
 
-Status: **Canonical V2 examples complete; V1 deletion and root cutover pending**
+Status: **Complete — V2-only 1.0 cutover**
 
 Date: 2026-07-31
 
 The source of truth for architecture and gates is the
 [production migration plan](./v2-production-migration-plan.md). This tracker
-maps the released V1 Python catalog to the opt-in V2 namespace. “Implemented”
+maps the released 0.1.x V1 Python catalog to the V2-only 1.0 API. “Implemented”
 means source and unit coverage exist; “accepted” additionally means the wave's
 real Streamlit browser and packaging gates are green.
 
@@ -53,29 +53,28 @@ Wave 5 evidence is recorded in the
 ## Wave 6 compatibility disposition
 
 - The [compatibility matrix](./v2-compatibility-matrix.md) covers all
-  thirty-three V1 root exports, all thirty-five V2 widget functions, and the
-  seven typed V2 descriptors.
+  thirty-three legacy V1 root exports, all thirty-five 1.0 widget functions,
+  and the seven typed descriptors.
 - Thirty-two stable V1 component roles have V2 implementations. V1
   `checkbox` groups and context-managed `card` usage need application-level
   adapters.
-- Experimental `element` composition remains compatibility-only.
+- Experimental `element` composition is removed in 1.0.
 - Public keys are optional and resolve to private Streamlit-safe mount keys;
   return values and callbacks are the public state contract.
 - `Home.py`, all component pages, and all thirty-five embedded component API
-  documents now use the explicit V2 namespace and contain no `element()` or
-  legacy argument forms.
-- `streamlit_shadcn_ui.v1` remains temporarily available only until the
-  dedicated V1 cleanup phase.
-- The accepted release target is a V2-only `1.0.0`; the root switch, global
-  runtime floor increase, and version bump happen after V1 deletion.
+  documents use the 1.0 package root and contain no `element()` or legacy
+  argument forms.
+- The V1 Python implementation, React workspace, iframe assets, baselines,
+  compatibility namespace, and V1-only tests are removed.
+- The package root exports V2, metadata targets `1.0.0`, and the global floors
+  are Python 3.10 and Streamlit 1.60.
 
-The cutover and rollback decision is
-[ADR-010](./adr/010-v2-1.0-single-track-cutover.md). The repository is not yet
-ready to publish 1.0 because V1 cleanup and the public root collapse remain.
-Final regression, performance, and distribution evidence is recorded in the
+The completed cutover and rollback decision is
+[ADR-010](./adr/010-v2-1.0-single-track-cutover.md). Final regression,
+performance, and distribution evidence is recorded in the
 [Wave 6 release-readiness record](./v2-wave6-release-readiness.md).
 
-## Compatibility-only or undocumented V1 surfaces
+## Removed or undocumented V1 surfaces
 
 The V1 package also exposes low-level helpers such as `select_trigger`,
 `select_options`, `dropdown_menu_trigger`, `dropdown_menu_content`,

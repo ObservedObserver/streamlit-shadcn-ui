@@ -4,10 +4,11 @@ Status: **Final for the V2-only 1.0 API**
 
 Date: 2026-07-30
 
-This document covers every name exported by the released package root and
-every name exported by `streamlit_shadcn_ui.v2`. The machine-readable coverage
-source is [v2-compatibility-matrix.json](./v2-compatibility-matrix.json), and a
-test prevents either namespace from drifting away from it.
+This document covers every name exported by the released 0.1.x package root
+and every name exported by the V2-only 1.0 package root. The machine-readable
+coverage source is
+[v2-compatibility-matrix.json](./v2-compatibility-matrix.json), and a test
+prevents the 1.0 namespace from drifting away from it.
 
 V2 is a conceptual catalog migration, not a source-compatible namespace swap.
 All V2 keys are optional and keyword-only. The library derives a private,
@@ -22,8 +23,8 @@ runtime-validated.
 - **Migrated**: V2 has the same product role, with deliberate API edits.
 - **Adapter required**: the same name exists, but the V1 usage model cannot be
   represented by one V2 call.
-- **Compatibility only**: the V1 surface remains available through the package
-  root and `streamlit_shadcn_ui.v1`; V2 does not claim parity.
+- **Removed**: the V1 surface has no 1.0 adapter. Applications that still need
+  it must remain on the last 0.1.x package.
 
 ## Interactive and overlay components
 
@@ -76,12 +77,11 @@ V2 also adds `badge`, `separator`, and `skeleton`, plus typed descriptors:
 `Choice`, `MenuItem`, `AccordionItem`, `BadgeItem`, `BreadcrumbItem`,
 `BreadcrumbSelection`, and `TableColumn`.
 
-## Compatibility-only surfaces
+## Removed V1-only surfaces
 
-`element` and the V1 `with ui.card(...)` composition protocol remain
-compatibility-only. V2 intentionally renders one independently isolated
-Streamlit component per call, so it does not reproduce the V1 experimental
-tree serializer.
+`element` and the V1 `with ui.card(...)` composition protocol are removed in
+1.0. V2 intentionally renders one independently isolated Streamlit component
+per call, so it does not reproduce the V1 experimental tree serializer.
 
 The following module-level helpers were implementation details of the
 multi-iframe architecture and receive no V2 adapters:
@@ -124,8 +124,8 @@ state API, if needed, must use a separate user-owned key and a new ADR.
 import streamlit_shadcn_ui as ui
 fruit = ui.select("Fruit", ["Apple", "Banana"], key="fruit")
 
-# V2
-import streamlit_shadcn_ui.v2 as ui
+# 1.0
+import streamlit_shadcn_ui as ui
 fruit = ui.select(
     "Fruit",
     ["Apple", "Banana"],
@@ -148,7 +148,5 @@ values = {
 }
 ```
 
-```python
-# V1 compatibility / rollback remains explicit
-import streamlit_shadcn_ui.v1 as ui
-```
+Applications that cannot migrate yet should pin the final 0.1.x release. The
+1.0 wheel does not contain `streamlit_shadcn_ui.v1` or the iframe frontend.

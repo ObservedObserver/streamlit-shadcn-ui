@@ -1,27 +1,26 @@
 # V2 Wave 6 release readiness
 
-Status: **Technical migration complete; visual re-validation, Windows, and release-feedback gates open**
+Status: **Complete for the V2-only 1.0 source and distribution candidate**
 
 Date: 2026-07-31
 
-Wave 6 closes the repository-side migration of the stable component catalog.
-It does not claim that local automation is a substitute for publishing an
-opt-in release and observing real applications.
+Wave 6 closes the repository-side migration of the stable component catalog
+and the V2-only 1.0 cutover. Publication remains a separate maintainer action.
 
 ## Outcome
 
-- V2 exports thirty-five public helpers across thirty-four rendered component
+- The 1.0 package root exports thirty-five public helpers across thirty-four rendered component
   kinds.
 - All thirty-two stable high-level V1 component roles have a V2
   implementation.
-- The thirty-three-name V1 root remains unchanged. The additional `v1`
-  namespace is an exact rollback alias.
+- The V1 Python implementation, React workspace, iframe assets, and `v1`
+  compatibility namespace are absent from the source and release archives.
 - V1 Checkbox groups and context-managed Card usage require application-level
-  adapters. Experimental `element` composition remains V1-only.
+  migration. Experimental `element` composition is removed.
 - Raw V2 `st.session_state` cells are private protocol envelopes.
-- The package root remains V1; V2 remains an explicit import.
-- Python and Streamlit global floors are unchanged. V2 keeps its guarded
-  Python 3.10 / Streamlit 1.60 floor.
+- The package root is the canonical V2 API; the direct `.v2` import remains an
+  alias to the same objects.
+- The global floors are Python 3.10 and Streamlit 1.60.
 
 The detailed contract is the
 [compatibility matrix](./v2-compatibility-matrix.md), and the decision is
@@ -35,7 +34,7 @@ light/dark environment, direction, and language.
 
 | Layer | Verified release |
 |---|---:|
-| Python package candidate | 0.1.19 source; no release bump authorized |
+| Python package candidate | 1.0.0 |
 | Streamlit | 1.60.0 |
 | Components V2 library | 0.2.0 |
 | shadcn CLI | 4.16.0 |
@@ -57,7 +56,7 @@ needed for this candidate.
 
 | Gate | Result |
 |---|---:|
-| Python V2 and compatibility tests | 48 passed |
+| Python API, documentation, compatibility, and release tests | 58 passed |
 | Frontend Vitest | 63 passed |
 | Generated shadcn source and import graph | Passed |
 | Strict TypeScript and production build | Passed |
@@ -142,33 +141,22 @@ checked-in dist is clean after the build.
 
 | Asset | Raw | Deterministic gzip | SHA-256 |
 |---|---:|---:|---|
-| `entry-N_BsFLGy.js` | 923,785 B | 228,913 B | `704f4529e5e99c9c2f7287dfed91f229c5016c54a1abe6b9aed53637fc456cba` |
-| `style--8f7rCKt.css` | 104,025 B | 14,745 B | `5be72532d7a2a9060bc6362be2b68aed853e3ca00189c8429f5689244d05359f` |
+| `entry-CTom8dO1.js` | 925,393 B | 229,121 B | `62a59e055065e2bd1675d01dde874cdcd020d7a28f6b359550a004096630d60c` |
+| `style--8f7rCKt.css` | 107,192 B | 15,183 B | `21bde0fab99f25a75e92ee3f40ac7d2adf242bf2e63bd48d0d26a7da917210a8` |
 
 Both archives contain:
 
-- the explicit `streamlit_shadcn_ui.v1` rollback namespace;
-- the complete `streamlit_shadcn_ui.v2` namespace;
+- the V2-only `streamlit_shadcn_ui` package root and `.v2` implementation;
 - one V2 JavaScript entry and one V2 stylesheet;
 - no frontend development source, source map, or `node_modules`;
-- byte-identical pinned V1 assets.
+- no V1 source, legacy React workspace, or iframe assets.
 
-Fresh wheel and sdist environments ran Streamlit 1.60 with Node absent from
-the server `PATH`. Each rendered thirty-four independent component hosts and
-thirty-four component kinds with zero iframe, zero invalid ShadowRoot, and
-zero browser error or warning.
+Fresh wheel and sdist environments run Streamlit 1.60 with Node absent from the
+server `PATH`. The installed catalog renders thirty-four independent component
+hosts and thirty-four component kinds with zero iframe and valid ShadowRoots.
 
-The first truly cold installed-catalog render can exceed ten seconds because
-the fixture mounts the entire V1 compatibility import plus thirty-four V2
-components at once. The installed smoke therefore gives first render a
-sixty-second startup budget while keeping normal component expectations at
-ten seconds.
-
-Setuptools reports that the legacy license-table metadata will be deprecated
-in 2027. Converting it to the new SPDX string requires a build-backend floor
-that no longer supports the promised Python 3.7 V1 rollback. ADR-008 therefore
-defers that metadata-only change to the same semantic breaking release that
-raises the global runtime floor.
+The 1.0 metadata uses the SPDX license expression supported by the raised
+setuptools build floor.
 
 ## Interactive accessibility evidence
 
@@ -185,8 +173,8 @@ Safari 26.5 on macOS passed the final-bundle interactive checks on
   expected false decision.
 
 Safari was restored to Actual Size and VoiceOver was confirmed off afterward.
-The Windows-only NVDA/Firefox check has not run in this workspace and remains
-an explicit promotion gate.
+The Windows-only NVDA/Firefox check has not run in this workspace. ADR-010
+records it as useful follow-up coverage rather than a blocking 1.0 gate.
 
 The exact standard shadcn neutral palette includes muted-on-muted and
 destructive-Badge combinations that axe measures at approximately 4.34:1 and
@@ -216,17 +204,10 @@ them up on completion, and do not modify the production bundle.
 two-release rollback policy that this record originally evaluated. The
 maintainer has approved a breaking V2-only `1.0.0` target.
 
-The release remains blocked until:
-
-1. canonical Home, component pages, and embedded API examples use V2 and pass
-   Python plus real-browser verification;
-2. all V1-only Python, React, iframe assets, package data, baselines, and tests
-   are removed;
-3. the package root exports V2, global runtime floors match the V2 guard, and
-   the compatibility documentation describes the approved breaking changes;
-4. the exact proposed wheel and sdist repeat the full unit, browser,
-   accessibility, performance, and clean-install gates;
-5. release metadata is set to `1.0.0` and the maintainer approves publishing.
+Repository-side 1.0 conditions 1–5 are complete: canonical documentation uses
+the package root, V1-only artifacts are removed, floors and migration notes are
+updated, exact archives pass release verification, and metadata is `1.0.0`.
+Publishing still requires an explicit maintainer action and credentials.
 
 The Windows NVDA/Firefox smoke remains a documented follow-up rather than a
 blocking 1.0 condition. No release credentials or publication action are

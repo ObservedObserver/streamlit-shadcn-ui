@@ -15,8 +15,7 @@ def _version_tuple(value: str) -> tuple:
 def require_v2_runtime() -> Any:
     if sys.version_info < (3, 10):
         raise RuntimeError(
-            "streamlit_shadcn_ui.v2 requires Python >= 3.10. "
-            "The existing V1 API remains available on older Python versions."
+            "streamlit-shadcn-ui requires Python >= 3.10."
         )
 
     import streamlit as st
@@ -27,9 +26,8 @@ def require_v2_runtime() -> Any:
         or not hasattr(st.components, "v2")
     ):
         raise RuntimeError(
-            "streamlit_shadcn_ui.v2 requires Streamlit >= 1.60. "
-            "Install streamlit-shadcn-ui[components-v2] or continue using "
-            "the V1 API."
+            "streamlit-shadcn-ui requires Streamlit >= 1.60. "
+            "Upgrade Streamlit before rendering a component."
         )
     return st
 

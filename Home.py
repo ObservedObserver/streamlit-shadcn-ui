@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-import streamlit_shadcn_ui.v2 as ui
+import streamlit_shadcn_ui as ui
 
 
 st.set_page_config(page_title="Streamlit Shadcn UI", page_icon="🧱")

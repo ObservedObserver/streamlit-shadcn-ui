@@ -21,8 +21,12 @@ class ReleaseContractTests(unittest.TestCase):
         )
         self.assertEqual(process.returncode, 0, process.stderr)
         summary = json.loads(process.stdout)
-        self.assertEqual(summary["version"], "0.1.19")
-        self.assertEqual(len(summary["v1Files"]), 3)
+        self.assertEqual(summary["version"], "1.0.0")
+        self.assertEqual(
+            summary["architecture"],
+            "streamlit-components-v2",
+        )
+        self.assertNotIn("v1Files", summary)
         self.assertTrue(summary["v2"]["entry"]["name"].startswith("entry-"))
         self.assertTrue(
             summary["v2"]["stylesheet"]["name"].startswith("style-")

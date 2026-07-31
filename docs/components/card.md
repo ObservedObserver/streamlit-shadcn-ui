@@ -4,7 +4,7 @@ The V2 card API is declarative: pass its title, description, and content directl
 
 ```python
 import streamlit as st
-import streamlit_shadcn_ui.v2 as ui
+import streamlit_shadcn_ui as ui
 
 columns = st.columns(2)
 with columns[0]:

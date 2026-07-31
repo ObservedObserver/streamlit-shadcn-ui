@@ -4,7 +4,7 @@ V2 intentionally replaces the experimental generic `element()` renderer with typ
 
 ```python
 import streamlit as st
-import streamlit_shadcn_ui.v2 as ui
+import streamlit_shadcn_ui as ui
 
 columns = st.columns(2)
 with columns[0]:

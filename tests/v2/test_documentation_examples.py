@@ -13,8 +13,7 @@ _DOC_PATHS = sorted((_ROOT / "docs" / "components").glob("*.md"))
 _PYTHON_FENCE = re.compile(r"```(?:py|python)\n(.*?)```", re.DOTALL)
 
 _LEGACY_PATTERNS = (
-    "import streamlit_shadcn_ui as ui",
-    "from streamlit_shadcn_ui import",
+    "streamlit_shadcn_ui.v1",
     "ui.element(",
     "with ui.card(",
     ".render()",
@@ -32,11 +31,12 @@ _LEGACY_PATTERNS = (
 
 
 class DocumentationExampleTests(unittest.TestCase):
-    def test_canonical_app_sources_use_only_the_v2_namespace(self) -> None:
+    def test_canonical_app_sources_use_the_1_0_root_namespace(self) -> None:
         for path in _APP_PATHS:
             with self.subTest(path=path.relative_to(_ROOT)):
                 source = path.read_text(encoding="utf-8")
-                self.assertIn("import streamlit_shadcn_ui.v2 as ui", source)
+                self.assertIn("import streamlit_shadcn_ui as ui", source)
+                self.assertNotIn("streamlit_shadcn_ui.v2", source)
                 for pattern in _LEGACY_PATTERNS:
                     self.assertNotIn(pattern, source)
 
@@ -45,7 +45,8 @@ class DocumentationExampleTests(unittest.TestCase):
         for path in _DOC_PATHS:
             with self.subTest(path=path.relative_to(_ROOT)):
                 source = path.read_text(encoding="utf-8")
-                self.assertIn("import streamlit_shadcn_ui.v2 as ui", source)
+                self.assertIn("import streamlit_shadcn_ui as ui", source)
+                self.assertNotIn("streamlit_shadcn_ui.v2", source)
                 for pattern in _LEGACY_PATTERNS:
                     self.assertNotIn(pattern, source)
 

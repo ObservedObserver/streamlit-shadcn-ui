@@ -1,6 +1,6 @@
 import streamlit as st
 
-import streamlit_shadcn_ui.v2 as ui
+import streamlit_shadcn_ui as ui
 
 
 st.set_page_config(
@@ -11,7 +11,7 @@ st.set_page_config(
 
 st.title("Streamlit Shadcn UI · Wave 5")
 st.caption(
-    "The stable V1 Alert Dialog now uses generated shadcn source, "
+    "Alert Dialog uses generated shadcn source, "
     "Base UI modal behavior, a same-ShadowRoot native top-layer host, "
     "and a versioned cross-root modal layer coordinator."
 )

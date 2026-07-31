@@ -60,7 +60,7 @@
     },
     "element": {
       "v2": null,
-      "disposition": "compatibility_only"
+      "disposition": "removed"
     },
     "hover_card": {
       "v2": "hover_card",

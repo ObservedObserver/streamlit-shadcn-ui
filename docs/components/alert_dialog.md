@@ -4,7 +4,7 @@ Alert Dialogs are used to display information to the user. It is a modal window,
 
 ```py
 import streamlit as st
-import streamlit_shadcn_ui.v2 as ui
+import streamlit_shadcn_ui as ui
 
 trigger_btn = ui.button("Trigger Button")
 decision = ui.alert_dialog(
