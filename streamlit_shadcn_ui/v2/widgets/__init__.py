@@ -10,10 +10,13 @@ from .card import card, metric_card
 from .checkbox import checkbox
 from .collapsible import collapsible
 from .dropdown_menu import dropdown_menu
+from .date_picker import date_picker
+from .hover_card import hover_card
 from .input import input
 from .input_otp import input_otp
 from .link_button import link_button
 from .pagination import pagination
+from .popover import popover
 from .progress import progress
 from .radio_group import radio_group
 from .scroll_area import scroll_area
@@ -41,12 +44,15 @@ __all__ = [
     "card",
     "checkbox",
     "collapsible",
+    "date_picker",
     "dropdown_menu",
+    "hover_card",
     "input",
     "input_otp",
     "link_button",
     "metric_card",
     "pagination",
+    "popover",
     "progress",
     "radio_group",
     "scroll_area",

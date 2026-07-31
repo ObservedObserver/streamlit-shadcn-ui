@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "capturedAt": "2026-07-31T06:09:19.827Z",
+  "capturedAt": "2026-07-31T06:43:29.038Z",
   "generator": {
     "name": "shadcn",
     "version": "4.16.0",
@@ -84,6 +84,11 @@
       "sha256": "0a7909c9c8ce8dcbcfb4b355071daad0aae56cf31dfde808253309346e5fdd64",
       "primitive": "base-ui"
     },
+    "hover-card": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/hover-card.json",
+      "sha256": "d1473472766f316799e44a7c6d2e598a5fe16e592c822779ad7d84e8b91437ae",
+      "primitive": "base-ui"
+    },
     "input": {
       "url": "https://ui.shadcn.com/r/styles/base-nova/input.json",
       "sha256": "00e3d8e2bbf597b632bafde6cc1b6006d2f759b9083b32bfd024f0b2edeb2fc1",
@@ -98,6 +103,11 @@
       "url": "https://ui.shadcn.com/r/styles/base-nova/pagination.json",
       "sha256": "30fdca8ec4a5fa3d9175f29e3933443583ee39f638a478e25da56896bd799777",
       "primitive": "react"
+    },
+    "popover": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/popover.json",
+      "sha256": "8c6cec209d1004a1ca4ea06d41c50f54eca991535f75bc72c3c9b3672d4a6f43",
+      "primitive": "base-ui"
     },
     "progress": {
       "url": "https://ui.shadcn.com/r/styles/base-nova/progress.json",
@@ -165,5 +175,5 @@
       "primitive": "base-ui"
     }
   },
-  "snapshotRevision": 3
+  "snapshotRevision": 4
 }

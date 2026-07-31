@@ -64,12 +64,15 @@ class PublicApiContractTests(unittest.TestCase):
                 "card",
                 "checkbox",
                 "collapsible",
+                "date_picker",
                 "dropdown_menu",
+                "hover_card",
                 "input",
                 "input_otp",
                 "link_button",
                 "metric_card",
                 "pagination",
+                "popover",
                 "progress",
                 "radio_group",
                 "scroll_area",
@@ -619,6 +622,89 @@ class PublicApiContractTests(unittest.TestCase):
                 key="bad-calendar",
                 value="2026-01-01",
                 min_date="2026-02-01",
+            )
+
+    def test_wave4_widgets_emit_stateless_and_revisioned_envelopes(
+        self,
+    ) -> None:
+        captured = []
+
+        with patch.object(
+            common_module,
+            "mount",
+            side_effect=lambda **kwargs: captured.append(kwargs),
+        ):
+            values = [
+                public_api.popover(
+                    "Migration details",
+                    "One ShadowRoot.",
+                    key="wave4-popover",
+                ),
+                public_api.hover_card(
+                    "Architecture",
+                    "shadcn plus Base UI",
+                    key="wave4-hover-card",
+                ),
+                public_api.date_picker(
+                    "Release date",
+                    default_value="2026-07-30",
+                    key="wave4-single-date",
+                ),
+                public_api.date_picker(
+                    "Release window",
+                    mode="range",
+                    default_value=["2026-07-30", "2026-08-02"],
+                    key="wave4-date-range",
+                ),
+            ]
+
+        self.assertEqual(
+            values,
+            [None, None, "2026-07-30", ["2026-07-30", "2026-08-02"]],
+        )
+        self.assertEqual(
+            [call["data"]["kind"] for call in captured],
+            ["popover", "hover_card", "date_picker", "date_picker"],
+        )
+        for call in captured[:2]:
+            kind = call["data"]["kind"]
+            self.assertEqual(
+                call["default"],
+                {"meta": {"protocolVersion": 1, "kind": kind}},
+            )
+            self.assertNotIn("callbacks", call)
+        for call in captured[2:]:
+            self.assertEqual(call["default"]["state"]["kind"], "date_picker")
+            self.assertEqual(
+                set(call["callbacks"]),
+                {"on_state_change"},
+            )
+
+    def test_wave4_boundaries_fail_closed(self) -> None:
+        with self.assertRaisesRegex(ValueError, "content_type"):
+            public_api.hover_card(
+                "Unsafe",
+                "<script>alert(1)</script>",
+                content_type="html",
+                key="unsafe-hover-card",
+            )
+        with self.assertRaisesRegex(ValueError, "exactly two"):
+            public_api.date_picker(
+                mode="range",
+                default_value=["2026-07-30"],
+                key="short-range",
+            )
+        with self.assertRaisesRegex(ValueError, "start"):
+            public_api.date_picker(
+                mode="range",
+                default_value=["2026-08-02", "2026-07-30"],
+                key="descending-range",
+            )
+        with self.assertRaisesRegex(ValueError, "bounds"):
+            public_api.date_picker(
+                default_value="2026-07-01",
+                min_date="2026-07-15",
+                key="bounded-date",
             )
 
 

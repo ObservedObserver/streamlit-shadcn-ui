@@ -34,6 +34,9 @@ export type ComponentKind =
   | "toggle"
   | "toggle_group"
   | "calendar"
+  | "popover"
+  | "hover_card"
+  | "date_picker"
 
 export type StateCell<T, TKind extends ComponentKind> = {
   kind: TKind
@@ -439,6 +442,42 @@ export type CalendarEnvelope = {
   }
 }
 
+export type PopoverEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "popover"
+  props: {
+    label: string
+    content: string | null
+    disabled: boolean
+  }
+}
+
+export type HoverCardEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "hover_card"
+  props: {
+    label: string
+    content: string
+    disabled: boolean
+  }
+}
+
+export type DatePickerValue = string | [string, string] | null
+
+export type DatePickerEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "date_picker"
+  state: StateCell<DatePickerValue, "date_picker">
+  props: {
+    label: string | null
+    mode: "single" | "range"
+    placeholder: string
+    minDate: string | null
+    maxDate: string | null
+    disabled: boolean
+  }
+}
+
 export type Envelope =
   | SelectEnvelope
   | DropdownMenuEnvelope
@@ -470,6 +509,9 @@ export type Envelope =
   | ToggleEnvelope
   | ToggleGroupEnvelope
   | CalendarEnvelope
+  | PopoverEnvelope
+  | HoverCardEnvelope
+  | DatePickerEnvelope
 
 export type ProtocolFailure = {
   code: string
@@ -1757,6 +1799,137 @@ function parseCalendar(
   }
 }
 
+function parsePopover(
+  value: Record<string, unknown>
+): PopoverEnvelope | null {
+  const props = value.props
+  if (
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    !isNullableBoundedText(props.content) ||
+    typeof props.disabled !== "boolean"
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "popover",
+    props: {
+      label: props.label,
+      content: props.content,
+      disabled: props.disabled,
+    },
+  }
+}
+
+function parseHoverCard(
+  value: Record<string, unknown>
+): HoverCardEnvelope | null {
+  const props = value.props
+  if (
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    !isBoundedText(props.content) ||
+    typeof props.disabled !== "boolean"
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "hover_card",
+    props: {
+      label: props.label,
+      content: props.content,
+      disabled: props.disabled,
+    },
+  }
+}
+
+function isDatePickerValue(
+  value: unknown
+): value is DatePickerValue {
+  return (
+    value === null ||
+    isIsoDate(value) ||
+    (Array.isArray(value) &&
+      value.length === 2 &&
+      isIsoDate(value[0]) &&
+      isIsoDate(value[1]))
+  )
+}
+
+function dateWithinBounds(
+  value: string,
+  minimum: string | null,
+  maximum: string | null
+): boolean {
+  return (
+    (minimum === null || value >= minimum) &&
+    (maximum === null || value <= maximum)
+  )
+}
+
+function parseDatePicker(
+  value: Record<string, unknown>
+): DatePickerEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(
+    value.state,
+    "date_picker",
+    isDatePickerValue
+  )
+  if (
+    !state ||
+    !isRecord(props) ||
+    !isNullableBoundedText(props.label) ||
+    (props.mode !== "single" && props.mode !== "range") ||
+    !isBoundedText(props.placeholder) ||
+    !isNullableIsoDate(props.minDate) ||
+    !isNullableIsoDate(props.maxDate) ||
+    typeof props.disabled !== "boolean" ||
+    (props.minDate !== null &&
+      props.maxDate !== null &&
+      props.minDate > props.maxDate) ||
+    (props.mode === "single" && Array.isArray(state.value)) ||
+    (props.mode === "range" &&
+      state.value !== null &&
+      !Array.isArray(state.value))
+  ) {
+    return null
+  }
+
+  const minimum = props.minDate as string | null
+  const maximum = props.maxDate as string | null
+  const dates: string[] =
+    state.value === null
+      ? []
+      : typeof state.value === "string"
+        ? [state.value]
+        : [...state.value]
+  if (
+    dates.some(
+      (date) => !dateWithinBounds(date, minimum, maximum)
+    ) ||
+    (dates.length === 2 && dates[0]! > dates[1]!)
+  ) {
+    return null
+  }
+
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "date_picker",
+    state,
+    props: {
+      label: props.label,
+      mode: props.mode,
+      placeholder: props.placeholder,
+      minDate: minimum,
+      maxDate: maximum,
+      disabled: props.disabled,
+    },
+  }
+}
+
 function parseKnownEnvelope(
   value: Record<string, unknown>
 ): Envelope | null {
@@ -1821,6 +1994,12 @@ function parseKnownEnvelope(
       return parseToggleGroup(value)
     case "calendar":
       return parseCalendar(value)
+    case "popover":
+      return parsePopover(value)
+    case "hover_card":
+      return parseHoverCard(value)
+    case "date_picker":
+      return parseDatePicker(value)
     default:
       return null
   }

@@ -14,11 +14,14 @@ import {
 import { CheckboxView } from "@/components/streamlit/checkbox"
 import { CollapsibleView } from "@/components/streamlit/collapsible"
 import { DropdownMenuView } from "@/components/streamlit/dropdown-menu"
+import { DatePickerView } from "@/components/streamlit/date-picker"
+import { HoverCardView } from "@/components/streamlit/hover-card"
 import { CalendarView } from "@/components/streamlit/calendar"
 import { InputOtpView } from "@/components/streamlit/input-otp"
 import { InputView } from "@/components/streamlit/input"
 import { LinkButtonView } from "@/components/streamlit/link-button"
 import { PaginationView } from "@/components/streamlit/pagination"
+import { PopoverView } from "@/components/streamlit/popover"
 import { ProgressView } from "@/components/streamlit/progress"
 import { RadioGroupView } from "@/components/streamlit/radio-group"
 import { ScrollAreaView } from "@/components/streamlit/scroll-area"
@@ -198,6 +201,17 @@ export function V2App({
     case "calendar":
       return (
         <CalendarView
+          envelope={envelope}
+          setStateValue={setStateValue}
+        />
+      )
+    case "popover":
+      return <PopoverView envelope={envelope} />
+    case "hover_card":
+      return <HoverCardView envelope={envelope} />
+    case "date_picker":
+      return (
+        <DatePickerView
           envelope={envelope}
           setStateValue={setStateValue}
         />

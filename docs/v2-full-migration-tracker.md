@@ -42,9 +42,9 @@ real Streamlit browser and packaging gates are green.
 | `toggle` | 3 | Accepted | persistent boolean |
 | `toggle_group` | 3 | Accepted | persistent bounded unique values |
 | `calendar` | 3 | Accepted | persistent ISO single date |
-| `popover` | 4 | Planned | anchored non-modal overlay |
-| `hover_card` | 4 | Planned | anchored non-modal overlay |
-| `date_picker` | 4 | Planned | persistent date/range plus anchored overlay |
+| `popover` | 4 | Accepted | stateless anchored non-modal overlay |
+| `hover_card` | 4 | Accepted | stateless hover/focus non-modal overlay; text content |
+| `date_picker` | 4 | Accepted | persistent ISO date or ordered range; range commits on Apply; supported in forms |
 | `alert_dialog` | 5 | Planned | modal transient decision; rejected in forms |
 
 ## Compatibility-only or undocumented V1 surfaces

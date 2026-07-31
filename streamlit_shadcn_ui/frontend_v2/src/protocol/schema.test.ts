@@ -338,6 +338,58 @@ function wave3Envelopes() {
   ]
 }
 
+function wave4Envelopes() {
+  return [
+    {
+      protocolVersion: 1,
+      kind: "popover",
+      props: {
+        label: "Migration details",
+        content: "One ShadowRoot.",
+        disabled: false,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "hover_card",
+      props: {
+        label: "Architecture",
+        content: "shadcn plus Base UI",
+        disabled: false,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "date_picker",
+      state: stateCell("date_picker", "2026-07-30"),
+      props: {
+        label: "Release date",
+        mode: "single",
+        placeholder: "Pick a date",
+        minDate: "2026-07-01",
+        maxDate: "2026-08-31",
+        disabled: false,
+      },
+    },
+    {
+      protocolVersion: 1,
+      kind: "date_picker",
+      state: stateCell("date_picker", [
+        "2026-07-30",
+        "2026-08-02",
+      ]),
+      props: {
+        label: "Release window",
+        mode: "range",
+        placeholder: "Pick a date",
+        minDate: null,
+        maxDate: null,
+        disabled: false,
+      },
+    },
+  ]
+}
+
 describe("parseEnvelope", () => {
   it("accepts and normalizes a valid Select envelope", () => {
     const parsed = parseEnvelope(selectEnvelope())
@@ -639,6 +691,64 @@ describe("parseEnvelope", () => {
       },
     ],
   ])("rejects malformed Wave 3 input: %s", (_name, envelope) => {
+    expect(parseEnvelope(envelope).ok).toBe(false)
+  })
+
+  it("accepts and normalizes every Wave 4 envelope", () => {
+    for (const envelope of wave4Envelopes()) {
+      expect(parseEnvelope(envelope)).toEqual({
+        ok: true,
+        envelope,
+      })
+    }
+  })
+
+  it.each([
+    [
+      "single mode with a range value",
+      {
+        ...wave4Envelopes()[2],
+        state: stateCell("date_picker", [
+          "2026-07-30",
+          "2026-08-02",
+        ]),
+      },
+    ],
+    [
+      "range mode with a single value",
+      {
+        ...wave4Envelopes()[3],
+        state: stateCell("date_picker", "2026-07-30"),
+      },
+    ],
+    [
+      "descending range",
+      {
+        ...wave4Envelopes()[3],
+        state: stateCell("date_picker", [
+          "2026-08-02",
+          "2026-07-30",
+        ]),
+      },
+    ],
+    [
+      "date outside bounds",
+      {
+        ...wave4Envelopes()[2],
+        state: stateCell("date_picker", "2026-06-30"),
+      },
+    ],
+    [
+      "invalid range date",
+      {
+        ...wave4Envelopes()[3],
+        state: stateCell("date_picker", [
+          "2026-07-30",
+          "2026-02-30",
+        ]),
+      },
+    ],
+  ])("rejects malformed Wave 4 input: %s", (_name, envelope) => {
     expect(parseEnvelope(envelope).ok).toBe(false)
   })
 })

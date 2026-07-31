@@ -46,6 +46,10 @@ Wave 3 adds the inline and form catalog:
 `radio_group`, `scroll_area`, `slider`, `switch`, `tabs`, `toggle`,
 `toggle_group`, and `calendar`.
 
+Wave 4 completes the stable anchored-overlay catalog:
+
+`popover`, `hover_card`, and single/range `date_picker`.
+
 For example:
 
 ```py
@@ -62,10 +66,10 @@ Component source is generated from a pinned, checked-in shadcn Base UI
 registry snapshot; Base UI remains the interaction and accessibility
 primitive. This is not a from-scratch replacement for shadcn.
 
-Select and Dropdown Menu portal into an instance-owned overlay root in the
-same Streamlit ShadowRoot. The native Popover top layer escapes Streamlit
-clipping and stacking contexts without an iframe, a second popup iframe, or a
-popup in `document.body`.
+Select, Dropdown Menu, Popover, Hover Card, and Date Picker portal into an
+instance-owned overlay root in the same Streamlit ShadowRoot. The native
+Popover top layer escapes Streamlit clipping and stacking contexts without an
+iframe, a second popup iframe, or a popup in `document.body`.
 
 V2 requires Python 3.10 or newer and Streamlit 1.60 or newer. V1 keeps its
 existing package-wide compatibility floor.
@@ -76,6 +80,7 @@ Run a completed-wave acceptance page with:
 ./scripts/poc_v2.sh
 ./scripts/wave2_v2.sh
 ./scripts/wave3_v2.sh
+./scripts/wave4_v2.sh
 ```
 
 See the
@@ -83,10 +88,12 @@ See the
 [Wave 2 acceptance record](docs/v2-wave2-acceptance.md),
 [Wave 3 acceptance record](docs/v2-wave3-acceptance.md),
 [Wave 3 state contract](docs/v2-wave3-state-contract.md),
+[Wave 4 acceptance record](docs/v2-wave4-acceptance.md),
+[Wave 4 state and overlay contract](docs/v2-wave4-state-and-overlay-contract.md),
 [full migration tracker](docs/v2-full-migration-tracker.md),
 [anchored-overlay decision](docs/adr/001-v2-anchored-overlay-host.md), and
-[migration plan](docs/v2-production-migration-plan.md). Waves 1–3 have been
-accepted; Waves 4–6 remain opt-in migration work and V1 remains the rollback.
+[migration plan](docs/v2-production-migration-plan.md). Waves 1–4 have been
+accepted; Waves 5–6 remain opt-in migration work and V1 remains the rollback.
 
 ## Components
 
@@ -167,6 +174,7 @@ There are several scripts in `scripts` folder to help you develop this project.
 ./scripts/poc_v2.sh # build and run the independent V2 POC
 ./scripts/wave2_v2.sh # build and run the Wave 2 acceptance catalog
 ./scripts/wave3_v2.sh # build and run the Wave 3 state/form catalog
+./scripts/wave4_v2.sh # build and run the Wave 4 anchored-overlay catalog
 ./scripts/dev.sh # streamlit dev server
 ```
 

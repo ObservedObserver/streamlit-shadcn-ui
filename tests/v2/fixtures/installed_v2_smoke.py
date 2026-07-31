@@ -164,6 +164,21 @@ calendar_value = ui.calendar(
     key="installed_calendar",
     value="2026-07-30",
 )
+ui.popover(
+    "Installed Popover",
+    "Installed popover content",
+    key="installed_popover",
+)
+ui.hover_card(
+    "Installed Hover Card",
+    "Installed hover card content",
+    key="installed_hover_card",
+)
+date_picker_value = ui.date_picker(
+    "Installed Date Picker",
+    default_value="2026-07-30",
+    key="installed_date_picker",
+)
 
 st.write(
     {
@@ -175,6 +190,7 @@ st.write(
         "clicked": clicked,
         "collapsible": collapsible_value,
         "crumb": crumb,
+        "date_picker": date_picker_value,
         "input": input_value,
         "otp": otp_value,
         "pagination": pagination_value,
