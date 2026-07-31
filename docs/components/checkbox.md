@@ -8,8 +8,7 @@ import streamlit_shadcn_ui.v2 as ui
 
 accepted = ui.checkbox(
     "Accept the terms",
-    default_checked=False,
-    key="accept_terms",
+    value=False,
 )
 st.write("Accepted:", accepted)
 

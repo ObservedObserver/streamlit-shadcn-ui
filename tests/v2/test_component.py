@@ -10,6 +10,50 @@ from streamlit_shadcn_ui.v2 import _component
 
 
 class ComponentMountTests(unittest.TestCase):
+    def test_private_keys_are_stable_namespaced_and_streamlit_safe(self) -> None:
+        first = _component.private_component_key(
+            key="public-key",
+            kind="select",
+            identity={"label": "First"},
+        )
+        second = _component.private_component_key(
+            key="public-key",
+            kind="button",
+            identity={"label": "Second"},
+        )
+
+        self.assertEqual(first, second)
+        self.assertTrue(first.startswith("ssui_v2_component_"))
+        self.assertNotIn("__", first)
+        self.assertNotIn("public-key", first)
+
+    def test_automatic_keys_follow_callsite_kind_and_identity(self) -> None:
+        def resolve(kind, identity):
+            return _component.private_component_key(
+                key=None,
+                kind=kind,
+                identity=identity,
+            )
+
+        first = resolve("select", {"label": "Fruit"})
+        self.assertEqual(first, resolve("select", {"label": "Fruit"}))
+        self.assertNotEqual(first, resolve("select", {"label": "Color"}))
+        self.assertNotEqual(first, resolve("button", {"label": "Fruit"}))
+
+    def test_invalid_public_keys_fail_before_mounting(self) -> None:
+        with self.assertRaisesRegex(TypeError, "string or None"):
+            _component.private_component_key(
+                key=42,
+                kind="select",
+                identity={},
+            )
+        with self.assertRaisesRegex(ValueError, "must not be empty"):
+            _component.private_component_key(
+                key="",
+                kind="select",
+                identity={},
+            )
+
     def test_metadata_default_registers_its_required_callback(self) -> None:
         captured = {}
 

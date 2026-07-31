@@ -1,46 +1,77 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Iterable, List, Optional, Union
+from typing import Any, Callable, Iterable, List, Optional, TypeVar, Union
 
 from .._protocol import validate_text
-from ._common import enum_value, mount_stateful, normalize_choices
+from ._common import (
+    boolean,
+    enum_value,
+    mount_stateful,
+    normalize_choices,
+    token_for_value,
+)
+
+
+T = TypeVar("T")
 
 
 def toggle_group(
-    default_values: Optional[Iterable[str]] = None,
+    options: Optional[Iterable[T]] = None,
     *,
-    key: str,
-    options: Optional[Iterable[Any]] = None,
+    value: Any = None,
+    selection_mode: str = "multiple",
+    format_func: Callable[[T], str] = str,
+    key: Optional[str] = None,
     label: str = "Text formatting",
-    multiple: bool = True,
     orientation: str = "horizontal",
     variant: str = "outline",
+    size: str = "default",
     disabled: bool = False,
     on_change: Optional[Callable[[], None]] = None,
     width: Union[str, int] = "content",
-) -> List[str]:
+) -> Any:
     """Render a persistent shadcn Toggle Group."""
 
-    choices = normalize_choices(
+    choices, values_by_token = normalize_choices(
         options
         if options is not None
-        else ["bold", "italic", "underline"]
+        else ["bold", "italic", "underline"],
+        format_func,
     )
     if not choices:
         raise ValueError("Toggle Group requires at least one option.")
-    values = {option["value"] for option in choices}
+    selection_mode = enum_value(
+        selection_mode,
+        {"single", "multiple"},
+        "selection_mode",
+    )
+    multiple = selection_mode == "multiple"
+    if value is None:
+        raw_initial = []
+    elif multiple:
+        if isinstance(value, (str, bytes)):
+            raise TypeError(
+                "value must be an iterable of options in multiple mode."
+            )
+        try:
+            raw_initial = list(value)
+        except TypeError as error:
+            raise TypeError(
+                "value must be an iterable of options in multiple mode."
+            ) from error
+    else:
+        raw_initial = [value]
     initial = [
-        validate_text(str(value), "default_values")
-        for value in (default_values or [])
+        token_for_value(
+            item,
+            choices,
+            values_by_token,
+            "value",
+        )
+        for item in raw_initial
     ]
     if len(initial) != len(set(initial)):
-        raise ValueError("default_values must be unique.")
-    if any(value not in values for value in initial):
-        raise ValueError("default_values must be present in options.")
-    if not multiple and len(initial) > 1:
-        raise ValueError(
-            "A single Toggle Group accepts at most one default value."
-        )
+        raise ValueError("value must not contain duplicate options.")
     label = validate_text(label, "label")
     orientation = enum_value(
         orientation,
@@ -52,6 +83,7 @@ def toggle_group(
         {"default", "outline"},
         "variant",
     )
+    size = enum_value(size, {"default", "sm", "lg"}, "size")
 
     value = mount_stateful(
         key=key,
@@ -60,7 +92,7 @@ def toggle_group(
         is_valid_value=lambda candidate: (
             isinstance(candidate, list)
             and len(candidate) == len(set(candidate))
-            and all(item in values for item in candidate)
+            and all(item in values_by_token for item in candidate)
             and (multiple or len(candidate) <= 1)
         ),
         props={
@@ -69,9 +101,13 @@ def toggle_group(
             "multiple": bool(multiple),
             "orientation": orientation,
             "variant": variant,
-            "disabled": bool(disabled),
+            "size": size,
+            "disabled": boolean(disabled, "disabled"),
         },
         width=width,
         on_change=on_change,
     )
-    return list(value)
+    selected = [values_by_token[token] for token in value]
+    if multiple:
+        return selected
+    return selected[0] if selected else None

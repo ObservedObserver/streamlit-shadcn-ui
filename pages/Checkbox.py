@@ -17,7 +17,7 @@ single_options = [
 single_values = [
     ui.checkbox(
         label,
-        default_checked=default_checked,
+        value=default_checked,
         key=f"single_checkbox_{index}",
     )
     for index, (label, default_checked) in enumerate(single_options)

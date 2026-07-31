@@ -7,10 +7,10 @@ from ._common import mount_stateless, optional_text
 
 
 def scroll_area(
-    title: Optional[str] = None,
     items: Optional[Iterable[str]] = None,
     *,
-    key: str,
+    title: Optional[str] = None,
+    key: Optional[str] = None,
     height: int = 240,
     width: Union[str, int] = "stretch",
 ) -> None:

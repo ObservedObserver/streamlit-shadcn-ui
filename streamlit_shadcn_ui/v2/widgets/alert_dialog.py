@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from typing import Callable, Optional, Union
 
-from .._component import get_result_value, mount, noop_callback
+from .._component import (
+    get_result_value,
+    mount,
+    noop_callback,
+    private_component_key,
+)
 from .._protocol import (
     PROTOCOL_VERSION,
     metadata_cell,
@@ -11,6 +16,7 @@ from .._protocol import (
     validate_text,
 )
 from .._streamlit_compat import fail_if_trigger_in_form
+from ._common import boolean
 
 
 def _prepare_request(entry: dict, show: bool) -> tuple:
@@ -33,29 +39,34 @@ def alert_dialog(
     show: bool,
     title: str,
     description: str,
-    confirm_label: Optional[str] = None,
-    cancel_label: Optional[str] = None,
     *,
-    key: str,
+    confirm_label: str = "Confirm",
+    cancel_label: str = "Cancel",
+    key: Optional[str] = None,
     on_decision: Optional[Callable[[], None]] = None,
     width: Union[str, int] = "content",
 ) -> Optional[bool]:
     """Render a modal shadcn Base UI confirmation dialog."""
 
     fail_if_trigger_in_form("alert_dialog")
-    entry = register_kind(key, "alert_dialog")
-    normalized_show = bool(show)
-    request_id, resolved_id = _prepare_request(entry, normalized_show)
+    normalized_show = boolean(show, "show")
     title = validate_text(title, "title")
     description = validate_text(description, "description")
-    confirm_text = validate_text(
-        "Confirm" if confirm_label is None else confirm_label,
-        "confirm_label",
+    confirm_text = validate_text(confirm_label, "confirm_label")
+    cancel_text = validate_text(cancel_label, "cancel_label")
+    mount_key = private_component_key(
+        key=key,
+        kind="alert_dialog",
+        identity={
+            "title": title,
+            "description": description,
+            "confirmLabel": confirm_text,
+            "cancelLabel": cancel_text,
+            "width": width,
+        },
     )
-    cancel_text = validate_text(
-        "Cancel" if cancel_label is None else cancel_label,
-        "cancel_label",
-    )
+    entry = register_kind(mount_key, "alert_dialog")
+    request_id, resolved_id = _prepare_request(entry, normalized_show)
 
     envelope = validate_envelope(
         {
@@ -73,7 +84,7 @@ def alert_dialog(
         }
     )
     result = mount(
-        key=key,
+        key=mount_key,
         data=envelope,
         default={"meta": metadata_cell("alert_dialog")},
         width=width,

@@ -4,7 +4,7 @@ import datetime
 import re
 from typing import Callable, Optional, Union
 
-from ._common import mount_stateful
+from ._common import boolean, mount_stateful
 
 
 _ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -52,16 +52,16 @@ def _valid_date_candidate(
 
 
 def calendar(
-    *,
-    key: str,
-    value: Optional[Union[str, datetime.date]] = None,
     label: str = "Calendar",
+    *,
+    value: Optional[Union[str, datetime.date]] = None,
+    key: Optional[str] = None,
     min_date: Optional[Union[str, datetime.date]] = None,
     max_date: Optional[Union[str, datetime.date]] = None,
     disabled: bool = False,
     on_change: Optional[Callable[[], None]] = None,
     width: Union[str, int] = "content",
-) -> Optional[str]:
+) -> Optional[datetime.date]:
     """Render a persistent single-date shadcn Calendar."""
 
     from .._protocol import validate_text
@@ -91,9 +91,9 @@ def calendar(
             "label": label,
             "minDate": minimum,
             "maxDate": maximum,
-            "disabled": bool(disabled),
+            "disabled": boolean(disabled, "disabled"),
         },
         width=width,
         on_change=on_change,
     )
-    return result
+    return None if result is None else datetime.date.fromisoformat(result)

@@ -8,6 +8,5 @@ ui.progress(
     value=30,
     label="Upload progress",
     show_value=True,
-    key="progress1",
 )
 ```

@@ -22,7 +22,6 @@ invoice_df = pd.DataFrame(data)
 
 ui.table(
     data=invoice_df,
-    key="invoice_table",
     caption="Recent invoices",
     max_height=300,
 )

@@ -34,7 +34,7 @@ clicked = ui.button(
 crumb = ui.breadcrumb(
     [
         {"text": "Installed", "href": "/"},
-        {"text": "Smoke", "isCurrentPage": True},
+        {"text": "Smoke", "current": True},
     ],
     key="installed_breadcrumb",
 )
@@ -64,7 +64,7 @@ ui.card(
 ui.metric_card(
     "Installed Metric",
     "16",
-    "component hosts",
+    description="component hosts",
     key="installed_metric_card",
 )
 ui.aspect_ratio(
@@ -87,8 +87,8 @@ ui.progress(
 ui.separator(key="installed_separator")
 ui.skeleton(
     key="installed_skeleton",
-    width_px="100%",
-    height_px=20,
+    skeleton_width="100%",
+    skeleton_height=20,
 )
 ui.table(
     [{"component": "V2", "status": "Ready"}],
@@ -106,14 +106,14 @@ ui.link_button(
 )
 
 input_value = ui.input(
-    "Installed input",
+    "Installed Input",
+    value="Installed input",
     key="installed_input",
-    label="Installed Input",
 )
 textarea_value = ui.textarea(
-    "Installed textarea",
+    "Installed Textarea",
+    value="Installed textarea",
     key="installed_textarea",
-    label="Installed Textarea",
 )
 accordion_value = ui.accordion(
     [{"trigger": "Installed question", "content": "Installed answer"}],
@@ -122,12 +122,13 @@ accordion_value = ui.accordion(
 collapsible_value = ui.collapsible(
     "Installed Collapsible",
     "First",
-    ["Second"],
+    items=["Second"],
     key="installed_collapsible",
 )
 otp_value = ui.input_otp(
-    "123",
-    6,
+    "Installed OTP",
+    value="123",
+    max_length=6,
     key="installed_otp",
 )
 pagination_value = ui.pagination(
@@ -135,40 +136,43 @@ pagination_value = ui.pagination(
     total_pages=10,
 )
 radio_value = ui.radio_group(
+    "Installed Radio",
     ["Alpha", "Beta"],
-    "Alpha",
+    value="Alpha",
     key="installed_radio",
 )
 ui.scroll_area(
-    "Installed Scroll Area",
     ["One", "Two"],
+    title="Installed Scroll Area",
     key="installed_scroll",
 )
 slider_value = ui.slider(
-    [25, 75],
+    "Installed Slider",
     0,
     100,
+    (25, 75),
     5,
-    "Installed Slider",
     key="installed_slider",
 )
 switch_value = ui.switch(
-    True,
     "Installed Switch",
+    True,
     key="installed_switch",
 )
 tabs_value = ui.tabs(
     ["Overview", "Details"],
-    "Overview",
+    value="Overview",
     key="installed_tabs",
 )
 toggle_value = ui.toggle(
-    False,
-    "bold",
+    "Bold",
+    value=False,
+    icon="bold",
     key="installed_toggle",
 )
 toggle_group_value = ui.toggle_group(
-    ["bold"],
+    ["bold", "italic", "underline"],
+    value=["bold"],
     key="installed_toggle_group",
 )
 calendar_value = ui.calendar(
@@ -187,7 +191,7 @@ ui.hover_card(
 )
 date_picker_value = ui.date_picker(
     "Installed Date Picker",
-    default_value="2026-07-30",
+    value="2026-07-30",
     key="installed_date_picker",
 )
 

@@ -40,6 +40,7 @@ function fixture() {
         disabled: false,
         text: "Run",
         variant: "default",
+        size: "default",
       },
     },
     key: "stable-frontend-key",
@@ -72,6 +73,7 @@ describe("Streamlit V2 renderer lifecycle", () => {
             disabled: false,
             text: `Run ${index}`,
             variant: "default",
+            size: "default",
           },
         },
       })

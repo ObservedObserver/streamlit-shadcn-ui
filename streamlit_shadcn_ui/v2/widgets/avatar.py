@@ -12,7 +12,7 @@ def avatar(
     src: Optional[str] = None,
     fallback: str = "?",
     *,
-    key: str,
+    key: Optional[str] = None,
     alt: Optional[str] = None,
     size: str = "default",
     width: Union[str, int] = "content",

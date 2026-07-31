@@ -4,13 +4,12 @@
 import streamlit as st
 import streamlit_shadcn_ui.v2 as ui
 
-data = [
-    {"trigger": "Is it accessible?", "content": "Yes. It adheres to the WAI-ARIA design pattern."},
-    {"trigger": "Is it styled?", "content": "Yes. It comes with default styles that match the other components' aesthetic."},
-    {"trigger": "Is it animated?", "content": "Yes. It's animated by default, but you can disable it if you prefer."},
+items = [
+    ui.AccordionItem("accessibility", "Is it accessible?", "Yes. It follows the WAI-ARIA pattern."),
+    ui.AccordionItem("styling", "Is it styled?", "Yes. It uses the shadcn default style."),
 ]
-open_sections = ui.accordion(data, key="accordion1")
-st.write("Open sections:", open_sections)
+open_section = ui.accordion(items, value="accessibility")
+st.write("Open section:", open_section)
 
 st.write(ui.accordion)
 ```

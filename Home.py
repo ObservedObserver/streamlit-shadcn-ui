@@ -9,12 +9,11 @@ st.set_page_config(page_title="Streamlit Shadcn UI", page_icon="🧱")
 
 st.header("Streamlit Shadcn UI")
 ui.badges(
-    badge_list=[
+    items=[
         ("shadcn", "default"),
         ("in", "secondary"),
         ("streamlit", "destructive"),
     ],
-    key="main_badges",
 )
 st.caption(
     "A Streamlit component library for building beautiful apps easily. "
@@ -27,14 +26,12 @@ with action_columns[0]:
     ui.link_button(
         "Get Started",
         "https://github.com/ObservedObserver/streamlit-shadcn-ui#readme",
-        key="get_started",
         width="stretch",
     )
 with action_columns[1]:
     ui.link_button(
         "GitHub",
         "https://github.com/ObservedObserver/streamlit-shadcn-ui",
-        key="github",
         variant="outline",
         width="stretch",
     )
@@ -43,14 +40,12 @@ st.subheader("Dashboard")
 
 active_tab = ui.tabs(
     options=["Overview", "Analytics", "Reports", "Notifications"],
-    default_value="Overview",
-    key="main_tabs",
+    value="Overview",
 )
 st.caption(f"Current view: {active_tab}")
 
 selected_date = ui.date_picker(
     "Reporting date",
-    key="reporting_date",
 )
 if selected_date:
     st.caption(f"Reporting date: {selected_date}")
@@ -58,24 +53,21 @@ if selected_date:
 metric_columns = st.columns(3)
 with metric_columns[0]:
     ui.metric_card(
-        title="Total Revenue",
-        content="$45,231.89",
+        "Total Revenue",
+        "$45,231.89",
         description="+20.1% from last month",
-        key="revenue_card",
     )
 with metric_columns[1]:
     ui.metric_card(
-        title="Subscriptions",
-        content="+2,350",
+        "Subscriptions",
+        "+2,350",
         description="+180.1% from last month",
-        key="subscriptions_card",
     )
 with metric_columns[2]:
     ui.metric_card(
-        title="Sales",
-        content="+12,234",
+        "Sales",
+        "+12,234",
         description="+19% from last month",
-        key="sales_card",
     )
 
 
@@ -157,78 +149,66 @@ invoice_data = [
 
 ui.table(
     invoice_data,
-    key="invoice_table",
     caption="Recent invoices",
     max_height=300,
 )
 
 st.subheader("Interactive components")
 
-button_clicked = ui.button("Button", key="demo_button")
+button_clicked = ui.button("Button")
 st.write("UI Button clicked:", button_clicked)
 
 slider_value = ui.slider(
-    default_value=[20],
+    "Select a value",
     min_value=0,
     max_value=100,
+    value=20,
     step=2,
-    label="Select a value",
-    key="demo_slider",
 )
 st.write("Slider value:", slider_value)
 
 input_value = ui.input(
-    default_value="Hello, Streamlit!",
-    label="Message",
+    "Message",
+    value="Hello, Streamlit!",
     type="text",
     placeholder="Enter text here",
-    key="demo_input",
 )
 st.write("Input value:", input_value)
 
 textarea_value = ui.textarea(
-    default_value="Type your message here...",
-    label="Long message",
+    "Long message",
+    value="Type your message here...",
     placeholder="Enter longer text",
-    key="demo_textarea",
 )
 st.write("Textarea value:", textarea_value)
 
 radio_value = ui.radio_group(
-    options=[
-        {"label": "Option A", "value": "A"},
-        {"label": "Option B", "value": "B"},
-        {"label": "Option C", "value": "C"},
-    ],
-    default_value="B",
-    label="Choose an option",
-    key="demo_radio",
+    "Choose an option",
+    ["Option A", "Option B", "Option C"],
+    value="Option B",
 )
 st.write("Selected radio option:", radio_value)
 
 switch_value = ui.switch(
-    default_checked=True,
-    label="Toggle switch",
-    key="demo_switch",
+    "Toggle switch",
+    value=True,
 )
 st.write("Switch is on:", switch_value)
 
 select_value = ui.select(
     "Choose a fruit",
     ["Apple", "Banana", "Orange", "Grape", "Mango"],
-    key="demo_select",
 )
 st.write("Selected fruit:", select_value)
 
 st.subheader("Alert Dialog")
-show_dialog = ui.button("Open alert dialog", key="dialog_trigger")
+show_dialog = ui.button("Open alert dialog")
 dialog_result = ui.alert_dialog(
     show_dialog,
     "Alert Dialog",
     "This is an alert dialog backed by the V2 modal layer.",
     confirm_label="OK",
     cancel_label="Cancel",
-    key="demo_alert_dialog",
 )
 if dialog_result is not None:
     st.write("Dialog confirmed:", dialog_result)

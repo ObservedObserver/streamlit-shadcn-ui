@@ -10,10 +10,10 @@ with open("docs/components/metric_card.md", "r") as f:
 cols = st.columns(3)
 
 with cols[0]:
-    ui.metric_card(title="Total Revenue", content="$45,231.89", description="+20.1% from last month", key="card1")
+    ui.metric_card("Total Revenue", "$45,231.89", delta="+20.1%")
 with cols[1]:
-    ui.metric_card(title="Total Revenue", content="$45,231.89", description="+20.1% from last month", key="card2")
+    ui.metric_card("Subscriptions", "+2,350", delta="+180.1%")
 with cols[2]:
-    ui.metric_card(title="Total Revenue", content="$45,231.89", description="+20.1% from last month", key="card3")
+    ui.metric_card("Sales", "+12,234", delta="+19%")
 
 st.write(ui.metric_card)

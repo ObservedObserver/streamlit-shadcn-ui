@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from typing import Any, Iterable, Mapping, Tuple, Union
+from typing import Any, Iterable, Mapping, Optional, Tuple, Union
 
 from ._common import enum_value, mount_stateless
 from .._protocol import validate_collection_size, validate_text
+from ..types import BadgeItem
 
 _VARIANTS = {
     "default",
@@ -18,7 +19,7 @@ _VARIANTS = {
 def badge(
     text: str,
     *,
-    key: str,
+    key: Optional[str] = None,
     variant: str = "default",
     width: Union[str, int] = "content",
 ) -> None:
@@ -32,15 +33,15 @@ def badge(
 
 
 def badges(
-    badge_list: Iterable[Any],
+    items: Iterable[Any],
     *,
-    key: str,
+    key: Optional[str] = None,
     width: Union[str, int] = "content",
 ) -> None:
     """Render a bounded group of shadcn Badges."""
 
     normalized = []
-    for item in badge_list:
+    for item in items:
         text, variant = _normalize_badge(item)
         normalized.append(
             {
@@ -62,6 +63,8 @@ def badges(
 
 
 def _normalize_badge(item: Any) -> Tuple[str, str]:
+    if isinstance(item, BadgeItem):
+        return item.text, item.variant
     if isinstance(item, Mapping):
         return str(item.get("text", "")), str(
             item.get("variant", "default")

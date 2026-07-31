@@ -3,13 +3,13 @@ from __future__ import annotations
 import math
 from typing import Optional, Union
 
-from ._common import mount_stateless, optional_text
+from ._common import boolean, mount_stateless, optional_text
 
 
 def progress(
     value: float = 0,
     *,
-    key: str,
+    key: Optional[str] = None,
     label: Optional[str] = None,
     show_value: bool = False,
     width: Union[str, int] = "stretch",
@@ -30,7 +30,7 @@ def progress(
         props={
             "value": float(value),
             "label": optional_text(label, "label"),
-            "showValue": bool(show_value),
+            "showValue": boolean(show_value, "show_value"),
         },
         width=width,
     )

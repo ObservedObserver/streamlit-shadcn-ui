@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime
 import importlib
 import inspect
 import unittest
@@ -10,12 +11,6 @@ import streamlit_shadcn_ui.v2 as public_api
 from streamlit_shadcn_ui.v2 import _protocol
 
 
-select_module = importlib.import_module(
-    "streamlit_shadcn_ui.v2.widgets.select"
-)
-checkbox_module = importlib.import_module(
-    "streamlit_shadcn_ui.v2.widgets.checkbox"
-)
 button_module = importlib.import_module(
     "streamlit_shadcn_ui.v2.widgets.button"
 )
@@ -55,6 +50,13 @@ class PublicApiContractTests(unittest.TestCase):
         self.assertEqual(
             public_api.__all__,
             [
+                "AccordionItem",
+                "BadgeItem",
+                "BreadcrumbItem",
+                "BreadcrumbSelection",
+                "Choice",
+                "MenuItem",
+                "TableColumn",
                 "accordion",
                 "alert",
                 "alert_dialog",
@@ -93,20 +95,21 @@ class PublicApiContractTests(unittest.TestCase):
             ],
         )
 
-    def test_public_signatures_are_frozen_for_the_opt_in_poc(self) -> None:
+    def test_public_signatures_are_frozen_for_1_0(self) -> None:
         expected = {
             "button": [
-                ("text", inspect.Parameter.empty),
-                ("key", inspect.Parameter.empty),
+                ("label", inspect.Parameter.empty),
+                ("key", None),
                 ("variant", "default"),
+                ("size", "default"),
                 ("disabled", False),
                 ("on_click", None),
                 ("width", "content"),
             ],
             "checkbox": [
                 ("label", inspect.Parameter.empty),
-                ("key", inspect.Parameter.empty),
-                ("default_checked", False),
+                ("value", False),
+                ("key", None),
                 ("disabled", False),
                 ("on_change", None),
                 ("width", "content"),
@@ -114,7 +117,8 @@ class PublicApiContractTests(unittest.TestCase):
             "dropdown_menu": [
                 ("label", inspect.Parameter.empty),
                 ("items", inspect.Parameter.empty),
-                ("key", inspect.Parameter.empty),
+                ("format_func", str),
+                ("key", None),
                 ("menu_label", None),
                 ("disabled", False),
                 ("on_select", None),
@@ -123,9 +127,10 @@ class PublicApiContractTests(unittest.TestCase):
             "select": [
                 ("label", inspect.Parameter.empty),
                 ("options", inspect.Parameter.empty),
-                ("key", inspect.Parameter.empty),
                 ("value", None),
                 ("index", 0),
+                ("format_func", str),
+                ("key", None),
                 ("placeholder", "Select an option"),
                 ("disabled", False),
                 ("on_change", None),
@@ -135,9 +140,9 @@ class PublicApiContractTests(unittest.TestCase):
                 ("show", inspect.Parameter.empty),
                 ("title", inspect.Parameter.empty),
                 ("description", inspect.Parameter.empty),
-                ("confirm_label", None),
-                ("cancel_label", None),
-                ("key", inspect.Parameter.empty),
+                ("confirm_label", "Confirm"),
+                ("cancel_label", "Cancel"),
+                ("key", None),
                 ("on_decision", None),
                 ("width", "content"),
             ],
@@ -151,13 +156,49 @@ class PublicApiContractTests(unittest.TestCase):
                 contract,
             )
 
+    def test_every_widget_has_an_optional_keyword_only_key(self) -> None:
+        for name in public_api.__all__:
+            widget = getattr(public_api, name)
+            if not inspect.isfunction(widget):
+                continue
+            with self.subTest(widget=name):
+                signature = inspect.signature(widget)
+                key = signature.parameters["key"]
+                self.assertIsNone(key.default)
+                self.assertIs(key.kind, inspect.Parameter.KEYWORD_ONLY)
+                self.assertFalse(
+                    any(
+                        parameter.kind
+                        is inspect.Parameter.VAR_KEYWORD
+                        for parameter in signature.parameters.values()
+                    )
+                )
+
+    def test_1_0_vocabulary_removes_transport_or_legacy_names(self) -> None:
+        banned = {
+            "class_name",
+            "default_checked",
+            "default_open",
+            "default_value",
+            "default_values",
+            "initial_page",
+            "multiple",
+        }
+        for name in public_api.__all__:
+            widget = getattr(public_api, name)
+            if inspect.isfunction(widget):
+                with self.subTest(widget=name):
+                    self.assertTrue(
+                        banned.isdisjoint(inspect.signature(widget).parameters)
+                    )
+
     def test_select_emits_and_returns_the_revisioned_state_cell(self) -> None:
         captured = {}
 
         def mount(**kwargs):
             captured.update(kwargs)
 
-        with patch.object(select_module, "mount", side_effect=mount):
+        with patch.object(common_module, "mount", side_effect=mount):
             value = public_api.select(
                 "Fruit",
                 ["Apple", "Banana"],
@@ -168,15 +209,9 @@ class PublicApiContractTests(unittest.TestCase):
 
         self.assertEqual(value, "Banana")
         self.assertEqual(captured["data"]["kind"], "select")
-        self.assertEqual(
-            captured["default"]["state"],
-            {
-                "kind": "select",
-                "value": "Banana",
-                "clientRevision": 0,
-                "serverRevision": 0,
-            },
-        )
+        banana_token = captured["data"]["props"]["options"][1]["value"]
+        self.assertEqual(captured["default"]["state"]["value"], banana_token)
+        self.assertEqual(captured["default"]["state"]["kind"], "select")
         self.assertEqual(
             captured["default"]["meta"],
             {"protocolVersion": 1, "kind": "select"},
@@ -186,14 +221,14 @@ class PublicApiContractTests(unittest.TestCase):
     def test_checkbox_returns_bool_and_uses_the_same_state_shape(self) -> None:
         captured = {}
         with patch.object(
-            checkbox_module,
+            common_module,
             "mount",
             side_effect=lambda **kwargs: captured.update(kwargs),
         ):
             checked = public_api.checkbox(
                 "Remember",
                 key="remember",
-                default_checked=True,
+                value=True,
             )
 
         self.assertIs(checked, True)
@@ -213,10 +248,7 @@ class PublicApiContractTests(unittest.TestCase):
             button_module,
             "fail_if_trigger_in_form",
         ), patch.object(
-            button_module,
-            "register_kind",
-        ), patch.object(
-            button_module,
+            common_module,
             "mount",
             side_effect=lambda **kwargs: (
                 captured.update(kwargs) or {"click": True}
@@ -236,12 +268,11 @@ class PublicApiContractTests(unittest.TestCase):
             menu_module,
             "fail_if_trigger_in_form",
         ), patch.object(
-            menu_module,
-            "register_kind",
-        ), patch.object(
-            menu_module,
+            common_module,
             "mount",
-            return_value=SimpleNamespace(action="Archive"),
+            side_effect=lambda **kwargs: SimpleNamespace(
+                action=kwargs["data"]["props"]["items"][0]["value"]
+            ),
         ):
             action = public_api.dropdown_menu(
                 "Actions",
@@ -254,10 +285,7 @@ class PublicApiContractTests(unittest.TestCase):
             menu_module,
             "fail_if_trigger_in_form",
         ), patch.object(
-            menu_module,
-            "register_kind",
-        ), patch.object(
-            menu_module,
+            common_module,
             "mount",
             return_value={"action": "forged"},
         ):
@@ -271,7 +299,7 @@ class PublicApiContractTests(unittest.TestCase):
     def test_select_empty_and_invalid_defaults_fail_deterministically(
         self,
     ) -> None:
-        with patch.object(select_module, "mount"):
+        with patch.object(common_module, "mount"):
             self.assertIsNone(
                 public_api.select(
                     "Empty",
@@ -287,12 +315,51 @@ class PublicApiContractTests(unittest.TestCase):
                 key="invalid",
                 value="Banana",
             )
+        with self.assertRaisesRegex(IndexError, "outside"):
+            public_api.select("Fruit", ["Apple"], index=2)
         with self.assertRaisesRegex(ValueError, "must be unique"):
-            public_api.select(
-                "Fruit",
-                ["Apple", "Apple"],
-                key="duplicate",
+            public_api.select("Fruit", ["Apple", "Apple"])
+
+    def test_choice_widgets_preserve_python_values_and_labels(self) -> None:
+        captured = {}
+        alpha = {"id": 1, "slug": "alpha"}
+        beta = {"id": 2, "slug": "beta"}
+
+        with patch.object(
+            common_module,
+            "mount",
+            side_effect=lambda **kwargs: captured.update(kwargs),
+        ):
+            selected = public_api.select(
+                "Release",
+                [
+                    public_api.Choice(alpha, "Alpha"),
+                    public_api.Choice(beta, "Beta", disabled=True),
+                ],
+                value=alpha,
             )
+
+        self.assertIs(selected, alpha)
+        self.assertEqual(
+            [item["label"] for item in captured["data"]["props"]["options"]],
+            ["Alpha", "Beta"],
+        )
+        self.assertTrue(captured["data"]["props"]["options"][1]["disabled"])
+        self.assertTrue(captured["key"].startswith("ssui_v2_component_"))
+
+    def test_unkeyed_widgets_do_not_publish_session_state_names(self) -> None:
+        captured = {}
+        with patch.object(
+            common_module,
+            "mount",
+            side_effect=lambda **kwargs: captured.update(kwargs),
+        ):
+            self.assertIs(public_api.checkbox("Remember", value=True), True)
+
+        mount_key = captured["key"]
+        self.assertTrue(mount_key.startswith("ssui_v2_component_"))
+        self.assertNotIn("Remember", mount_key)
+        self.assertNotIn("Remember", self.streamlit.session_state)
 
     def test_wave2_stateless_widgets_emit_metadata_envelopes(self) -> None:
         captured = []
@@ -324,7 +391,7 @@ class PublicApiContractTests(unittest.TestCase):
             public_api.metric_card(
                 "Revenue",
                 "$42",
-                "+5%",
+                delta="+5%",
                 key="metric",
             )
             public_api.link_button(
@@ -341,8 +408,8 @@ class PublicApiContractTests(unittest.TestCase):
             public_api.separator(key="separator")
             public_api.skeleton(
                 key="skeleton",
-                width_px="10rem",
-                height_px=24,
+                skeleton_width="10rem",
+                skeleton_height=24,
             )
             public_api.table(
                 [{"name": "Ada", "score": 10}],
@@ -376,16 +443,13 @@ class PublicApiContractTests(unittest.TestCase):
     def test_breadcrumb_returns_only_a_valid_transient_action(self) -> None:
         items = [
             {"text": "Home", "href": "/"},
-            {"text": "Current", "isCurrentPage": True},
+            {"text": "Current", "current": True},
         ]
         with patch.object(
             breadcrumb_module,
             "fail_if_trigger_in_form",
         ), patch.object(
-            breadcrumb_module,
-            "register_kind",
-        ), patch.object(
-            breadcrumb_module,
+            common_module,
             "mount",
             return_value={
                 "action": {"text": "Home", "href": "/", "index": 0}
@@ -393,17 +457,14 @@ class PublicApiContractTests(unittest.TestCase):
         ):
             self.assertEqual(
                 public_api.breadcrumb(items, key="crumbs"),
-                {"text": "Home", "href": "/", "index": 0},
+                public_api.BreadcrumbSelection("Home", "/", 0),
             )
 
         with patch.object(
             breadcrumb_module,
             "fail_if_trigger_in_form",
         ), patch.object(
-            breadcrumb_module,
-            "register_kind",
-        ), patch.object(
-            breadcrumb_module,
+            common_module,
             "mount",
             return_value={
                 "action": {
@@ -440,7 +501,7 @@ class PublicApiContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "units"):
             public_api.skeleton(
                 key="invalid-skeleton",
-                width_px="calc(100% - 1rem)",
+                skeleton_width="calc(100% - 1rem)",
             )
         with self.assertRaisesRegex(ValueError, "unique"):
             public_api.table(
@@ -464,74 +525,80 @@ class PublicApiContractTests(unittest.TestCase):
         ):
             values = [
                 public_api.input(
+                    "Name",
                     "Ada",
                     key="wave3-input",
-                    label="Name",
                 ),
                 public_api.textarea(
+                    "Notes",
                     "Notes",
                     key="wave3-textarea",
                 ),
                 public_api.accordion(
                     [{"trigger": "Question", "content": "Answer"}],
                     key="wave3-accordion",
-                    default_values=["0"],
+                    value=["0"],
+                    selection_mode="multiple",
                 ),
                 public_api.collapsible(
                     "Details",
                     "First",
-                    ["Second"],
+                    items=["Second"],
                     key="wave3-collapsible",
-                    default_open=True,
+                    value=True,
                 ),
                 public_api.input_otp(
+                    "OTP",
                     "123",
-                    6,
+                    max_length=6,
                     key="wave3-otp",
                 ),
                 public_api.pagination(
                     key="wave3-pagination",
                     total_pages=20,
-                    initial_page=3,
+                    page=3,
                 ),
                 public_api.radio_group(
+                    "Channel",
                     [
                         {"label": "Alpha", "value": "a"},
                         {"label": "Beta", "value": "b"},
                     ],
-                    "b",
+                    value="b",
                     key="wave3-radio",
                 ),
                 public_api.scroll_area(
-                    "Tags",
                     ["one", "two"],
+                    title="Tags",
                     key="wave3-scroll",
                 ),
                 public_api.slider(
-                    [20, 80],
+                    "Range",
                     0,
                     100,
+                    (20, 80),
                     2,
-                    "Range",
                     key="wave3-slider",
                 ),
                 public_api.switch(
-                    True,
                     "Enabled",
+                    True,
                     key="wave3-switch",
                 ),
                 public_api.tabs(
                     ["One", "Two"],
-                    "Two",
+                    value="Two",
                     key="wave3-tabs",
                 ),
                 public_api.toggle(
+                    "Italic",
                     True,
-                    "italic",
+                    icon="italic",
                     key="wave3-toggle",
                 ),
                 public_api.toggle_group(
-                    ["bold"],
+                    ["bold", "italic"],
+                    value=["bold"],
                     key="wave3-toggle-group",
                 ),
                 public_api.calendar(
@@ -551,12 +618,12 @@ class PublicApiContractTests(unittest.TestCase):
                 3,
                 "b",
                 None,
-                [20.0, 80.0],
+                (20, 80),
                 True,
                 "Two",
                 True,
                 ["bold"],
-                "2026-07-30",
+                datetime.date(2026, 7, 30),
             ],
         )
         expected_kinds = [
@@ -600,35 +667,40 @@ class PublicApiContractTests(unittest.TestCase):
     def test_wave3_boundaries_fail_closed(self) -> None:
         with self.assertRaisesRegex(ValueError, "max_length"):
             public_api.input(
+                "Name",
                 "too long",
                 key="bad-input",
                 max_length=2,
             )
         with self.assertRaisesRegex(ValueError, "max_length"):
             public_api.input(
+                "Name",
                 "😀",
                 key="utf16-input",
                 max_length=1,
             )
-        with self.assertRaisesRegex(ValueError, "unique"):
+        with self.assertRaisesRegex(TypeError, "disabled flag"):
             public_api.radio_group(
-                ["same", "same"],
+                "Channel",
+                [{"label": "Same", "value": "same", "disabled": 1}],
                 key="bad-radio",
             )
-        with self.assertRaisesRegex(ValueError, "one or two"):
+        with self.assertRaisesRegex(ValueError, "exactly two"):
             public_api.slider(
-                [1, 2, 3],
+                "Bad range",
+                value=[1, 2, 3],
                 key="bad-slider",
             )
         with self.assertRaisesRegex(TypeError, "must be numbers"):
             public_api.slider(
-                [True],
+                "Boolean slider",
+                value=[True],
                 key="boolean-slider",
             )
         with self.assertRaisesRegex(ValueError, "present"):
             public_api.tabs(
                 ["One"],
-                "Missing",
+                value="Missing",
                 key="bad-tabs",
             )
         with self.assertRaisesRegex(ValueError, "calendar bounds"):
@@ -661,20 +733,28 @@ class PublicApiContractTests(unittest.TestCase):
                 ),
                 public_api.date_picker(
                     "Release date",
-                    default_value="2026-07-30",
+                    value="2026-07-30",
                     key="wave4-single-date",
                 ),
                 public_api.date_picker(
                     "Release window",
-                    mode="range",
-                    default_value=["2026-07-30", "2026-08-02"],
+                    selection_mode="range",
+                    value=["2026-07-30", "2026-08-02"],
                     key="wave4-date-range",
                 ),
             ]
 
         self.assertEqual(
             values,
-            [None, None, "2026-07-30", ["2026-07-30", "2026-08-02"]],
+            [
+                None,
+                None,
+                datetime.date(2026, 7, 30),
+                (
+                    datetime.date(2026, 7, 30),
+                    datetime.date(2026, 8, 2),
+                ),
+            ],
         )
         self.assertEqual(
             [call["data"]["kind"] for call in captured],
@@ -695,7 +775,7 @@ class PublicApiContractTests(unittest.TestCase):
             )
 
     def test_wave4_boundaries_fail_closed(self) -> None:
-        with self.assertRaisesRegex(ValueError, "content_type"):
+        with self.assertRaisesRegex(TypeError, "unexpected keyword"):
             public_api.hover_card(
                 "Unsafe",
                 "<script>alert(1)</script>",
@@ -704,19 +784,19 @@ class PublicApiContractTests(unittest.TestCase):
             )
         with self.assertRaisesRegex(ValueError, "exactly two"):
             public_api.date_picker(
-                mode="range",
-                default_value=["2026-07-30"],
+                selection_mode="range",
+                value=["2026-07-30"],
                 key="short-range",
             )
         with self.assertRaisesRegex(ValueError, "start"):
             public_api.date_picker(
-                mode="range",
-                default_value=["2026-08-02", "2026-07-30"],
+                selection_mode="range",
+                value=["2026-08-02", "2026-07-30"],
                 key="descending-range",
             )
         with self.assertRaisesRegex(ValueError, "bounds"):
             public_api.date_picker(
-                default_value="2026-07-01",
+                value="2026-07-01",
                 min_date="2026-07-15",
                 key="bounded-date",
             )

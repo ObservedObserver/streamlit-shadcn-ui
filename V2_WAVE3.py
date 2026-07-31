@@ -28,16 +28,16 @@ if st.button("Reset Wave 3 state", type="secondary"):
 with st.sidebar:
     st.header("Sidebar placement")
     sidebar_enabled = ui.switch(
-        True,
         "Sidebar enabled",
+        True,
         key="wave3_sidebar_switch",
     )
     st.write("Sidebar switch:", sidebar_enabled)
     sidebar_toggle = ui.toggle(
+        "Sidebar italic",
         False,
-        "italic",
+        icon="italic",
         key="wave3_sidebar_toggle",
-        label="Sidebar italic",
     )
     st.write("Sidebar toggle:", sidebar_toggle)
 
@@ -45,18 +45,18 @@ st.subheader("Draft-based text inputs")
 input_column, textarea_column, otp_column = st.columns(3)
 with input_column:
     name = ui.input(
+        "Name",
         "Ada",
         key="wave3_input",
-        label="Name",
         placeholder="Type a name",
         max_length=40,
     )
     st.write("Input Python value:", name)
 with textarea_column:
     notes = ui.textarea(
+        "Notes",
         "Initial notes",
         key="wave3_textarea",
-        label="Notes",
         placeholder="Write a longer note",
         rows=4,
         max_length=200,
@@ -64,10 +64,10 @@ with textarea_column:
     st.write("Textarea Python value:", notes)
 with otp_column:
     otp = ui.input_otp(
+        "Verification code",
         "",
-        6,
+        max_length=6,
         key="wave3_otp",
-        label="Verification code",
     )
     st.write("OTP Python value:", otp or "—")
 
@@ -88,8 +88,8 @@ with disclosure_left:
             },
         ],
         key="wave3_accordion",
-        default_values=["accessible"],
-        multiple=True,
+        value=["accessible"],
+        selection_mode="multiple",
         label="Migration questions",
     )
     st.write("Accordion open:", ",".join(open_items) or "—")
@@ -97,7 +97,7 @@ with disclosure_middle:
     opened = ui.collapsible(
         "Repository details",
         "@base-ui/react",
-        ["shadcn source", "Streamlit V2 host"],
+        items=["shadcn source", "Streamlit V2 host"],
         key="wave3_collapsible",
     )
     st.write("Collapsible open:", opened)
@@ -105,7 +105,7 @@ with disclosure_right:
     page_number = ui.pagination(
         key="wave3_pagination",
         total_pages=100,
-        initial_page=50,
+        page=50,
         sibling_count=1,
         label="Migration pages",
     )
@@ -115,6 +115,7 @@ st.subheader("Choice and range controls")
 choice_left, choice_middle, choice_right = st.columns(3)
 with choice_left:
     radio_value = ui.radio_group(
+        "Release channel",
         [
             {"label": "Alpha", "value": "alpha"},
             {"label": "Beta", "value": "beta"},
@@ -124,18 +125,17 @@ with choice_left:
                 "disabled": True,
             },
         ],
-        "alpha",
+        value="alpha",
         key="wave3_radio",
-        label="Release channel",
     )
     st.write("Radio value:", radio_value)
 with choice_middle:
     slider_value = ui.slider(
-        [20, 80],
+        "Confidence range",
         0,
         100,
+        (20, 80),
         5,
-        "Confidence range",
         key="wave3_slider",
     )
     st.caption(
@@ -144,8 +144,8 @@ with choice_middle:
     )
 with choice_right:
     ui.scroll_area(
-        "Migration log",
         ["Wave %d ready" % index for index in range(1, 21)],
+        title="Migration log",
         key="wave3_scroll_area",
         height=180,
     )
@@ -154,15 +154,15 @@ st.subheader("Compact selection controls")
 compact_left, compact_middle, compact_right = st.columns(3)
 with compact_left:
     enabled = ui.switch(
-        False,
         "Feature enabled",
+        False,
         key="wave3_switch",
     )
     st.write("Switch value:", enabled)
 with compact_middle:
     selected_tab = ui.tabs(
         ["Overview", "Analytics", "Reports"],
-        "Overview",
+        value="Overview",
         key="wave3_tabs",
         label="Workspace section",
         variant="line",
@@ -170,17 +170,17 @@ with compact_middle:
     st.write("Tabs value:", selected_tab)
 with compact_right:
     pressed = ui.toggle(
+        "Bold",
         False,
-        "bold",
+        icon="bold",
         key="wave3_toggle",
-        label="Bold",
         variant="outline",
     )
     formatting = ui.toggle_group(
-        ["bold"],
+        ["bold", "italic", "underline"],
+        value=["bold"],
         key="wave3_toggle_group",
         label="Formatting",
-        options=["bold", "italic", "underline"],
     )
     st.write("Toggle value:", pressed)
     st.write("Toggle group:", ",".join(formatting) or "—")
@@ -198,22 +198,22 @@ st.write("Calendar value:", selected_date or "—")
 st.subheader("Streamlit form integration")
 with st.form("wave3_state_form"):
     form_name = ui.input(
+        "Form name",
         "Draft",
         key="wave3_form_input",
-        label="Form name",
     )
     form_channel = ui.radio_group(
+        "Form status",
         ["Draft", "Ready", "Published"],
-        "Draft",
+        value="Draft",
         key="wave3_form_radio",
-        label="Form status",
     )
     form_slider = ui.slider(
-        [25],
+        "Form progress",
         0,
         100,
+        25,
         5,
-        "Form progress",
         key="wave3_form_slider",
     )
     form_submitted = st.form_submit_button("Submit Wave 3 form")
@@ -233,7 +233,7 @@ else:
         % (
             form_result["name"],
             form_result["status"],
-            ",".join("%g" % item for item in form_result["progress"]),
+            "%g" % form_result["progress"],
         )
     )
 

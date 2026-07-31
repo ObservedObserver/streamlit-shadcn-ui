@@ -12,17 +12,14 @@ with columns[0]:
         title="Typed components",
         content="No generic DOM renderer is required in V2.",
         description="shadcn + Base UI",
-        key="composition_card",
     )
 with columns[1]:
     project_name = ui.input(
         label="Project name",
         placeholder="streamlit-shadcn-ui",
-        key="composition_input",
     )
     submitted = ui.button(
         "Create project",
-        key="composition_button",
     )
 
 st.write({"project_name": project_name, "submitted": submitted})

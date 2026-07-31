@@ -268,7 +268,7 @@ with tab_states:
         checked = ui.checkbox(
             "Keep this checked across reruns",
             key="wave1_checkbox",
-            default_checked=True,
+            value=True,
         )
         st.write("Checkbox:", checked)
 

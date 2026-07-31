@@ -1,4 +1,14 @@
-"""Opt-in Streamlit Components V2 widgets backed by shadcn and Base UI."""
+"""Streamlit Components V2 widgets backed by shadcn and Base UI."""
+
+from .types import (
+    AccordionItem,
+    BadgeItem,
+    BreadcrumbItem,
+    BreadcrumbSelection,
+    Choice,
+    MenuItem,
+    TableColumn,
+)
 
 from .widgets import (
     accordion,
@@ -39,6 +49,13 @@ from .widgets import (
 )
 
 __all__ = [
+    "AccordionItem",
+    "BadgeItem",
+    "BreadcrumbItem",
+    "BreadcrumbSelection",
+    "Choice",
+    "MenuItem",
+    "TableColumn",
     "accordion",
     "alert",
     "alert_dialog",

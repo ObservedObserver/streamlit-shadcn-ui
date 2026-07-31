@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Union
+from typing import Optional, Union
 
 from ._common import enum_value, mount_stateless
 
@@ -9,7 +9,7 @@ _ORIENTATIONS = {"horizontal", "vertical"}
 
 def separator(
     *,
-    key: str,
+    key: Optional[str] = None,
     orientation: str = "horizontal",
     width: Union[str, int] = "stretch",
 ) -> None:

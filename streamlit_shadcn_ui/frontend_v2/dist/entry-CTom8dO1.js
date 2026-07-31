@@ -16392,6 +16392,7 @@ function Gf({ envelope: e, setTriggerValue: t }) {
 			onClick: () => {
 				t("click", !0);
 			},
+			size: e.props.size,
 			variant: e.props.variant,
 			children: e.props.text
 		})
@@ -16435,35 +16436,51 @@ function Xf({ className: e, ...t }) {
 		...t
 	});
 }
-//#endregion
-//#region src/components/streamlit/card.tsx
-function Zf({ component: e, metric: t, props: n }) {
-	let r = n.title !== null || n.description !== null;
-	return /* @__PURE__ */ (0, Y.jsxs)(Kf, {
-		"data-ssui-component": e,
-		"data-testid": `ssui-v2-${e.replace("_", "-")}`,
-		size: n.size,
-		children: [r ? /* @__PURE__ */ (0, Y.jsxs)(qf, { children: [n.title === null ? null : /* @__PURE__ */ (0, Y.jsx)(Jf, { children: n.title }), n.description === null ? null : /* @__PURE__ */ (0, Y.jsx)(Yf, { children: n.description })] }) : null, n.content === null ? null : /* @__PURE__ */ (0, Y.jsx)(Xf, { children: t ? /* @__PURE__ */ (0, Y.jsx)("div", {
-			className: "text-2xl font-semibold tracking-tight",
-			children: n.content
-		}) : /* @__PURE__ */ (0, Y.jsx)("div", {
-			className: "text-sm",
-			children: n.content
-		}) })]
+function Zf({ className: e, ...t }) {
+	return /* @__PURE__ */ (0, Y.jsx)("div", {
+		"data-slot": "card-footer",
+		className: J("flex items-center rounded-b-xl border-t bg-muted/50 p-(--card-spacing)", e),
+		...t
 	});
 }
+//#endregion
+//#region src/components/streamlit/card.tsx
 function Qf({ envelope: e }) {
-	return /* @__PURE__ */ (0, Y.jsx)(Zf, {
-		component: "card",
-		metric: !1,
-		props: e.props
+	let { props: t } = e, n = t.title !== null || t.description !== null;
+	return /* @__PURE__ */ (0, Y.jsxs)(Kf, {
+		"data-ssui-component": "card",
+		"data-testid": "ssui-v2-card",
+		size: t.size,
+		children: [
+			n ? /* @__PURE__ */ (0, Y.jsxs)(qf, { children: [t.title === null ? null : /* @__PURE__ */ (0, Y.jsx)(Jf, { children: t.title }), t.description === null ? null : /* @__PURE__ */ (0, Y.jsx)(Yf, { children: t.description })] }) : null,
+			t.content === null ? null : /* @__PURE__ */ (0, Y.jsx)(Xf, { children: /* @__PURE__ */ (0, Y.jsx)("div", {
+				className: "text-sm",
+				children: t.content
+			}) }),
+			t.footer === null ? null : /* @__PURE__ */ (0, Y.jsx)(Zf, { children: t.footer })
+		]
 	});
 }
 function $f({ envelope: e }) {
-	return /* @__PURE__ */ (0, Y.jsx)(Zf, {
-		component: "metric_card",
-		metric: !0,
-		props: e.props
+	let { props: t } = e;
+	return /* @__PURE__ */ (0, Y.jsxs)(Kf, {
+		"data-ssui-component": "metric_card",
+		"data-testid": "ssui-v2-metric-card",
+		size: t.size,
+		children: [
+			/* @__PURE__ */ (0, Y.jsxs)(qf, { children: [/* @__PURE__ */ (0, Y.jsx)(Yf, { children: t.label }), /* @__PURE__ */ (0, Y.jsx)(Jf, {
+				className: "text-2xl font-semibold tracking-tight",
+				children: t.value
+			})] }),
+			t.description === null ? null : /* @__PURE__ */ (0, Y.jsx)(Xf, { children: /* @__PURE__ */ (0, Y.jsx)("div", {
+				className: "text-sm text-muted-foreground",
+				children: t.description
+			}) }),
+			t.delta === null ? null : /* @__PURE__ */ (0, Y.jsx)(Zf, { children: /* @__PURE__ */ (0, Y.jsx)(If, {
+				variant: "secondary",
+				children: t.delta
+			}) })
+		]
 	});
 }
 //#endregion
@@ -23066,6 +23083,7 @@ function Vb({ envelope: e }) {
 		...t,
 		children: /* @__PURE__ */ (0, Y.jsx)(Cu, {
 			disabled: !0,
+			size: e.props.size,
 			variant: e.props.variant,
 			children: e.props.text
 		})
@@ -23073,7 +23091,10 @@ function Vb({ envelope: e }) {
 		className: "inline-flex p-px",
 		...t,
 		children: /* @__PURE__ */ (0, Y.jsx)("a", {
-			className: J(Su({ variant: e.props.variant })),
+			className: J(Su({
+				size: e.props.size,
+				variant: e.props.variant
+			})),
 			href: e.props.url,
 			rel: e.props.target === "_blank" ? "noopener noreferrer" : void 0,
 			target: e.props.target,
@@ -27455,6 +27476,7 @@ function sT({ envelope: e, setStateValue: t }) {
 		multiple: e.props.multiple,
 		onValueChange: n,
 		orientation: e.props.orientation,
+		size: e.props.size,
 		value: r.value,
 		variant: e.props.variant,
 		children: e.props.options.map((e) => /* @__PURE__ */ (0, Y.jsx)(oT, {
@@ -27481,6 +27503,7 @@ function lT({ envelope: e, setStateValue: t }) {
 		disabled: e.props.disabled,
 		onPressedChange: n,
 		pressed: r.value,
+		size: e.props.size,
 		variant: e.props.variant,
 		children: [i === null ? null : /* @__PURE__ */ (0, Y.jsx)(i, { "aria-hidden": "true" }), e.props.label]
 	});
@@ -27832,24 +27855,34 @@ var BT = /* @__PURE__ */ new Set([
 	"secondary",
 	"ghost",
 	"link"
+]), VT = /* @__PURE__ */ new Set([
+	"default",
+	"xs",
+	"sm",
+	"lg",
+	"icon",
+	"icon-xs",
+	"icon-sm",
+	"icon-lg"
 ]);
-function VT(e) {
+function HT(e) {
 	let t = e.props;
-	return !ET(t) || !DT(t.text) || typeof t.disabled != "boolean" || typeof t.variant != "string" || !BT.has(t.variant) ? null : {
+	return !ET(t) || !DT(t.text) || typeof t.disabled != "boolean" || typeof t.variant != "string" || !BT.has(t.variant) || typeof t.size != "string" || !VT.has(t.size) ? null : {
 		protocolVersion: 1,
 		kind: "button",
 		props: {
 			disabled: t.disabled,
 			text: t.text,
-			variant: t.variant
+			variant: t.variant,
+			size: t.size
 		}
 	};
 }
-var HT = /* @__PURE__ */ new Set(["default", "destructive"]), UT = /* @__PURE__ */ new Set([
+var UT = /* @__PURE__ */ new Set(["default", "destructive"]), WT = /* @__PURE__ */ new Set([
 	"sm",
 	"default",
 	"lg"
-]), WT = /* @__PURE__ */ new Set([
+]), GT = /* @__PURE__ */ new Set([
 	"default",
 	"secondary",
 	"destructive",
@@ -27857,9 +27890,9 @@ var HT = /* @__PURE__ */ new Set(["default", "destructive"]), UT = /* @__PURE__ 
 	"ghost",
 	"link"
 ]);
-function GT(e) {
+function KT(e) {
 	let t = e.props;
-	return !ET(t) || !DT(t.title) || !OT(t.description) || typeof t.variant != "string" || !HT.has(t.variant) ? null : {
+	return !ET(t) || !DT(t.title) || !OT(t.description) || typeof t.variant != "string" || !UT.has(t.variant) ? null : {
 		protocolVersion: 1,
 		kind: "alert",
 		props: {
@@ -27869,9 +27902,9 @@ function GT(e) {
 		}
 	};
 }
-function KT(e) {
+function qT(e) {
 	let t = e.props;
-	return !ET(t) || !jT(t.src) || !DT(t.fallback) || !DT(t.alt) || typeof t.size != "string" || !UT.has(t.size) ? null : {
+	return !ET(t) || !jT(t.src) || !DT(t.fallback) || !DT(t.alt) || typeof t.size != "string" || !WT.has(t.size) ? null : {
 		protocolVersion: 1,
 		kind: "avatar",
 		props: {
@@ -27882,12 +27915,12 @@ function KT(e) {
 		}
 	};
 }
-function qT(e) {
+function JT(e) {
 	let t = e.props;
 	if (!ET(t) || !Array.isArray(t.badges) || t.badges.length > 1e4) return null;
 	let n = [];
 	for (let e of t.badges) {
-		if (!ET(e) || !DT(e.text) || typeof e.variant != "string" || !WT.has(e.variant)) return null;
+		if (!ET(e) || !DT(e.text) || typeof e.variant != "string" || !GT.has(e.variant)) return null;
 		n.push({
 			text: e.text,
 			variant: e.variant
@@ -27899,7 +27932,7 @@ function qT(e) {
 		props: { badges: n }
 	};
 }
-function JT(e) {
+function YT(e) {
 	let t = e.props;
 	if (!ET(t) || !DT(t.label) || !Array.isArray(t.items) || t.items.length > 1e4) return null;
 	let n = [], r = 0;
@@ -27920,23 +27953,38 @@ function JT(e) {
 		}
 	};
 }
-function YT(e) {
-	return !ET(e) || !OT(e.title) || !OT(e.content) || !OT(e.description) || e.size !== "default" && e.size !== "sm" ? null : {
+function XT(e) {
+	return !ET(e) || !OT(e.title) || !OT(e.content) || !OT(e.description) || !OT(e.footer) || e.size !== "default" && e.size !== "sm" ? null : {
 		title: e.title,
 		content: e.content,
 		description: e.description,
+		footer: e.footer,
 		size: e.size
 	};
 }
-function XT(e, t) {
-	let n = YT(e.props);
-	return n ? {
+function ZT(e) {
+	let t = XT(e.props);
+	return t ? {
 		protocolVersion: 1,
-		kind: t,
-		props: n
+		kind: "card",
+		props: t
 	} : null;
 }
-function ZT(e) {
+function QT(e) {
+	let t = e.props;
+	return !ET(t) || !DT(t.label) || !DT(t.value) || !OT(t.description) || !OT(t.delta) || t.size !== "default" && t.size !== "sm" ? null : {
+		protocolVersion: 1,
+		kind: "metric_card",
+		props: {
+			label: t.label,
+			value: t.value,
+			description: t.description,
+			delta: t.delta,
+			size: t.size
+		}
+	};
+}
+function $T(e) {
 	let t = e.props;
 	return !ET(t) || !AT(t.src) || !DT(t.alt) || !MT(t.ratio) || t.ratio <= 0 || t.ratio > 100 ? null : {
 		protocolVersion: 1,
@@ -27948,7 +27996,7 @@ function ZT(e) {
 		}
 	};
 }
-function QT(e) {
+function eE(e) {
 	let t = e.props;
 	return !ET(t) || !MT(t.value) || t.value < 0 || t.value > 100 || !OT(t.label) || typeof t.showValue != "boolean" ? null : {
 		protocolVersion: 1,
@@ -27960,7 +28008,7 @@ function QT(e) {
 		}
 	};
 }
-function $T(e) {
+function tE(e) {
 	let t = e.props;
 	return !ET(t) || t.orientation !== "horizontal" && t.orientation !== "vertical" ? null : {
 		protocolVersion: 1,
@@ -27968,7 +28016,7 @@ function $T(e) {
 		props: { orientation: t.orientation }
 	};
 }
-function eE(e) {
+function nE(e) {
 	let t = e.props;
 	return !ET(t) || t.shape !== "rectangle" && t.shape !== "circle" || !NT(t.width) || !NT(t.height) ? null : {
 		protocolVersion: 1,
@@ -27980,10 +28028,10 @@ function eE(e) {
 		}
 	};
 }
-function tE(e) {
+function rE(e) {
 	return e === null || typeof e == "string" || typeof e == "boolean" || MT(e);
 }
-function nE(e) {
+function iE(e) {
 	let t = e.props;
 	if (!ET(t) || !Array.isArray(t.columns) || !Array.isArray(t.rows) || t.columns.length > 1e4 || t.rows.length > 1e4 || !OT(t.caption) || !(t.maxHeight === null || Number.isSafeInteger(t.maxHeight) && t.maxHeight >= 80 && t.maxHeight <= 1e4)) return null;
 	let n = [], r = /* @__PURE__ */ new Set();
@@ -27997,7 +28045,7 @@ function nE(e) {
 	}
 	let i = [];
 	for (let e of t.rows) {
-		if (!Array.isArray(e) || e.length !== n.length || e.some((e) => !tE(e))) return null;
+		if (!Array.isArray(e) || e.length !== n.length || e.some((e) => !rE(e))) return null;
 		i.push([...e]);
 	}
 	return {
@@ -28011,21 +28059,22 @@ function nE(e) {
 		}
 	};
 }
-function rE(e) {
+function aE(e) {
 	let t = e.props;
-	return !ET(t) || !DT(t.text) || !kT(t.url) || typeof t.variant != "string" || !BT.has(t.variant) || typeof t.disabled != "boolean" || t.target !== "_blank" && t.target !== "_self" ? null : {
+	return !ET(t) || !DT(t.text) || !kT(t.url) || typeof t.variant != "string" || !BT.has(t.variant) || typeof t.size != "string" || !VT.has(t.size) || typeof t.disabled != "boolean" || t.target !== "_blank" && t.target !== "_self" ? null : {
 		protocolVersion: 1,
 		kind: "link_button",
 		props: {
 			text: t.text,
 			url: t.url,
 			variant: t.variant,
+			size: t.size,
 			disabled: t.disabled,
 			target: t.target
 		}
 	};
 }
-var iE = /* @__PURE__ */ new Set([
+var oE = /* @__PURE__ */ new Set([
 	"text",
 	"email",
 	"password",
@@ -28033,10 +28082,10 @@ var iE = /* @__PURE__ */ new Set([
 	"tel",
 	"url"
 ]);
-function aE(e) {
+function sE(e) {
 	return e === null || Number.isSafeInteger(e) && e >= 1 && e <= 16384;
 }
-function oE(e) {
+function cE(e) {
 	if (!Array.isArray(e) || e.length > 1e4) return null;
 	let t = [], n = /* @__PURE__ */ new Set();
 	for (let r of e) {
@@ -28049,23 +28098,23 @@ function oE(e) {
 	}
 	return t;
 }
-function sE(e) {
+function lE(e) {
 	return Array.isArray(e) && e.length <= 1e4 && e.every((e) => DT(e));
 }
-function cE(e) {
+function uE(e) {
 	return new Set(e).size === e.length;
 }
-function lE(e) {
+function dE(e) {
 	if (typeof e != "string" || !/^\d{4}-\d{2}-\d{2}$/.test(e)) return !1;
 	let t = Number(e.slice(0, 4)), n = Number(e.slice(5, 7)), r = Number(e.slice(8, 10)), i = /* @__PURE__ */ new Date(0);
 	return i.setUTCHours(0, 0, 0, 0), i.setUTCFullYear(t, n - 1, r), i.getUTCFullYear() === t && i.getUTCMonth() === n - 1 && i.getUTCDate() === r;
 }
-function uE(e) {
-	return e === null || lE(e);
+function fE(e) {
+	return e === null || dE(e);
 }
-function dE(e) {
+function pE(e) {
 	let t = e.props, n = IT(e.state, "input", DT);
-	return !n || !ET(t) || !DT(t.label) || !DT(t.placeholder) || typeof t.type != "string" || !iE.has(t.type) || typeof t.disabled != "boolean" || !aE(t.maxLength) || t.maxLength !== null && n.value.length > t.maxLength ? null : {
+	return !n || !ET(t) || !DT(t.label) || !DT(t.placeholder) || typeof t.type != "string" || !oE.has(t.type) || typeof t.disabled != "boolean" || !sE(t.maxLength) || t.maxLength !== null && n.value.length > t.maxLength ? null : {
 		protocolVersion: 1,
 		kind: "input",
 		state: n,
@@ -28078,9 +28127,9 @@ function dE(e) {
 		}
 	};
 }
-function fE(e) {
+function mE(e) {
 	let t = e.props, n = IT(e.state, "textarea", DT);
-	return !n || !ET(t) || !DT(t.label) || !DT(t.placeholder) || typeof t.disabled != "boolean" || !Number.isSafeInteger(t.rows) || t.rows < 2 || t.rows > 20 || !aE(t.maxLength) || t.maxLength !== null && n.value.length > t.maxLength ? null : {
+	return !n || !ET(t) || !DT(t.label) || !DT(t.placeholder) || typeof t.disabled != "boolean" || !Number.isSafeInteger(t.rows) || t.rows < 2 || t.rows > 20 || !sE(t.maxLength) || t.maxLength !== null && n.value.length > t.maxLength ? null : {
 		protocolVersion: 1,
 		kind: "textarea",
 		state: n,
@@ -28093,9 +28142,9 @@ function fE(e) {
 		}
 	};
 }
-function pE(e) {
-	let t = e.props, n = IT(e.state, "accordion", sE);
-	if (!n || !ET(t) || !DT(t.label) || typeof t.disabled != "boolean" || typeof t.multiple != "boolean" || !Array.isArray(t.items) || t.items.length > 1e4 || !cE(n.value) || !t.multiple && n.value.length > 1) return null;
+function hE(e) {
+	let t = e.props, n = IT(e.state, "accordion", lE);
+	if (!n || !ET(t) || !DT(t.label) || typeof t.disabled != "boolean" || typeof t.multiple != "boolean" || !Array.isArray(t.items) || t.items.length > 1e4 || !uE(n.value) || !t.multiple && n.value.length > 1) return null;
 	let r = [], i = /* @__PURE__ */ new Set();
 	for (let e of t.items) {
 		if (!ET(e) || !DT(e.label) || !DT(e.content) || !DT(e.value) || typeof e.disabled != "boolean" || i.has(e.value)) return null;
@@ -28118,9 +28167,9 @@ function pE(e) {
 		}
 	};
 }
-function mE(e) {
+function gE(e) {
 	let t = e.props, n = IT(e.state, "collapsible", (e) => typeof e == "boolean");
-	return !n || !ET(t) || !DT(t.title) || !OT(t.firstItem) || !sE(t.items) || typeof t.disabled != "boolean" ? null : {
+	return !n || !ET(t) || !DT(t.title) || !OT(t.firstItem) || !lE(t.items) || typeof t.disabled != "boolean" ? null : {
 		protocolVersion: 1,
 		kind: "collapsible",
 		state: n,
@@ -28132,7 +28181,7 @@ function mE(e) {
 		}
 	};
 }
-function hE(e) {
+function _E(e) {
 	let t = e.props, n = IT(e.state, "input_otp", DT);
 	return !n || !ET(t) || !DT(t.label) || !Number.isSafeInteger(t.maxLength) || t.maxLength < 1 || t.maxLength > 12 || t.pattern !== "digits" && t.pattern !== "alphanumeric" || typeof t.disabled != "boolean" || n.value.length > t.maxLength || (t.pattern === "digits" ? !/^\d*$/.test(n.value) : !/^[a-z0-9]*$/i.test(n.value)) ? null : {
 		protocolVersion: 1,
@@ -28146,7 +28195,7 @@ function hE(e) {
 		}
 	};
 }
-function gE(e) {
+function vE(e) {
 	let t = e.props, n = IT(e.state, "pagination", (e) => Number.isSafeInteger(e));
 	return !n || !ET(t) || !DT(t.label) || !Number.isSafeInteger(t.totalPages) || t.totalPages < 1 || t.totalPages > 1e4 || !Number.isSafeInteger(t.siblingCount) || t.siblingCount < 0 || t.siblingCount > 10 || typeof t.disabled != "boolean" || n.value < 1 || n.value > t.totalPages ? null : {
 		protocolVersion: 1,
@@ -28160,10 +28209,10 @@ function gE(e) {
 		}
 	};
 }
-function _E(e) {
+function yE(e) {
 	let t = e.props, n = IT(e.state, "radio_group", OT);
 	if (!n || !ET(t) || !DT(t.label) || typeof t.disabled != "boolean") return null;
-	let r = oE(t.options);
+	let r = cE(t.options);
 	return !r || n.value !== null && !r.some((e) => e.value === n.value) ? null : {
 		protocolVersion: 1,
 		kind: "radio_group",
@@ -28175,9 +28224,9 @@ function _E(e) {
 		}
 	};
 }
-function vE(e) {
+function bE(e) {
 	let t = e.props;
-	return !ET(t) || !OT(t.title) || !sE(t.items) || !Number.isSafeInteger(t.height) || t.height < 80 || t.height > 1e4 ? null : {
+	return !ET(t) || !OT(t.title) || !lE(t.items) || !Number.isSafeInteger(t.height) || t.height < 80 || t.height > 1e4 ? null : {
 		protocolVersion: 1,
 		kind: "scroll_area",
 		props: {
@@ -28187,7 +28236,7 @@ function vE(e) {
 		}
 	};
 }
-function yE(e) {
+function xE(e) {
 	let t = e.props, n = IT(e.state, "slider", (e) => Array.isArray(e) && e.every((e) => MT(e)));
 	if (!n || !ET(t) || !DT(t.label) || !MT(t.min) || !MT(t.max) || t.max <= t.min || !MT(t.step) || t.step <= 0 || t.step > t.max - t.min || typeof t.disabled != "boolean" || n.value.length !== 1 && n.value.length !== 2) return null;
 	let r = t.min, i = t.max;
@@ -28204,7 +28253,7 @@ function yE(e) {
 		}
 	};
 }
-function bE(e) {
+function SE(e) {
 	let t = e.props, n = IT(e.state, "switch", (e) => typeof e == "boolean");
 	return !n || !ET(t) || !DT(t.label) || typeof t.disabled != "boolean" ? null : {
 		protocolVersion: 1,
@@ -28216,10 +28265,10 @@ function bE(e) {
 		}
 	};
 }
-function xE(e) {
+function CE(e) {
 	let t = e.props, n = IT(e.state, "tabs", DT);
 	if (!n || !ET(t) || !DT(t.label) || t.orientation !== "horizontal" && t.orientation !== "vertical" || t.variant !== "default" && t.variant !== "line" || typeof t.disabled != "boolean") return null;
-	let r = oE(t.options);
+	let r = cE(t.options);
 	return !r || r.length === 0 || !r.some((e) => e.value === n.value) ? null : {
 		protocolVersion: 1,
 		kind: "tabs",
@@ -28233,9 +28282,9 @@ function xE(e) {
 		}
 	};
 }
-function SE(e) {
+function wE(e) {
 	let t = e.props, n = IT(e.state, "toggle", (e) => typeof e == "boolean");
-	return !n || !ET(t) || !DT(t.label) || t.icon !== null && t.icon !== "bold" && t.icon !== "italic" && t.icon !== "underline" || t.variant !== "default" && t.variant !== "outline" || typeof t.disabled != "boolean" ? null : {
+	return !n || !ET(t) || !DT(t.label) || t.icon !== null && t.icon !== "bold" && t.icon !== "italic" && t.icon !== "underline" || t.variant !== "default" && t.variant !== "outline" || t.size !== "default" && t.size !== "sm" && t.size !== "lg" || typeof t.disabled != "boolean" ? null : {
 		protocolVersion: 1,
 		kind: "toggle",
 		state: n,
@@ -28243,14 +28292,15 @@ function SE(e) {
 			label: t.label,
 			icon: t.icon,
 			variant: t.variant,
+			size: t.size,
 			disabled: t.disabled
 		}
 	};
 }
-function CE(e) {
-	let t = e.props, n = IT(e.state, "toggle_group", sE);
-	if (!n || !ET(t) || !DT(t.label) || typeof t.multiple != "boolean" || t.orientation !== "horizontal" && t.orientation !== "vertical" || t.variant !== "default" && t.variant !== "outline" || typeof t.disabled != "boolean" || !cE(n.value) || !t.multiple && n.value.length > 1) return null;
-	let r = oE(t.options);
+function TE(e) {
+	let t = e.props, n = IT(e.state, "toggle_group", lE);
+	if (!n || !ET(t) || !DT(t.label) || typeof t.multiple != "boolean" || t.orientation !== "horizontal" && t.orientation !== "vertical" || t.variant !== "default" && t.variant !== "outline" || t.size !== "default" && t.size !== "sm" && t.size !== "lg" || typeof t.disabled != "boolean" || !uE(n.value) || !t.multiple && n.value.length > 1) return null;
+	let r = cE(t.options);
 	return !r || r.length === 0 || n.value.some((e) => !r.some((t) => t.value === e)) ? null : {
 		protocolVersion: 1,
 		kind: "toggle_group",
@@ -28261,13 +28311,14 @@ function CE(e) {
 			multiple: t.multiple,
 			orientation: t.orientation,
 			variant: t.variant,
+			size: t.size,
 			disabled: t.disabled
 		}
 	};
 }
-function wE(e) {
-	let t = e.props, n = IT(e.state, "calendar", uE);
-	return !n || !ET(t) || !DT(t.label) || !uE(t.minDate) || !uE(t.maxDate) || typeof t.disabled != "boolean" || t.minDate !== null && t.maxDate !== null && t.minDate > t.maxDate || n.value !== null && (t.minDate !== null && n.value < t.minDate || t.maxDate !== null && n.value > t.maxDate) ? null : {
+function EE(e) {
+	let t = e.props, n = IT(e.state, "calendar", fE);
+	return !n || !ET(t) || !DT(t.label) || !fE(t.minDate) || !fE(t.maxDate) || typeof t.disabled != "boolean" || t.minDate !== null && t.maxDate !== null && t.minDate > t.maxDate || n.value !== null && (t.minDate !== null && n.value < t.minDate || t.maxDate !== null && n.value > t.maxDate) ? null : {
 		protocolVersion: 1,
 		kind: "calendar",
 		state: n,
@@ -28279,7 +28330,7 @@ function wE(e) {
 		}
 	};
 }
-function TE(e) {
+function DE(e) {
 	let t = e.props;
 	return !ET(t) || !DT(t.label) || !OT(t.content) || typeof t.disabled != "boolean" ? null : {
 		protocolVersion: 1,
@@ -28291,7 +28342,7 @@ function TE(e) {
 		}
 	};
 }
-function EE(e) {
+function OE(e) {
 	let t = e.props;
 	return !ET(t) || !DT(t.label) || !DT(t.content) || typeof t.disabled != "boolean" ? null : {
 		protocolVersion: 1,
@@ -28303,7 +28354,7 @@ function EE(e) {
 		}
 	};
 }
-function DE(e) {
+function kE(e) {
 	let t = e.props;
 	return !ET(t) || typeof t.show != "boolean" || !PT(t.openRequestId) || !PT(t.resolvedRequestId) || t.resolvedRequestId > t.openRequestId || !DT(t.title) || !DT(t.description) || !DT(t.confirmLabel) || !DT(t.cancelLabel) ? null : {
 		protocolVersion: 1,
@@ -28319,17 +28370,17 @@ function DE(e) {
 		}
 	};
 }
-function OE(e) {
-	return e === null || lE(e) || Array.isArray(e) && e.length === 2 && lE(e[0]) && lE(e[1]);
+function AE(e) {
+	return e === null || dE(e) || Array.isArray(e) && e.length === 2 && dE(e[0]) && dE(e[1]);
 }
-function kE(e, t, n) {
+function jE(e, t, n) {
 	return (t === null || e >= t) && (n === null || e <= n);
 }
-function AE(e) {
-	let t = e.props, n = IT(e.state, "date_picker", OE);
-	if (!n || !ET(t) || !OT(t.label) || t.mode !== "single" && t.mode !== "range" || !DT(t.placeholder) || !uE(t.minDate) || !uE(t.maxDate) || typeof t.disabled != "boolean" || t.minDate !== null && t.maxDate !== null && t.minDate > t.maxDate || t.mode === "single" && Array.isArray(n.value) || t.mode === "range" && n.value !== null && !Array.isArray(n.value)) return null;
+function ME(e) {
+	let t = e.props, n = IT(e.state, "date_picker", AE);
+	if (!n || !ET(t) || !OT(t.label) || t.mode !== "single" && t.mode !== "range" || !DT(t.placeholder) || !fE(t.minDate) || !fE(t.maxDate) || typeof t.disabled != "boolean" || t.minDate !== null && t.maxDate !== null && t.minDate > t.maxDate || t.mode === "single" && Array.isArray(n.value) || t.mode === "range" && n.value !== null && !Array.isArray(n.value)) return null;
 	let r = t.minDate, i = t.maxDate, a = n.value === null ? [] : typeof n.value == "string" ? [n.value] : [...n.value];
-	return a.some((e) => !kE(e, r, i)) || a.length === 2 && a[0] > a[1] ? null : {
+	return a.some((e) => !jE(e, r, i)) || a.length === 2 && a[0] > a[1] ? null : {
 		protocolVersion: 1,
 		kind: "date_picker",
 		state: n,
@@ -28343,46 +28394,46 @@ function AE(e) {
 		}
 	};
 }
-function jE(e) {
+function NE(e) {
 	switch (e.kind) {
 		case "select": return LT(e);
 		case "dropdown_menu": return RT(e);
 		case "checkbox": return zT(e);
-		case "button": return VT(e);
-		case "alert": return GT(e);
-		case "alert_dialog": return DE(e);
-		case "avatar": return KT(e);
-		case "badge": return qT(e);
-		case "breadcrumb": return JT(e);
-		case "card": return XT(e, "card");
-		case "metric_card": return XT(e, "metric_card");
-		case "aspect_ratio": return ZT(e);
-		case "progress": return QT(e);
-		case "separator": return $T(e);
-		case "skeleton": return eE(e);
-		case "table": return nE(e);
-		case "link_button": return rE(e);
-		case "input": return dE(e);
-		case "textarea": return fE(e);
-		case "accordion": return pE(e);
-		case "collapsible": return mE(e);
-		case "input_otp": return hE(e);
-		case "pagination": return gE(e);
-		case "radio_group": return _E(e);
-		case "scroll_area": return vE(e);
-		case "slider": return yE(e);
-		case "switch": return bE(e);
-		case "tabs": return xE(e);
-		case "toggle": return SE(e);
-		case "toggle_group": return CE(e);
-		case "calendar": return wE(e);
-		case "popover": return TE(e);
-		case "hover_card": return EE(e);
-		case "date_picker": return AE(e);
+		case "button": return HT(e);
+		case "alert": return KT(e);
+		case "alert_dialog": return kE(e);
+		case "avatar": return qT(e);
+		case "badge": return JT(e);
+		case "breadcrumb": return YT(e);
+		case "card": return ZT(e);
+		case "metric_card": return QT(e);
+		case "aspect_ratio": return $T(e);
+		case "progress": return eE(e);
+		case "separator": return tE(e);
+		case "skeleton": return nE(e);
+		case "table": return iE(e);
+		case "link_button": return aE(e);
+		case "input": return pE(e);
+		case "textarea": return mE(e);
+		case "accordion": return hE(e);
+		case "collapsible": return gE(e);
+		case "input_otp": return _E(e);
+		case "pagination": return vE(e);
+		case "radio_group": return yE(e);
+		case "scroll_area": return bE(e);
+		case "slider": return xE(e);
+		case "switch": return SE(e);
+		case "tabs": return CE(e);
+		case "toggle": return wE(e);
+		case "toggle_group": return TE(e);
+		case "calendar": return EE(e);
+		case "popover": return DE(e);
+		case "hover_card": return OE(e);
+		case "date_picker": return ME(e);
 		default: return null;
 	}
 }
-function ME(e) {
+function PE(e) {
 	let t = ET(e) && typeof e.kind == "string" ? e.kind : "unknown", n = ET(e) && (typeof e.protocolVersion == "string" || typeof e.protocolVersion == "number") ? String(e.protocolVersion) : "unknown", r = Infinity;
 	try {
 		r = new TextEncoder().encode(JSON.stringify(e)).byteLength;
@@ -28395,7 +28446,7 @@ function ME(e) {
 			protocolVersion: n
 		}
 	};
-	let i = jE(e);
+	let i = NE(e);
 	return i ? {
 		ok: !0,
 		envelope: i
@@ -28410,14 +28461,14 @@ function ME(e) {
 }
 //#endregion
 //#region src/entry.tsx
-var NE = /* @__PURE__ */ new WeakMap();
-function PE(e, t, n) {
+var FE = /* @__PURE__ */ new WeakMap();
+function IE(e, t, n) {
 	let r = e.querySelector(t);
 	if (!(r instanceof HTMLElement)) throw Error(`${n}: required component root is missing.`);
 	return r;
 }
-function FE(e, t) {
-	let n = PE(e, "[data-ssui-v2-app-root]", "SSUI_V2_APP_ROOT_MISSING"), r = PE(e, "[data-ssui-v2-overlay-root]", "SSUI_V2_OVERLAY_ROOT_MISSING");
+function LE(e, t) {
+	let n = IE(e, "[data-ssui-v2-app-root]", "SSUI_V2_APP_ROOT_MISSING"), r = IE(e, "[data-ssui-v2-overlay-root]", "SSUI_V2_OVERLAY_ROOT_MISSING");
 	if (n.getRootNode() !== e || r.getRootNode() !== e) throw Error("SSUI_V2_ROOT_OWNERSHIP: component roots escaped parentElement.");
 	let i = `ssui-${t.replace(/[^a-zA-Z0-9_-]/g, "-")}-`;
 	return {
@@ -28426,7 +28477,7 @@ function FE(e, t) {
 		reactRoot: (0, _.createRoot)(n, { identifierPrefix: i })
 	};
 }
-function IE({ failure: e }) {
+function RE({ failure: e }) {
 	return /* @__PURE__ */ (0, Y.jsxs)("div", {
 		"data-ssui-v2-error": !0,
 		role: "alert",
@@ -28441,10 +28492,10 @@ function IE({ failure: e }) {
 		]
 	});
 }
-var LE = (e) => {
-	let { parentElement: t } = e, n = NE.get(t);
-	n || (n = FE(t, e.key), NE.set(t, n)), wT(t);
-	let r = ME(e.data), i = r.ok ? `${r.envelope.kind}:${r.envelope.protocolVersion}` : `${r.failure.code}:${r.failure.kind}:${r.failure.protocolVersion}`;
+var zE = (e) => {
+	let { parentElement: t } = e, n = FE.get(t);
+	n || (n = LE(t, e.key), FE.set(t, n)), wT(t);
+	let r = PE(e.data), i = r.ok ? `${r.envelope.kind}:${r.envelope.protocolVersion}` : `${r.failure.code}:${r.failure.kind}:${r.failure.protocolVersion}`;
 	return n.reactRoot.render(/* @__PURE__ */ (0, Y.jsx)(gT, {
 		overlayRoot: n.overlayRoot,
 		parentElement: t,
@@ -28453,11 +28504,11 @@ var LE = (e) => {
 			envelope: r.envelope,
 			setStateValue: e.setStateValue,
 			setTriggerValue: e.setTriggerValue
-		}) : /* @__PURE__ */ (0, Y.jsx)(IE, { failure: r.failure })
+		}) : /* @__PURE__ */ (0, Y.jsx)(RE, { failure: r.failure })
 	})), () => {
-		let e = NE.get(t);
-		e && (e.reactRoot.unmount(), e.overlayRoot.replaceChildren(), TT(t), NE.delete(t));
+		let e = FE.get(t);
+		e && (e.reactRoot.unmount(), e.overlayRoot.replaceChildren(), TT(t), FE.delete(t));
 	};
 };
 //#endregion
-export { LE as default };
+export { zE as default };

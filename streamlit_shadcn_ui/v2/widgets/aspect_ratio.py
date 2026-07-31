@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import math
-from typing import Union
+from typing import Optional, Union
 
 from ._common import mount_stateless, safe_image_src
 from .._protocol import validate_text
@@ -11,7 +11,7 @@ def aspect_ratio(
     src: str,
     alt: str,
     *,
-    key: str,
+    key: Optional[str] = None,
     ratio: float = 16 / 9,
     width: Union[str, int] = "stretch",
 ) -> None:

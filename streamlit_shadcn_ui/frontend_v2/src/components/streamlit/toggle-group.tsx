@@ -29,6 +29,7 @@ export function ToggleGroupView({
       multiple={envelope.props.multiple}
       onValueChange={commit}
       orientation={envelope.props.orientation}
+      size={envelope.props.size}
       value={state.value}
       variant={envelope.props.variant}
     >

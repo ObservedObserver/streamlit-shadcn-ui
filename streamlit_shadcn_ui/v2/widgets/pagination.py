@@ -3,14 +3,14 @@ from __future__ import annotations
 from typing import Callable, Optional, Union
 
 from .._protocol import validate_text
-from ._common import mount_stateful
+from ._common import boolean, mount_stateful
 
 
 def pagination(
+    total_pages: int,
     *,
-    key: str,
-    total_pages: int = 3,
-    initial_page: int = 1,
+    page: int = 1,
+    key: Optional[str] = None,
     sibling_count: int = 1,
     label: str = "Pagination",
     disabled: bool = False,
@@ -26,11 +26,11 @@ def pagination(
     ):
         raise ValueError("total_pages must be between 1 and 10,000.")
     if (
-        isinstance(initial_page, bool)
-        or not isinstance(initial_page, int)
-        or not 1 <= initial_page <= total_pages
+        isinstance(page, bool)
+        or not isinstance(page, int)
+        or not 1 <= page <= total_pages
     ):
-        raise ValueError("initial_page must be within total_pages.")
+        raise ValueError("page must be within total_pages.")
     if (
         isinstance(sibling_count, bool)
         or not isinstance(sibling_count, int)
@@ -42,7 +42,7 @@ def pagination(
     value = mount_stateful(
         key=key,
         kind="pagination",
-        default_value=initial_page,
+        default_value=page,
         is_valid_value=lambda candidate: (
             isinstance(candidate, int)
             and not isinstance(candidate, bool)
@@ -52,7 +52,7 @@ def pagination(
             "label": label,
             "totalPages": total_pages,
             "siblingCount": sibling_count,
-            "disabled": bool(disabled),
+            "disabled": boolean(disabled, "disabled"),
         },
         width=width,
         on_change=on_change,

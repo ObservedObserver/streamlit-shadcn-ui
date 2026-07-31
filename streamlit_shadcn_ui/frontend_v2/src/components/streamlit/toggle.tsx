@@ -41,6 +41,7 @@ export function ToggleView({
       disabled={envelope.props.disabled}
       onPressedChange={commit}
       pressed={state.value}
+      size={envelope.props.size}
       variant={envelope.props.variant}
     >
       {Icon !== null ? <Icon aria-hidden="true" /> : null}

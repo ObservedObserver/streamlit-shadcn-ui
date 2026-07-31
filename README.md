@@ -62,9 +62,13 @@ import streamlit_shadcn_ui.v2 as ui
 fruit = ui.select(
     "Fruit",
     ["Apple", "Banana", "Orange"],
-    key="fruit",
 )
 ```
+
+`key` is optional for ordinary calls. Supply a stable key for components
+created from dynamic or reorderable collections. Choice widgets preserve the
+original Python option values and accept `format_func` or typed `Choice` /
+`MenuItem` descriptors for display labels.
 
 Component source is generated from a pinned, checked-in shadcn Base UI
 registry snapshot; Base UI remains the interaction and accessibility
@@ -99,8 +103,9 @@ can also make that rollback choice explicit:
 import streamlit_shadcn_ui.v1 as ui
 ```
 
-V2 return values and callbacks are public; its raw
-`st.session_state[key]` protocol envelope is not.
+V2 return values and callbacks are public. Component protocol state and the
+private mount keys derived from public keys or call sites are implementation
+details.
 
 Run a completed-wave acceptance page with:
 
@@ -125,6 +130,7 @@ See the
 [V1/V2 compatibility matrix](docs/v2-compatibility-matrix.md),
 [cutover and rollback decision](docs/adr/008-v2-cutover-and-session-state.md),
 [shadcn visual-theme decision](docs/adr/009-v2-shadcn-owned-visual-theme.md),
+[V2 1.0 Python API decision](docs/adr/011-v2-1.0-python-api.md),
 [Wave 6 release-readiness record](docs/v2-wave6-release-readiness.md),
 [full migration tracker](docs/v2-full-migration-tracker.md),
 [anchored-overlay decision](docs/adr/001-v2-anchored-overlay-host.md), and

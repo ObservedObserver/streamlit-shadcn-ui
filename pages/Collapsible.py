@@ -8,9 +8,8 @@ with open("docs/components/collapsible.md", "r") as f:
     
 is_open = ui.collapsible(
     title="@peduarte starred 3 repositories",
-    first_item="@base-ui-components/react",
+    content="@base-ui-components/react",
     items=["shadcn/ui", "streamlit/streamlit"],
-    key="collapsible1",
 )
 st.write("Open:", is_open)
 

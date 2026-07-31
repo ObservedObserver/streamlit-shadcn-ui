@@ -29,8 +29,7 @@ products = {
 
 value = ui.tabs(
     options=products,
-    default_value="PyGWalker",
-    key="kanaries_tabs",
+    value="PyGWalker",
 )
 selected_product = products[value]
 
@@ -38,12 +37,10 @@ ui.card(
     title=value,
     content=selected_product["description"],
     description="Selected tab",
-    key="selected_product_card",
 )
 ui.link_button(
     f"{value} GitHub",
     selected_product["url"],
-    key="product_link",
     variant="outline",
 )
 st.write("Selected:", value)

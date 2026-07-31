@@ -56,8 +56,8 @@ primary_decision = ui.alert_dialog(
     open_primary,
     "Ship the V2 migration?",
     "Focus is trapped here; Escape and Cancel resolve false.",
-    "Ship it",
-    "Keep reviewing",
+    confirm_label="Ship it",
+    cancel_label="Keep reviewing",
     key="wave5_primary_dialog",
 )
 if primary_decision is not None:
@@ -88,8 +88,8 @@ first_decision = ui.alert_dialog(
     st.session_state.get("wave5_stack_first", False),
     "First queued dialog",
     "This dialog resumes after the top dialog resolves.",
-    "Accept first",
-    "Cancel first",
+    confirm_label="Accept first",
+    cancel_label="Cancel first",
     key="wave5_stack_first_dialog",
 )
 if first_decision is not None:
@@ -100,8 +100,8 @@ second_decision = ui.alert_dialog(
     st.session_state.get("wave5_stack_second", False),
     "Second top dialog",
     "Only this topmost independent modal owns global effects.",
-    "Accept second",
-    "Cancel second",
+    confirm_label="Accept second",
+    cancel_label="Cancel second",
     key="wave5_stack_second_dialog",
 )
 if second_decision is not None:
@@ -164,8 +164,8 @@ if st.session_state["wave5_render_conditional"]:
         st.session_state["wave5_conditional_requested"],
         "Conditional dialog",
         "This fixture can rerun, close, or unmount while open.",
-        "Confirm conditional",
-        "Cancel conditional",
+        confirm_label="Confirm conditional",
+        cancel_label="Cancel conditional",
         key="wave5_conditional_dialog",
     )
     if conditional_decision is not None:

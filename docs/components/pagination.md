@@ -5,18 +5,17 @@ import streamlit as st
 import streamlit_shadcn_ui.v2 as ui
 
 page_value = ui.pagination(
-    key="pagination1",
     total_pages=10,
-    initial_page=1,
+    page=1,
 )
 st.write("Selected page:", page_value)
 ```
 
 ### Parameters
 
-- `key` (required): Stable Streamlit component identity.
-- `total_pages` (default `3`): Total number of pages.
-- `initial_page` (default `1`): Initial page.
+- `total_pages`: Total number of pages.
+- `page` (default `1`): Initial page.
+- `key` (optional): Explicit identity for dynamic or reordered components.
 - `sibling_count` (default `1`): Nearby page buttons shown on each side.
 - `label`: Accessible pagination label.
 - `disabled`: Disables pagination interaction.
@@ -27,9 +26,8 @@ st.write("Selected page:", page_value)
 
 ```python
 page_value = ui.pagination(
-    key="pagination_large",
     total_pages=100,
-    initial_page=1,
+    page=1,
     sibling_count=2,
 )
 st.write("Current page:", page_value)

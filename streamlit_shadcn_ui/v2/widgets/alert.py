@@ -12,7 +12,7 @@ def alert(
     title: str,
     description: Optional[str] = None,
     *,
-    key: str,
+    key: Optional[str] = None,
     variant: str = "default",
     width: Union[str, int] = "stretch",
 ) -> None:

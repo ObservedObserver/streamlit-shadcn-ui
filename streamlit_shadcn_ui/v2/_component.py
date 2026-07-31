@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 from functools import lru_cache
+import hashlib
+import inspect
+import json
 from pathlib import Path
 from typing import Any, Callable, Mapping, Optional, Union
 
@@ -14,6 +17,8 @@ _COMPONENT_HTML = (
 _ASSET_DIR = Path(__file__).resolve().parents[1] / "frontend_v2" / "dist"
 _CSS_ASSET_GLOB = "style-*.css"
 _MOUNT = None
+_PACKAGE_DIR = Path(__file__).resolve().parents[1]
+_PRIVATE_KEY_PREFIX = "ssui_v2_component_"
 
 
 def noop_callback() -> None:
@@ -26,6 +31,55 @@ def get_result_value(result: Any, field: str, default: Any = None) -> Any:
     if isinstance(result, Mapping):
         return result.get(field, default)
     return getattr(result, field, default)
+
+
+def private_component_key(
+    *,
+    key: Optional[str],
+    kind: str,
+    identity: Mapping[str, Any],
+) -> str:
+    """Resolve a public optional key to a private Streamlit mount key."""
+
+    if key is not None:
+        if not isinstance(key, str):
+            raise TypeError("key must be a string or None.")
+        if not key:
+            raise ValueError("key must not be empty.")
+        seed = "user\0%s" % key
+    else:
+        payload = json.dumps(
+            dict(identity),
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        seed = "auto\0%s\0%s\0%s" % (
+            _external_callsite(),
+            kind,
+            payload,
+        )
+    digest = hashlib.sha256(seed.encode("utf-8")).hexdigest()
+    return "%s%s" % (_PRIVATE_KEY_PREFIX, digest)
+
+
+def _external_callsite() -> str:
+    frame = inspect.currentframe()
+    try:
+        while frame is not None:
+            filename = Path(frame.f_code.co_filename).resolve()
+            try:
+                filename.relative_to(_PACKAGE_DIR)
+            except ValueError:
+                return "%s:%d:%s" % (
+                    filename,
+                    frame.f_lineno,
+                    frame.f_code.co_name,
+                )
+            frame = frame.f_back
+    finally:
+        del frame
+    return "unknown"
 
 
 def mount(

@@ -90,7 +90,7 @@ with status_right:
         [
             {"text": "Home", "href": "/"},
             {"text": "Components", "href": "/components"},
-            {"text": "Wave 2", "isCurrentPage": True},
+            {"text": "Wave 2", "current": True},
         ],
         key="wave2_breadcrumb",
         label="Wave 2 navigation",
@@ -104,9 +104,9 @@ with status_right:
         st.caption(
             "Breadcrumb event: %s|%s|%s"
             % (
-                last_breadcrumb["index"],
-                last_breadcrumb["text"],
-                last_breadcrumb["href"],
+                last_breadcrumb.index,
+                last_breadcrumb.text,
+                last_breadcrumb.href,
             )
         )
 
@@ -123,7 +123,7 @@ with card_middle:
     ui.metric_card(
         "Migrated components",
         "16",
-        "Wave 1 + Wave 2 kinds",
+        description="Wave 1 + Wave 2 kinds",
         key="wave2_metric_components",
     )
 with card_right:
@@ -131,7 +131,7 @@ with card_right:
         ui.metric_card(
             "Iframe count",
             "0",
-            "Explicit dark Streamlit tokens",
+            description="Explicit dark Streamlit tokens",
             key="wave2_metric_iframes",
         )
 
@@ -168,14 +168,14 @@ with media_right:
     )
     ui.skeleton(
         key="wave2_skeleton_circle",
-        width_px=48,
-        height_px=48,
+        skeleton_width=48,
+        skeleton_height=48,
         shape="circle",
     )
     ui.skeleton(
         key="wave2_skeleton_rectangle",
-        width_px="100%",
-        height_px=20,
+        skeleton_width="100%",
+        skeleton_height=20,
     )
 
 st.subheader("Structure and data")

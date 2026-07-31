@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from ._common import enum_value, mount_stateless, optional_text
 
@@ -12,65 +12,47 @@ def card(
     content: Optional[str] = None,
     description: Optional[str] = None,
     *,
-    key: str,
+    footer: Optional[str] = None,
+    key: Optional[str] = None,
     size: str = "default",
     width: Union[str, int] = "stretch",
 ) -> None:
     """Render a stateless shadcn Card."""
 
-    _mount_card(
-        kind="card",
-        title=title,
-        content=content,
-        description=description,
+    mount_stateless(
         key=key,
-        size=size,
+        kind="card",
+        props={
+            "title": optional_text(title, "title"),
+            "content": optional_text(content, "content"),
+            "description": optional_text(description, "description"),
+            "footer": optional_text(footer, "footer"),
+            "size": enum_value(size, _SIZES, "size"),
+        },
         width=width,
     )
 
 
 def metric_card(
-    title: Optional[str] = None,
-    content: Optional[str] = None,
-    description: Optional[str] = None,
+    label: str,
+    value: Any,
     *,
-    key: str,
+    description: Optional[str] = None,
+    delta: Optional[str] = None,
+    key: Optional[str] = None,
     size: str = "default",
     width: Union[str, int] = "stretch",
 ) -> None:
     """Render a metric-oriented shadcn Card."""
 
-    _mount_card(
-        kind="metric_card",
-        title=title,
-        content=content,
-        description=description,
-        key=key,
-        size=size,
-        width=width,
-    )
-
-
-def _mount_card(
-    *,
-    kind: str,
-    title: Optional[str],
-    content: Optional[str],
-    description: Optional[str],
-    key: str,
-    size: str,
-    width: Union[str, int],
-) -> None:
     mount_stateless(
         key=key,
-        kind=kind,
+        kind="metric_card",
         props={
-            "title": optional_text(title, "title"),
-            "content": optional_text(content, "content"),
-            "description": optional_text(
-                description,
-                "description",
-            ),
+            "label": optional_text(label, "label"),
+            "value": optional_text(str(value), "value"),
+            "description": optional_text(description, "description"),
+            "delta": optional_text(delta, "delta"),
             "size": enum_value(size, _SIZES, "size"),
         },
         width=width,

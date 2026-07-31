@@ -2,21 +2,15 @@ from __future__ import annotations
 
 from typing import Callable, Optional, Union
 
-from .._component import mount, noop_callback
-from .._protocol import (
-    PROTOCOL_VERSION,
-    metadata_cell,
-    prepare_state,
-    validate_envelope,
-    validate_text,
-)
+from .._protocol import validate_text
+from ._common import boolean, mount_stateful
 
 
 def checkbox(
     label: str,
+    value: bool = False,
     *,
-    key: str,
-    default_checked: bool = False,
+    key: Optional[str] = None,
     disabled: bool = False,
     on_change: Optional[Callable[[], None]] = None,
     width: Union[str, int] = "content",
@@ -24,31 +18,16 @@ def checkbox(
     """Render a persistent shadcn Base UI Checkbox."""
 
     label = validate_text(label, "label")
-    state = prepare_state(
+    state = mount_stateful(
         key=key,
         kind="checkbox",
-        default_value=bool(default_checked),
+        default_value=boolean(value, "value"),
         is_valid_value=lambda candidate: isinstance(candidate, bool),
-    )
-    envelope = validate_envelope(
-        {
-            "protocolVersion": PROTOCOL_VERSION,
-            "kind": "checkbox",
-            "state": state,
-            "props": {
-                "disabled": bool(disabled),
-                "label": label,
-            },
-        }
-    )
-    mount(
-        key=key,
-        data=envelope,
-        default={
-            "meta": metadata_cell("checkbox"),
-            "state": state,
+        props={
+            "disabled": boolean(disabled, "disabled"),
+            "label": label,
         },
         width=width,
-        callbacks={"on_state_change": on_change or noop_callback},
+        on_change=on_change,
     )
-    return bool(state["value"])
+    return bool(state)

@@ -53,7 +53,7 @@ single_column, range_column = st.columns(2)
 with single_column:
     release_date = ui.date_picker(
         "Release date",
-        default_value="2026-07-30",
+        value="2026-07-30",
         key="wave4_single_date",
         min_date="2026-07-01",
         max_date="2026-08-31",
@@ -62,14 +62,16 @@ with single_column:
 with range_column:
     release_window = ui.date_picker(
         "Release window",
-        mode="range",
+        selection_mode="range",
         key="wave4_date_range",
         min_date="2026-07-01",
         max_date="2026-08-31",
     )
     st.write(
         "Range Python value:",
-        " – ".join(release_window) if release_window else "—",
+        " – ".join(date.isoformat() for date in release_window)
+        if release_window
+        else "—",
     )
 
 st.subheader("Clipping escape")
@@ -86,7 +88,7 @@ st.subheader("Streamlit form integration")
 with st.form("wave4_state_form"):
     form_date = ui.date_picker(
         "Form release date",
-        default_value="2026-07-30",
+        value="2026-07-30",
         key="wave4_form_date",
         min_date="2026-07-01",
         max_date="2026-08-31",

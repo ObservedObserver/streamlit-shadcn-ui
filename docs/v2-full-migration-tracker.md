@@ -30,21 +30,21 @@ real Streamlit browser and packaging gates are green.
 | `link_button` | 2 | Accepted | native link semantics, safe URL |
 | `input` | 3 | Accepted | persistent string; commit on blur / Enter |
 | `textarea` | 3 | Accepted | persistent string; commit on blur / Ctrl/Cmd+Enter |
-| `accordion` | 3 | Accepted | controlled persistent open-item array |
+| `accordion` | 3 | Accepted | single value or controlled open-item list |
 | `collapsible` | 3 | Accepted | controlled persistent open boolean |
 | `input_otp` | 3 | Accepted | persistent string; commit on completion / blur |
 | `pagination` | 3 | Accepted | persistent 1-based page |
-| `radio_group` | 3 | Accepted | persistent value |
+| `radio_group` | 3 | Accepted | persistent original Python option value |
 | `scroll_area` | 3 | Accepted | stateless bounded content helper |
-| `slider` | 3 | Accepted | persistent numeric array; commit after interaction |
+| `slider` | 3 | Accepted | persistent number or range tuple; commit after interaction |
 | `switch` | 3 | Accepted | persistent boolean |
-| `tabs` | 3 | Accepted | persistent selected tab |
+| `tabs` | 3 | Accepted | persistent original Python tab value |
 | `toggle` | 3 | Accepted | persistent boolean |
 | `toggle_group` | 3 | Accepted | persistent bounded unique values |
-| `calendar` | 3 | Accepted | persistent ISO single date |
+| `calendar` | 3 | Accepted | persistent `datetime.date` |
 | `popover` | 4 | Accepted | stateless anchored non-modal overlay |
 | `hover_card` | 4 | Accepted | stateless hover/focus non-modal overlay; text content |
-| `date_picker` | 4 | Accepted | persistent ISO date or ordered range; range commits on Apply; supported in forms |
+| `date_picker` | 4 | Accepted | persistent `datetime.date` or ordered date tuple; range commits on Apply; supported in forms |
 | `alert_dialog` | 5 | Accepted | rising-edge modal request; transient `None` / `bool` decision; rejected in forms |
 
 Wave 5 evidence is recorded in the
@@ -53,13 +53,14 @@ Wave 5 evidence is recorded in the
 ## Wave 6 compatibility disposition
 
 - The [compatibility matrix](./v2-compatibility-matrix.md) covers all
-  thirty-three V1 root exports and all thirty-five V2 exports.
+  thirty-three V1 root exports, all thirty-five V2 widget functions, and the
+  seven typed V2 descriptors.
 - Thirty-two stable V1 component roles have V2 implementations. V1
   `checkbox` groups and context-managed `card` usage need application-level
   adapters.
 - Experimental `element` composition remains compatibility-only.
-- Raw `st.session_state[key]` is a private V2 protocol envelope; the public
-  contracts are return values and callbacks.
+- Public keys are optional and resolve to private Streamlit-safe mount keys;
+  return values and callbacks are the public state contract.
 - `Home.py`, all component pages, and all thirty-five embedded component API
   documents now use the explicit V2 namespace and contain no `element()` or
   legacy argument forms.

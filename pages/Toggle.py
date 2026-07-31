@@ -6,13 +6,13 @@ st.header("Toggle")
 with open("docs/components/toggle.md", "r") as f:
     st.markdown(f.read())
 
-toggle_value_bold = ui.toggle(default_checked=False, icon="bold", key="toggle_bold")
+toggle_value_bold = ui.toggle("Bold", value=False, icon="bold")
 st.write("Bold Toggle is On:", toggle_value_bold)
 
-toggle_value_italic = ui.toggle(default_checked=False, icon="italic", key="toggle_italic")
+toggle_value_italic = ui.toggle("Italic", value=False, icon="italic")
 st.write("Italic Toggle is On:", toggle_value_italic)
 
-toggle_value_underline = ui.toggle(default_checked=False, icon="underline", key="toggle_underline")
+toggle_value_underline = ui.toggle("Underline", value=False, icon="underline")
 st.write("Underline Toggle is On:", toggle_value_underline)
 
 st.write(ui.toggle)

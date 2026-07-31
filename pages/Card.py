@@ -14,7 +14,6 @@ with card_columns[0]:
         title="Create project",
         content="Start from a clean V2 component surface.",
         description="Standard size",
-        key="card_default",
     )
 with card_columns[1]:
     ui.card(
@@ -22,7 +21,6 @@ with card_columns[1]:
         content="Three components were verified today.",
         description="Compact size",
         size="sm",
-        key="card_small",
     )
 
 st.write(ui.card)

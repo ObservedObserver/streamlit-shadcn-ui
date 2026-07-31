@@ -11,7 +11,6 @@ ui.avatar(
     src="https://imagedelivery.net/tSvh1MGEu9IgUanmf58srQ/e2b094c8-8519-4e8b-e92e-1cf8d4b58f00/public",
     fallback="SO",
     alt="Streamlit Shadcn UI avatar",
-    key="avatar1",
 )
 
 st.write(ui.avatar)

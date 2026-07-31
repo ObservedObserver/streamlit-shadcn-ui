@@ -136,6 +136,13 @@
     }
   },
   "v2Additions": {
+    "AccordionItem": "typed precomposed accordion item",
+    "BadgeItem": "typed badge collection item",
+    "BreadcrumbItem": "typed breadcrumb item",
+    "BreadcrumbSelection": "typed breadcrumb action result",
+    "Choice": "generic typed choice descriptor",
+    "MenuItem": "generic typed menu action descriptor",
+    "TableColumn": "typed table column descriptor",
     "badge": "single-item convenience API",
     "separator": "V2-only public display primitive",
     "skeleton": "V2-only public display primitive"

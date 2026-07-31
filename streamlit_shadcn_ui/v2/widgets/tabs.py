@@ -1,38 +1,47 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Iterable, Optional, Union
+from typing import Callable, Iterable, Optional, TypeVar, Union
 
 from .._protocol import validate_text
-from ._common import enum_value, mount_stateful, normalize_choices
+from ._common import (
+    boolean,
+    enum_value,
+    mount_stateful,
+    normalize_choices,
+    token_for_value,
+)
+
+
+T = TypeVar("T")
 
 
 def tabs(
-    options: Iterable[Any],
-    default_value: Optional[str] = None,
+    options: Iterable[T],
     *,
-    key: str,
+    value: Optional[T] = None,
+    format_func: Callable[[T], str] = str,
+    key: Optional[str] = None,
     label: str = "Tabs",
     orientation: str = "horizontal",
     variant: str = "default",
     disabled: bool = False,
     on_change: Optional[Callable[[], None]] = None,
     width: Union[str, int] = "stretch",
-) -> str:
+) -> T:
     """Render controlled shadcn Tabs that return the selected value."""
 
-    choices = normalize_choices(options)
+    choices, values_by_token = normalize_choices(options, format_func)
     if not choices:
         raise ValueError("Tabs require at least one option.")
-    values = {option["value"] for option in choices}
-    if default_value is None:
-        default_value = choices[0]["value"]
+    if value is None:
+        initial = choices[0]["value"]
     else:
-        default_value = validate_text(
-            str(default_value),
-            "default_value",
+        initial = token_for_value(
+            value,
+            choices,
+            values_by_token,
+            "value",
         )
-    if default_value not in values:
-        raise ValueError("default_value is not present in options.")
     label = validate_text(label, "label")
     orientation = enum_value(
         orientation,
@@ -45,19 +54,19 @@ def tabs(
         "variant",
     )
 
-    value = mount_stateful(
+    token = mount_stateful(
         key=key,
         kind="tabs",
-        default_value=default_value,
-        is_valid_value=lambda candidate: candidate in values,
+        default_value=initial,
+        is_valid_value=lambda candidate: candidate in values_by_token,
         props={
             "label": label,
             "options": choices,
             "orientation": orientation,
             "variant": variant,
-            "disabled": bool(disabled),
+            "disabled": boolean(disabled, "disabled"),
         },
         width=width,
         on_change=on_change,
     )
-    return str(value)
+    return values_by_token[token]

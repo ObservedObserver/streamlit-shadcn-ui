@@ -20,7 +20,11 @@ export function LinkButtonView({
   if (envelope.props.disabled) {
     return (
       <div className="inline-flex p-px" {...commonProps}>
-        <Button disabled variant={envelope.props.variant}>
+        <Button
+          disabled
+          size={envelope.props.size}
+          variant={envelope.props.variant}
+        >
           {envelope.props.text}
         </Button>
       </div>
@@ -31,7 +35,10 @@ export function LinkButtonView({
     <div className="inline-flex p-px" {...commonProps}>
       <a
         className={cn(
-          buttonVariants({ variant: envelope.props.variant })
+          buttonVariants({
+            size: envelope.props.size,
+            variant: envelope.props.variant,
+          })
         )}
         href={envelope.props.url}
         rel={

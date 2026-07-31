@@ -2,15 +2,12 @@ from __future__ import annotations
 
 from typing import Callable, Optional, Union
 
-from .._component import get_result_value, mount, noop_callback
+from .._component import get_result_value, noop_callback
 from .._protocol import (
-    PROTOCOL_VERSION,
-    metadata_cell,
-    register_kind,
-    validate_envelope,
     validate_text,
 )
 from .._streamlit_compat import fail_if_trigger_in_form
+from ._common import boolean, enum_value, mount_trigger
 
 _BUTTON_VARIANTS = {
     "default",
@@ -20,13 +17,24 @@ _BUTTON_VARIANTS = {
     "ghost",
     "link",
 }
+_BUTTON_SIZES = {
+    "default",
+    "xs",
+    "sm",
+    "lg",
+    "icon",
+    "icon-xs",
+    "icon-sm",
+    "icon-lg",
+}
 
 
 def button(
-    text: str,
+    label: str,
     *,
-    key: str,
+    key: Optional[str] = None,
     variant: str = "default",
+    size: str = "default",
     disabled: bool = False,
     on_click: Optional[Callable[[], None]] = None,
     width: Union[str, int] = "content",
@@ -34,26 +42,18 @@ def button(
     """Render a transient shadcn Base UI Button trigger."""
 
     fail_if_trigger_in_form("button")
-    register_kind(key, "button")
-    text = validate_text(text, "text")
-    if variant not in _BUTTON_VARIANTS:
-        raise ValueError("Unsupported V2 button variant.")
-
-    envelope = validate_envelope(
-        {
-            "protocolVersion": PROTOCOL_VERSION,
-            "kind": "button",
-            "props": {
-                "disabled": bool(disabled),
-                "text": text,
-                "variant": variant,
-            },
-        }
-    )
-    result = mount(
+    label = validate_text(label, "label")
+    variant = enum_value(variant, _BUTTON_VARIANTS, "variant")
+    size = enum_value(size, _BUTTON_SIZES, "size")
+    result = mount_trigger(
         key=key,
-        data=envelope,
-        default={"meta": metadata_cell("button")},
+        kind="button",
+        props={
+            "disabled": boolean(disabled, "disabled"),
+            "text": label,
+            "variant": variant,
+            "size": size,
+        },
         width=width,
         callbacks={"on_click_change": on_click or noop_callback},
     )

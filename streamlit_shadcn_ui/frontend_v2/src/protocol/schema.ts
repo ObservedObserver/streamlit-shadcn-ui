@@ -100,6 +100,16 @@ export type ButtonVariant =
   | "ghost"
   | "link"
 
+export type ButtonSize =
+  | "default"
+  | "xs"
+  | "sm"
+  | "lg"
+  | "icon"
+  | "icon-xs"
+  | "icon-sm"
+  | "icon-lg"
+
 export type ButtonEnvelope = {
   protocolVersion: typeof PROTOCOL_VERSION
   kind: "button"
@@ -107,6 +117,7 @@ export type ButtonEnvelope = {
     disabled: boolean
     text: string
     variant: ButtonVariant
+    size: ButtonSize
   }
 }
 
@@ -185,6 +196,7 @@ export type CardProps = {
   title: string | null
   content: string | null
   description: string | null
+  footer: string | null
   size: "default" | "sm"
 }
 
@@ -197,7 +209,13 @@ export type CardEnvelope = {
 export type MetricCardEnvelope = {
   protocolVersion: typeof PROTOCOL_VERSION
   kind: "metric_card"
-  props: CardProps
+  props: {
+    label: string
+    value: string
+    description: string | null
+    delta: string | null
+    size: "default" | "sm"
+  }
 }
 
 export type AspectRatioEnvelope = {
@@ -264,6 +282,7 @@ export type LinkButtonEnvelope = {
     text: string
     url: string
     variant: ButtonVariant
+    size: ButtonSize
     disabled: boolean
     target: "_blank" | "_self"
   }
@@ -427,6 +446,7 @@ export type ToggleEnvelope = {
     label: string
     icon: "bold" | "italic" | "underline" | null
     variant: "default" | "outline"
+    size: "default" | "sm" | "lg"
     disabled: boolean
   }
 }
@@ -441,6 +461,7 @@ export type ToggleGroupEnvelope = {
     multiple: boolean
     orientation: "horizontal" | "vertical"
     variant: "default" | "outline"
+    size: "default" | "sm" | "lg"
     disabled: boolean
   }
 }
@@ -803,6 +824,16 @@ const BUTTON_VARIANTS = new Set<ButtonVariant>([
   "ghost",
   "link",
 ])
+const BUTTON_SIZES = new Set<ButtonSize>([
+  "default",
+  "xs",
+  "sm",
+  "lg",
+  "icon",
+  "icon-xs",
+  "icon-sm",
+  "icon-lg",
+])
 
 function parseButton(value: Record<string, unknown>): ButtonEnvelope | null {
   const props = value.props
@@ -811,7 +842,9 @@ function parseButton(value: Record<string, unknown>): ButtonEnvelope | null {
     !isBoundedText(props.text) ||
     typeof props.disabled !== "boolean" ||
     typeof props.variant !== "string" ||
-    !BUTTON_VARIANTS.has(props.variant as ButtonVariant)
+    !BUTTON_VARIANTS.has(props.variant as ButtonVariant) ||
+    typeof props.size !== "string" ||
+    !BUTTON_SIZES.has(props.size as ButtonSize)
   ) {
     return null
   }
@@ -822,6 +855,7 @@ function parseButton(value: Record<string, unknown>): ButtonEnvelope | null {
       disabled: props.disabled,
       text: props.text,
       variant: props.variant as ButtonVariant,
+      size: props.size as ButtonSize,
     },
   }
 }
@@ -966,6 +1000,7 @@ function parseCardProps(value: unknown): CardProps | null {
     !isNullableBoundedText(value.title) ||
     !isNullableBoundedText(value.content) ||
     !isNullableBoundedText(value.description) ||
+    !isNullableBoundedText(value.footer) ||
     (value.size !== "default" && value.size !== "sm")
   ) {
     return null
@@ -974,22 +1009,47 @@ function parseCardProps(value: unknown): CardProps | null {
     title: value.title,
     content: value.content,
     description: value.description,
+    footer: value.footer,
     size: value.size,
   }
 }
 
-function parseCard(
-  value: Record<string, unknown>,
-  kind: "card" | "metric_card"
-): CardEnvelope | MetricCardEnvelope | null {
+function parseCard(value: Record<string, unknown>): CardEnvelope | null {
   const props = parseCardProps(value.props)
   if (!props) {
     return null
   }
   return {
     protocolVersion: PROTOCOL_VERSION,
-    kind,
+    kind: "card",
     props,
+  }
+}
+
+function parseMetricCard(
+  value: Record<string, unknown>
+): MetricCardEnvelope | null {
+  const props = value.props
+  if (
+    !isRecord(props) ||
+    !isBoundedText(props.label) ||
+    !isBoundedText(props.value) ||
+    !isNullableBoundedText(props.description) ||
+    !isNullableBoundedText(props.delta) ||
+    (props.size !== "default" && props.size !== "sm")
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "metric_card",
+    props: {
+      label: props.label,
+      value: props.value,
+      description: props.description,
+      delta: props.delta,
+      size: props.size,
+    },
   }
 }
 
@@ -1168,6 +1228,8 @@ function parseLinkButton(
     !isSafeUrl(props.url) ||
     typeof props.variant !== "string" ||
     !BUTTON_VARIANTS.has(props.variant as ButtonVariant) ||
+    typeof props.size !== "string" ||
+    !BUTTON_SIZES.has(props.size as ButtonSize) ||
     typeof props.disabled !== "boolean" ||
     (props.target !== "_blank" && props.target !== "_self")
   ) {
@@ -1180,6 +1242,7 @@ function parseLinkButton(
       text: props.text,
       url: props.url,
       variant: props.variant as ButtonVariant,
+      size: props.size as ButtonSize,
       disabled: props.disabled,
       target: props.target,
     },
@@ -1711,6 +1774,9 @@ function parseToggle(
       props.icon === "underline"
     ) ||
     (props.variant !== "default" && props.variant !== "outline") ||
+    (props.size !== "default" &&
+      props.size !== "sm" &&
+      props.size !== "lg") ||
     typeof props.disabled !== "boolean"
   ) {
     return null
@@ -1723,6 +1789,7 @@ function parseToggle(
       label: props.label,
       icon: props.icon,
       variant: props.variant,
+      size: props.size,
       disabled: props.disabled,
     },
   }
@@ -1745,6 +1812,9 @@ function parseToggleGroup(
     (props.orientation !== "horizontal" &&
       props.orientation !== "vertical") ||
     (props.variant !== "default" && props.variant !== "outline") ||
+    (props.size !== "default" &&
+      props.size !== "sm" &&
+      props.size !== "lg") ||
     typeof props.disabled !== "boolean" ||
     !hasUniqueValues(state.value) ||
     (!props.multiple && state.value.length > 1)
@@ -1772,6 +1842,7 @@ function parseToggleGroup(
       multiple: props.multiple,
       orientation: props.orientation,
       variant: props.variant,
+      size: props.size,
       disabled: props.disabled,
     },
   }
@@ -2001,9 +2072,9 @@ function parseKnownEnvelope(
     case "breadcrumb":
       return parseBreadcrumb(value)
     case "card":
-      return parseCard(value, "card")
+      return parseCard(value)
     case "metric_card":
-      return parseCard(value, "metric_card")
+      return parseMetricCard(value)
     case "aspect_ratio":
       return parseAspectRatio(value)
     case "progress":

@@ -2,12 +2,13 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import type {
   CardEnvelope,
-  CardProps,
   MetricCardEnvelope,
 } from "@/protocol/schema"
 
@@ -19,20 +20,13 @@ type MetricCardViewProps = {
   envelope: MetricCardEnvelope
 }
 
-function CardBody({
-  component,
-  metric,
-  props,
-}: {
-  component: "card" | "metric_card"
-  metric: boolean
-  props: CardProps
-}) {
+export function CardView({ envelope }: CardViewProps) {
+  const { props } = envelope
   const hasHeader = props.title !== null || props.description !== null
   return (
     <Card
-      data-ssui-component={component}
-      data-testid={`ssui-v2-${component.replace("_", "-")}`}
+      data-ssui-component="card"
+      data-testid="ssui-v2-card"
       size={props.size}
     >
       {hasHeader ? (
@@ -47,35 +41,42 @@ function CardBody({
       ) : null}
       {props.content !== null ? (
         <CardContent>
-          {metric ? (
-            <div className="text-2xl font-semibold tracking-tight">
-              {props.content}
-            </div>
-          ) : (
-            <div className="text-sm">{props.content}</div>
-          )}
+          <div className="text-sm">{props.content}</div>
         </CardContent>
+      ) : null}
+      {props.footer !== null ? (
+        <CardFooter>{props.footer}</CardFooter>
       ) : null}
     </Card>
   )
 }
 
-export function CardView({ envelope }: CardViewProps) {
-  return (
-    <CardBody
-      component="card"
-      metric={false}
-      props={envelope.props}
-    />
-  )
-}
-
 export function MetricCardView({ envelope }: MetricCardViewProps) {
+  const { props } = envelope
   return (
-    <CardBody
-      component="metric_card"
-      metric
-      props={envelope.props}
-    />
+    <Card
+      data-ssui-component="metric_card"
+      data-testid="ssui-v2-metric-card"
+      size={props.size}
+    >
+      <CardHeader>
+        <CardDescription>{props.label}</CardDescription>
+        <CardTitle className="text-2xl font-semibold tracking-tight">
+          {props.value}
+        </CardTitle>
+      </CardHeader>
+      {props.description !== null ? (
+        <CardContent>
+          <div className="text-sm text-muted-foreground">
+            {props.description}
+          </div>
+        </CardContent>
+      ) : null}
+      {props.delta !== null ? (
+        <CardFooter>
+          <Badge variant="secondary">{props.delta}</Badge>
+        </CardFooter>
+      ) : null}
+    </Card>
   )
 }

@@ -4,15 +4,15 @@ import re
 from typing import Callable, Optional, Union
 
 from .._protocol import validate_text
-from ._common import enum_value, mount_stateful
+from ._common import boolean, enum_value, mount_stateful
 
 
 def input_otp(
-    default_value: str = "",
-    max_length: int = 6,
-    *,
-    key: str,
     label: str = "One-time password",
+    value: str = "",
+    *,
+    max_length: int = 6,
+    key: Optional[str] = None,
     pattern: str = "digits",
     disabled: bool = False,
     on_change: Optional[Callable[[], None]] = None,
@@ -20,7 +20,7 @@ def input_otp(
 ) -> str:
     """Render a persistent shadcn OTP Input."""
 
-    default_value = validate_text(default_value, "default_value")
+    value = validate_text(value, "value")
     label = validate_text(label, "label")
     pattern = enum_value(
         pattern,
@@ -38,15 +38,15 @@ def input_otp(
         if pattern == "digits"
         else re.compile(r"^[a-zA-Z0-9]*$")
     )
-    if len(default_value) > max_length or not expression.fullmatch(
-        default_value
+    if len(value) > max_length or not expression.fullmatch(
+        value
     ):
-        raise ValueError("default_value does not match the OTP policy.")
+        raise ValueError("value does not match the OTP policy.")
 
     value = mount_stateful(
         key=key,
         kind="input_otp",
-        default_value=default_value,
+        default_value=value,
         is_valid_value=lambda candidate: (
             isinstance(candidate, str)
             and len(candidate.encode("utf-8")) <= 16 * 1024
@@ -57,7 +57,7 @@ def input_otp(
             "label": label,
             "maxLength": max_length,
             "pattern": pattern,
-            "disabled": bool(disabled),
+            "disabled": boolean(disabled, "disabled"),
         },
         width=width,
         on_change=on_change,

@@ -4,15 +4,18 @@ from typing import Any, Iterable, List, Mapping, Optional, Union
 
 from ._common import mount_stateless, optional_text, table_cell
 from .._protocol import validate_collection_size, validate_text
+from ..types import TableColumn
 
 _ALIGNMENTS = {"left", "center", "right"}
 
 
 def table(
     data: Any,
-    columns: Optional[Iterable[Mapping[str, Any]]] = None,
+    columns: Optional[
+        Iterable[Union[TableColumn, Mapping[str, Any]]]
+    ] = None,
     *,
-    key: str,
+    key: Optional[str] = None,
     caption: Optional[str] = None,
     max_height: Optional[int] = None,
     width: Union[str, int] = "stretch",
@@ -62,7 +65,9 @@ def _records(data: Any) -> List[Mapping[str, Any]]:
 
 def _columns(
     records: List[Mapping[str, Any]],
-    columns: Optional[Iterable[Mapping[str, Any]]],
+    columns: Optional[
+        Iterable[Union[TableColumn, Mapping[str, Any]]]
+    ],
 ) -> List[Mapping[str, str]]:
     if columns is None:
         keys = list(records[0].keys()) if records else []
@@ -78,8 +83,16 @@ def _columns(
     normalized = []
     seen = set()
     for column in columns:
-        if not isinstance(column, Mapping):
-            raise TypeError("Each table column must be a mapping.")
+        if isinstance(column, TableColumn):
+            column = {
+                "key": column.key,
+                "label": column.label,
+                "align": column.align,
+            }
+        elif not isinstance(column, Mapping):
+            raise TypeError(
+                "Each table column must be a TableColumn or mapping."
+            )
         key = validate_text(
             str(column.get("key", column.get("dataKey", ""))),
             "column key",
@@ -87,8 +100,9 @@ def _columns(
         if key in seen:
             raise ValueError("Table column keys must be unique.")
         seen.add(key)
+        raw_label = column.get("label")
         label = validate_text(
-            str(column.get("label", column.get("title", key))),
+            key if raw_label is None else str(raw_label),
             "column label",
         )
         align = validate_text(str(column.get("align", "left")), "align")

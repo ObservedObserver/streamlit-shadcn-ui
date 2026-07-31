@@ -3,14 +3,14 @@ from __future__ import annotations
 from typing import Callable, Optional, Union
 
 from .._protocol import validate_text
-from ._common import enum_value, mount_stateful, utf16_length
+from ._common import boolean, enum_value, mount_stateful, utf16_length
 
 
 def input(
-    default_value: str = "",
+    label: str,
+    value: str = "",
     *,
-    key: str,
-    label: str = "Input",
+    key: Optional[str] = None,
     type: str = "text",
     placeholder: Optional[str] = None,
     disabled: bool = False,
@@ -20,7 +20,7 @@ def input(
 ) -> str:
     """Render a persistent shadcn text Input."""
 
-    default_value = validate_text(default_value, "default_value")
+    value = validate_text(value, "value")
     label = validate_text(label, "label")
     input_type = enum_value(
         type,
@@ -38,13 +38,13 @@ def input(
             or not 1 <= max_length <= 16 * 1024
         ):
             raise ValueError("max_length must be between 1 and 16,384.")
-        if utf16_length(default_value) > max_length:
-            raise ValueError("default_value exceeds max_length.")
+        if utf16_length(value) > max_length:
+            raise ValueError("value exceeds max_length.")
 
     value = mount_stateful(
         key=key,
         kind="input",
-        default_value=default_value,
+        default_value=value,
         is_valid_value=lambda candidate: (
             isinstance(candidate, str)
             and len(candidate.encode("utf-8")) <= 16 * 1024
@@ -57,7 +57,7 @@ def input(
             "label": label,
             "placeholder": placeholder_value,
             "type": input_type,
-            "disabled": bool(disabled),
+            "disabled": boolean(disabled, "disabled"),
             "maxLength": max_length,
         },
         width=width,

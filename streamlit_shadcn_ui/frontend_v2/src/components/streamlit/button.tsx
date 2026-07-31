@@ -22,6 +22,7 @@ export function ButtonView({
         onClick={() => {
           setTriggerValue("click", true)
         }}
+        size={envelope.props.size}
         variant={envelope.props.variant}
       >
         {envelope.props.text}
