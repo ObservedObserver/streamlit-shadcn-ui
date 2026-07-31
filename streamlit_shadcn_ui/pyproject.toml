@@ -1,0 +1,7 @@
+[project]
+name = "streamlit-shadcn-ui"
+version = "0.1.19"
+
+[[tool.streamlit.component.components]]
+name = "v2"
+asset_dir = "frontend_v2/dist"

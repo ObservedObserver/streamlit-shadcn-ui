@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-07-30",
+  "generator": {
+    "name": "shadcn",
+    "version": "4.16.0",
+    "npmIntegrity": "sha512-kPr4RrQmbbZeAjwBYeBSpFvAHV8rkTlNPUluIxkRriq5TpevfFelVO5xvcF6oguHPVn0R6wPuVer4HudfcLy/A==",
+    "initCommand": "pnpm dlx shadcn@4.16.0 init --template vite -d --base base",
+    "base": "base",
+    "baseMeaning": "@base-ui/react",
+    "style": "base-nova",
+    "iconLibrary": "lucide"
+  },
+  "upstream": {
+    "repository": "https://github.com/shadcn-ui/ui",
+    "commit": "b28e5b4d9e90b72a222fff7eb70043a52856012d"
+  },
+  "versions": {
+    "@base-ui/react": "1.6.0",
+    "tailwindcss": "4.3.3",
+    "portalAdaptation": 1,
+    "anchoredPositionerAdaptation": 1,
+    "streamlitCssRegistrationAdaptation": 1,
+    "shadowCssSchema": 1
+  },
+  "registry": {
+    "select": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/select.json",
+      "sha256": "a3f9e9486195651b70fa500361c9d61d839a3fe4d650ffdda2f7e2ce1c03b780"
+    },
+    "dropdown-menu": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/dropdown-menu.json",
+      "sha256": "1904bd0ff0fe2e5bbfacf83b5b31d580e88eca799b8445cadae779cbabec1edd"
+    },
+    "checkbox": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/checkbox.json",
+      "sha256": "73da4a5c5bdb610bac7a0b5d9f3b1d260956da687c2d99959e95519f43fc621b"
+    },
+    "button": {
+      "url": "https://ui.shadcn.com/r/styles/base-nova/button.json",
+      "sha256": "35f59d5e2aab0723f09896bea748496ee4766bc8b4c642ae49bd2eb6cc7bc5eb"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 from streamlit_shadcn_ui.py_components.utils.session import init_session
 from .utils import declare_component
-from streamlit_extras.stylable_container import stylable_container
+from .utils.stylable_container import stylable_container
 import streamlit as st
 
 _component_func = declare_component("alert_dialog")

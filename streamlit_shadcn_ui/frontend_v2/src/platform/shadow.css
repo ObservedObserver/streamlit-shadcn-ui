@@ -1,0 +1,154 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@source "../entry.tsx";
+@source "../app.tsx";
+@source "../components/**/*.{ts,tsx}";
+@source "./*.tsx";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans:
+    "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:host {
+  --background: var(--st-background-color, #ffffff);
+  --foreground: var(--st-text-color, #31333f);
+  --card: var(--st-background-color, #ffffff);
+  --card-foreground: var(--st-text-color, #31333f);
+  --popover: var(--st-background-color, #ffffff);
+  --popover-foreground: var(--st-text-color, #31333f);
+  --primary: var(--st-primary-color, #ff4b4b);
+  --primary-foreground: var(
+    --ssui-v2-primary-foreground,
+    #ffffff
+  );
+  --secondary: var(--st-secondary-background-color, #f0f2f6);
+  --secondary-foreground: var(--st-text-color, #31333f);
+  --muted: var(--st-secondary-background-color, #f0f2f6);
+  --muted-foreground: color-mix(
+    in srgb,
+    var(--st-text-color, #31333f) 66%,
+    transparent
+  );
+  --accent: var(--st-secondary-background-color, #f0f2f6);
+  --accent-foreground: var(--st-text-color, #31333f);
+  --destructive: #dc2626;
+  --border: var(
+    --st-border-color,
+    color-mix(
+      in srgb,
+      var(--st-text-color, #31333f) 18%,
+      transparent
+    )
+  );
+  --input: var(--border);
+  --ring: var(--st-primary-color, #ff4b4b);
+  --radius: var(--st-base-radius, 0.5rem);
+
+  color: var(--foreground);
+  display: block;
+  font-family: var(
+    --st-font,
+    "Source Sans Pro",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif
+  );
+  isolation: isolate;
+  overflow: visible;
+}
+
+:host([data-theme="dark"]) {
+  --destructive: #f87171;
+}
+
+[data-ssui-v2-app-root] {
+  color: var(--foreground);
+  min-width: 0;
+  overflow: visible;
+  width: 100%;
+}
+
+[data-ssui-v2-overlay-root] {
+  background: transparent;
+  border: 0;
+  color: var(--foreground);
+  font-family: inherit;
+  height: auto;
+  inset: 0;
+  margin: 0;
+  overflow: visible;
+  padding: 0;
+  pointer-events: none;
+  position: fixed;
+  width: auto;
+}
+
+[data-ssui-v2-overlay-root] > * {
+  pointer-events: auto;
+}
+
+[data-slot="select-content"],
+[data-slot="dropdown-menu-content"] {
+  max-width: min(30rem, calc(100vw - 1rem));
+}
+
+[data-ssui-v2-error] {
+  color: var(--destructive);
+  font-size: 0.875rem;
+  padding: 0.5rem;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+
+  button {
+    font: inherit;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="select-content"],
+  [data-slot="dropdown-menu-content"],
+  button {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -17,8 +17,11 @@ classifiers = [
 ]
 dependencies = [
     "streamlit >= 0.63",
-    "streamlit_extras >= 0.3.5",
+    "streamlit_extras >= 0.3.5; python_version >= '3.8'",
 ]
+
+[project.optional-dependencies]
+components-v2 = ["streamlit >= 1.60"]
 
 [project.license]
 file = "LICENSE"
@@ -28,5 +31,15 @@ homepage = "https://github.com/ObservedObserver/streamlit-shadcn-ui"
 repository = "https://github.com/ObservedObserver/streamlit-shadcn-ui"
 
 [tool.setuptools]
-packages = { find = {} }
-include-package-data = true
+include-package-data = false
+
+[tool.setuptools.packages.find]
+include = ["streamlit_shadcn_ui*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+streamlit_shadcn_ui = [
+    "pyproject.toml",
+    "components/packages/frontend/dist/**/*",
+    "frontend_v2/dist/**/*",
+]

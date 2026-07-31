@@ -1,6 +1,6 @@
 from typing import List
 
-from streamlit_extras.stylable_container import stylable_container
+from .utils.stylable_container import stylable_container
 
 from streamlit_shadcn_ui.py_components.utils.callback import register_callback 
 from .utils import declare_component

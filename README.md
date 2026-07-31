@@ -24,6 +24,52 @@ ui.alert_dialog(show=trigger_btn, title="Alert Dialog", description="This is an 
 
 ```
 
+## Components V2 POC
+
+Wave 1 is an opt-in production POC in a separate namespace. Install its
+Streamlit floor explicitly:
+
+```sh
+pip install "streamlit-shadcn-ui[components-v2]"
+```
+
+Then use one of the four frozen Wave 1 APIs:
+
+```py
+import streamlit_shadcn_ui.v2 as ui
+
+fruit = ui.select(
+    "Fruit",
+    ["Apple", "Banana", "Orange"],
+    key="fruit",
+)
+```
+
+The POC contains `select`, `dropdown_menu`, `checkbox`, and `button`. Its
+component source is generated from a pinned, checked-in shadcn Base UI
+registry snapshot; Base UI remains the interaction and accessibility
+primitive. It is not a from-scratch replacement for shadcn.
+
+Select and Dropdown Menu portal into an instance-owned overlay root in the
+same Streamlit ShadowRoot. The native Popover top layer escapes Streamlit
+clipping and stacking contexts without an iframe, a second popup iframe, or a
+popup in `document.body`.
+
+V2 requires Python 3.10 or newer and Streamlit 1.60 or newer. V1 keeps its
+existing package-wide compatibility floor.
+
+Run the full acceptance page with:
+
+```sh
+./scripts/poc_v2.sh
+```
+
+See the
+[Wave 1 acceptance record](docs/v2-wave1-acceptance.md),
+[anchored-overlay decision](docs/adr/001-v2-anchored-overlay-host.md), and
+[migration plan](docs/v2-production-migration-plan.md). Broad migration is
+paused until the maintainer accepts this POC.
+
 ## Components
 
 Check docs and compoenent examples in [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://shadcn.streamlit.app/)
@@ -99,6 +145,8 @@ There are several scripts in `scripts` folder to help you develop this project.
 ```sh
 # For local development
 ./scripts/frontend.sh # frontend dev server
+./scripts/frontend_v2.sh # V2 frontend watch build
+./scripts/poc_v2.sh # build and run the independent V2 POC
 ./scripts/dev.sh # streamlit dev server
 ```
 

@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from .utils import declare_component
-from streamlit_extras.stylable_container import stylable_container
+from .utils.stylable_container import stylable_container
 import streamlit as st
 from typing import Optional
 from .utils import init_session

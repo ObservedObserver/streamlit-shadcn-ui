@@ -1,0 +1,395 @@
+:host {
+  --st-v2-background: var(--st-background-color, #ffffff);
+  --st-v2-foreground: var(--st-text-color, #31333f);
+  --st-v2-muted: var(--st-secondary-background-color, #f0f2f6);
+  --st-v2-muted-foreground: color-mix(
+    in srgb,
+    var(--st-v2-foreground) 66%,
+    transparent
+  );
+  --st-v2-border: var(
+    --st-border-color,
+    color-mix(in srgb, var(--st-v2-foreground) 18%, transparent)
+  );
+  --st-v2-primary: var(--st-primary-color, #ff4b4b);
+  --st-v2-primary-foreground: #ffffff;
+  --st-v2-destructive: #dc2626;
+  --st-v2-radius: var(--st-base-radius, 0.5rem);
+
+  color: var(--st-v2-foreground);
+  display: block;
+  font-family: var(
+    --st-font,
+    "Source Sans Pro",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif
+  );
+  overflow: visible;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[data-st-shadcn-v2-root] {
+  color: var(--st-v2-foreground);
+  min-width: 0;
+  overflow: visible;
+  width: 100%;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.st-v2-field {
+  display: grid;
+  gap: 0.375rem;
+  min-width: 0;
+  padding: 1px;
+  width: 100%;
+}
+
+.st-v2-inline-root {
+  display: inline-flex;
+  padding: 1px;
+}
+
+.st-v2-label,
+.st-v2-checkbox-label {
+  color: var(--st-v2-foreground);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+}
+
+.st-v2-trigger,
+.st-v2-input {
+  background: var(--st-v2-background);
+  border: 1px solid var(--st-v2-border);
+  border-radius: var(--st-v2-radius);
+  color: var(--st-v2-foreground);
+  font-size: 0.875rem;
+  height: 2.5rem;
+  line-height: 1.25rem;
+  outline: none;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+  width: 100%;
+}
+
+.st-v2-trigger {
+  align-items: center;
+  cursor: default;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  padding: 0 0.75rem;
+  text-align: left;
+}
+
+.st-v2-trigger-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.st-v2-trigger-icon {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  opacity: 0.65;
+}
+
+.st-v2-trigger-icon svg,
+.st-v2-button svg {
+  height: 1rem;
+  width: 1rem;
+}
+
+.st-v2-input {
+  padding: 0 0.75rem;
+}
+
+.st-v2-input::placeholder {
+  color: var(--st-v2-muted-foreground);
+}
+
+.st-v2-trigger:focus-visible,
+.st-v2-input:focus-visible,
+.st-v2-button:focus-visible,
+.st-v2-checkbox:focus-visible {
+  border-color: var(--st-v2-primary);
+  box-shadow: 0 0 0 2px
+    color-mix(in srgb, var(--st-v2-primary) 24%, transparent);
+}
+
+.st-v2-trigger:disabled,
+.st-v2-input:disabled,
+.st-v2-button:disabled,
+.st-v2-checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.st-v2-positioner {
+  outline: none;
+  z-index: 100000;
+}
+
+.st-v2-popup {
+  background: var(--st-v2-background);
+  border: 1px solid var(--st-v2-border);
+  border-radius: var(--st-v2-radius);
+  box-shadow:
+    0 10px 28px color-mix(in srgb, #000000 18%, transparent),
+    0 2px 8px color-mix(in srgb, #000000 10%, transparent);
+  color: var(--st-v2-foreground);
+  max-height: min(18rem, var(--available-height));
+  opacity: 1;
+  overflow: auto;
+  padding: 0.25rem;
+  transform: scale(1);
+  transform-origin: var(--transform-origin);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+.st-v2-popup[data-starting-style],
+.st-v2-popup[data-ending-style] {
+  opacity: 0;
+  transform: scale(0.97);
+}
+
+.st-v2-select-popup {
+  min-width: max(10rem, var(--anchor-width));
+  width: var(--anchor-width);
+}
+
+.st-v2-menu-popup {
+  min-width: max(10rem, var(--anchor-width));
+}
+
+.st-v2-list {
+  margin: 0;
+  padding: 0;
+}
+
+.st-v2-item,
+.st-v2-menu-item {
+  align-items: center;
+  border-radius: calc(var(--st-v2-radius) - 2px);
+  color: var(--st-v2-foreground);
+  cursor: default;
+  display: flex;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  min-height: 2rem;
+  outline: none;
+  position: relative;
+  user-select: none;
+}
+
+.st-v2-item {
+  justify-content: space-between;
+  padding: 0.375rem 2rem 0.375rem 0.5rem;
+}
+
+.st-v2-menu-item {
+  padding: 0.375rem 0.5rem;
+}
+
+.st-v2-item[data-highlighted],
+.st-v2-menu-item[data-highlighted] {
+  background: var(--st-v2-muted);
+}
+
+.st-v2-item[data-disabled],
+.st-v2-menu-item[data-disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.st-v2-menu-item[data-variant="destructive"] {
+  color: var(--st-v2-destructive);
+}
+
+.st-v2-item-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.st-v2-item-indicator {
+  align-items: center;
+  display: flex;
+  height: 1rem;
+  justify-content: center;
+  position: absolute;
+  right: 0.5rem;
+  width: 1rem;
+}
+
+.st-v2-item-indicator svg,
+.st-v2-scroll-arrow svg {
+  height: 1rem;
+  width: 1rem;
+}
+
+.st-v2-scroll-arrow {
+  align-items: center;
+  background: var(--st-v2-background);
+  display: flex;
+  height: 1.5rem;
+  justify-content: center;
+  position: sticky;
+  width: 100%;
+  z-index: 1;
+}
+
+.st-v2-scroll-arrow:first-child {
+  top: -0.25rem;
+}
+
+.st-v2-scroll-arrow:last-child {
+  bottom: -0.25rem;
+}
+
+.st-v2-menu-label {
+  color: var(--st-v2-muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1rem;
+  padding: 0.375rem 0.5rem;
+}
+
+.st-v2-button {
+  align-items: center;
+  background: var(--st-v2-primary);
+  border: 1px solid transparent;
+  border-radius: var(--st-v2-radius);
+  color: var(--st-v2-primary-foreground);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 0.875rem;
+  font-weight: 500;
+  gap: 0.5rem;
+  height: 2.5rem;
+  justify-content: center;
+  line-height: 1.25rem;
+  outline: none;
+  padding: 0 1rem;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    color 120ms ease;
+  white-space: nowrap;
+}
+
+.st-v2-button:hover:not(:disabled) {
+  filter: brightness(0.96);
+}
+
+.st-v2-button--outline,
+.st-v2-button[data-variant="outline"] {
+  background: var(--st-v2-background);
+  border-color: var(--st-v2-border);
+  color: var(--st-v2-foreground);
+}
+
+.st-v2-button[data-variant="secondary"] {
+  background: var(--st-v2-muted);
+  color: var(--st-v2-foreground);
+}
+
+.st-v2-button[data-variant="destructive"] {
+  background: var(--st-v2-destructive);
+}
+
+.st-v2-button[data-variant="ghost"],
+.st-v2-button[data-variant="link"] {
+  background: transparent;
+  color: var(--st-v2-foreground);
+}
+
+.st-v2-button[data-variant="ghost"]:hover:not(:disabled) {
+  background: var(--st-v2-muted);
+  filter: none;
+}
+
+.st-v2-button[data-variant="link"] {
+  color: var(--st-v2-primary);
+  padding-inline: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+}
+
+.st-v2-checkbox-row {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.625rem;
+  min-height: 2rem;
+  padding: 1px;
+}
+
+.st-v2-checkbox {
+  align-items: center;
+  appearance: none;
+  background: var(--st-v2-background);
+  border: 1px solid var(--st-v2-border);
+  border-radius: calc(var(--st-v2-radius) * 0.5);
+  color: var(--st-v2-primary-foreground);
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 1rem;
+  justify-content: center;
+  outline: none;
+  padding: 0;
+  width: 1rem;
+}
+
+.st-v2-checkbox[data-checked] {
+  background: var(--st-v2-primary);
+  border-color: var(--st-v2-primary);
+}
+
+.st-v2-checkbox-indicator {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.st-v2-checkbox-indicator svg {
+  height: 0.75rem;
+  stroke-width: 3;
+  width: 0.75rem;
+}
+
+.st-v2-checkbox-label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.st-v2-error {
+  color: var(--st-v2-destructive);
+  font-size: 0.875rem;
+  padding: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .st-v2-popup,
+  .st-v2-button,
+  .st-v2-trigger,
+  .st-v2-input {
+    transition: none;
+  }
+}

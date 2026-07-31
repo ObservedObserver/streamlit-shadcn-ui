@@ -1,6 +1,8 @@
 from streamlit_shadcn_ui.py_components.utils.callback import register_callback
 from streamlit_shadcn_ui.py_components.utils.declare import declare_component
-from streamlit_extras.stylable_container import stylable_container
+from streamlit_shadcn_ui.py_components.utils.stylable_container import (
+    stylable_container,
+)
 
 from streamlit_shadcn_ui.py_components.utils.session import init_session 
 import streamlit as st

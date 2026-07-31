@@ -1,4 +1,4 @@
-from streamlit_extras.stylable_container import stylable_container
+from .utils.stylable_container import stylable_container
 
 from .utils import declare_component
 import streamlit as st
