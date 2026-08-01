@@ -51,6 +51,16 @@ class DocumentationExampleTests(unittest.TestCase):
         self.assertIn("page_title=SEO_TITLE", source)
         self.assertIn("st.text(SEO_DESCRIPTION)", source)
 
+    def test_homepage_full_width_respects_the_expanded_sidebar(self) -> None:
+        source = (_ROOT / "site_pages" / "Homepage.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('initial_sidebar_state="expanded"', source)
+        self.assertIn('[data-testid="stMainBlockContainer"]', source)
+        self.assertIn("padding-inline: 0;", source)
+        self.assertNotIn("inline-size: 100vw", source)
+        self.assertNotIn("calc(50% - 50vw)", source)
+
     def test_router_registers_every_documentation_page(self) -> None:
         router_source = (_ROOT / "Home.py").read_text(encoding="utf-8")
         for path in _UI_APP_PATHS:
