@@ -107,6 +107,12 @@ const shadowSource = await readFile(
   "utf8"
 )
 
+assert.match(
+  shadowSource,
+  /^@import "tailwindcss" source\(none\);/m,
+  "Release CSS must scan only the explicit @source paths"
+)
+
 const expectedLightTokens = {
   "--background": "oklch(1 0 0)",
   "--foreground": "oklch(0.145 0 0)",
