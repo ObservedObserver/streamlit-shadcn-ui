@@ -76,12 +76,17 @@ def _verify_versions() -> str:
         )
     )["version"]
     versions = {root_version, nested_version, frontend_version}
-    if versions != {"1.0.0"}:
+    if len(versions) != 1:
         raise AssertionError(
-            "Root, component, and frontend versions must all be 1.0.0: %r"
+            "Root, component, and frontend versions must match: %r"
             % sorted(versions)
         )
-    return root_version
+    version = next(iter(versions))
+    if re.fullmatch(r"1\.0\.\d+", version) is None:
+        raise AssertionError(
+            "Release version must be a stable 1.0.x version: %r" % version
+        )
+    return version
 
 
 def _verify_no_tracked_legacy_sources() -> None:
