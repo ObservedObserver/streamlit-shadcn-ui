@@ -9,6 +9,12 @@ homepage = st.Page(
     icon=":material/home:",
     default=True,
 )
+getting_started = st.Page(
+    "site_pages/GettingStarted.py",
+    title="Getting Started",
+    icon=":material/rocket_launch:",
+    url_path="GettingStarted",
+)
 playground = st.Page(
     "site_pages/Playground.py",
     title="Playground",
@@ -75,7 +81,12 @@ guide_pages = [
 
 navigation = st.navigation(
     {
-        "Start": [homepage, playground, legacy_showcase],
+        "Start": [
+            homepage,
+            getting_started,
+            playground,
+            legacy_showcase,
+        ],
         "Components": component_pages,
         "Guides": guide_pages,
     },

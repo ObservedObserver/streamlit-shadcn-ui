@@ -16,7 +16,7 @@ st.set_page_config(
     page_title=SEO_TITLE,
     page_icon="◼",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 st.html(
@@ -58,12 +58,18 @@ st.html(
         background: var(--showcase-background);
       }
 
+      [data-testid="stApp"]:has(.st-key-showcase_hero)
+      [data-testid="stMainBlockContainer"] {
+        max-inline-size: none;
+        padding-inline: 0;
+      }
+
       .st-key-showcase_hero,
       .st-key-showcase_mosaic {
         box-sizing: border-box;
-        inline-size: 100vw;
-        max-inline-size: none;
-        margin-inline: calc(50% - 50vw) 0;
+        inline-size: 100%;
+        max-inline-size: 100%;
+        margin-inline: 0;
         color: var(--showcase-foreground);
       }
 
@@ -238,11 +244,8 @@ with st.container(key="showcase_hero", gap="small"):
         horizontal_alignment="center",
         gap="small",
     ):
-        ui.link_button(
-            "Get Started  →",
-            "https://github.com/ObservedObserver/streamlit-shadcn-ui#readme",
-            target="_blank",
-        )
+        if ui.button("Get Started  →", key="showcase_get_started"):
+            st.switch_page("site_pages/GettingStarted.py")
         ui.link_button(
             "GitHub",
             "https://github.com/ObservedObserver/streamlit-shadcn-ui",
