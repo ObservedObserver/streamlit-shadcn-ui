@@ -64,8 +64,10 @@ without changing the returned value.
 - Display: `alert`, `avatar`, `badge`, `badges`, `card`, `metric_card`,
   `aspect_ratio`, `progress`, `scroll_area`, `separator`, `skeleton`, `table`
 
-The repository's [Home.py](Home.py) and [component pages](pages) are executable
-API documentation for the complete catalog.
+The documentation app uses [Home.py](Home.py) as its explicit router. Its
+[product homepage](site_pages/Homepage.py), interactive
+[Playground](site_pages/Playground.py), and [component pages](pages) are
+executable documentation for the complete catalog.
 
 ## Architecture
 
