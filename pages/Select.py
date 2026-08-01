@@ -6,8 +6,11 @@ st.header("Select")
 with open("docs/components/select.md", "r") as f:
     st.markdown(f.read())
 
-choice = ui.select(options=["Apple", "Banana", "Orange"])
+choice = ui.select(
+    "Choose a fruit",
+    ["Apple", "Banana", "Orange"],
+)
 
-st.markdown(f"Currrent value: {choice}")
+st.markdown(f"Current value: {choice}")
 
 st.write(ui.select)

@@ -7,6 +7,14 @@ st.header("Badges")
 with open("docs/components/badges.md", "r") as f:
     st.markdown(f.read())
 
-ui.badges(badge_list=[("default", "default"), ("secondary", "secondary"), ("outline", "outline"), ("Hello", "destructive"), ("World", "destructive")], class_name="flex gap-2", key="badges1")
+ui.badges(
+    items=[
+        ("default", "default"),
+        ("secondary", "secondary"),
+        ("outline", "outline"),
+        ("Hello", "destructive"),
+        ("World", "destructive"),
+    ],
+)
 
 st.write(ui.badges)

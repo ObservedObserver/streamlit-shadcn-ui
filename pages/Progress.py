@@ -6,6 +6,10 @@ st.header("Progress")
 with open("docs/components/progress.md", "r") as f:
     st.markdown(f.read())
     
-progress_value = ui.progress(data=30, key="progress1")
+ui.progress(
+    value=30,
+    label="Upload progress",
+    show_value=True,
+)
 
 st.write(ui.progress)

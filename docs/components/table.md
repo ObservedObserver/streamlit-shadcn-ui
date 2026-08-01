@@ -16,6 +16,10 @@ data = [
 # Creating a DataFrame
 invoice_df = pd.DataFrame(data)
 
-ui.table(data=invoice_df, maxHeight=300)
+ui.table(
+    data=invoice_df,
+    caption="Recent invoices",
+    max_height=300,
+)
 
 ```

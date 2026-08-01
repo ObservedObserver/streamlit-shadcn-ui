@@ -1,0 +1,152 @@
+# V1 to V2 compatibility matrix
+
+Status: **Final for the V2-only 1.0 API**
+
+Date: 2026-07-30
+
+This document covers every name exported by the released 0.1.x package root
+and every name exported by the V2-only 1.0 package root. The machine-readable
+coverage source is
+[v2-compatibility-matrix.json](./v2-compatibility-matrix.json), and a test
+prevents the 1.0 namespace from drifting away from it.
+
+V2 is a conceptual catalog migration, not a source-compatible namespace swap.
+All V2 keys are optional and keyword-only. The library derives a private,
+deterministic mount identity when `key` is omitted; dynamic or reordered
+collections should still provide an explicit stable key. Unbounded
+`class_name` and `**kwargs` escape hatches were removed; supported variants,
+dimensions, labels, disabled states, bounds, and callbacks are explicit and
+runtime-validated.
+
+## Compatibility labels
+
+- **Migrated**: V2 has the same product role, with deliberate API edits.
+- **Adapter required**: the same name exists, but the V1 usage model cannot be
+  represented by one V2 call.
+- **Removed**: the V1 surface has no 1.0 adapter. Applications that still need
+  it must remain on the last 0.1.x package.
+
+## Interactive and overlay components
+
+| V1 export | V2 argument migration | V2 return / state | Callback and form policy | Visual and interaction change |
+|---|---|---|---|---|
+| `select` | Keep `label`, `options`; use `value=` or `index=`; add `format_func`; `key` is optional | Original Python option value or `None` | `on_change`; supported in forms | **Migrated.** Generated shadcn Select backed by Base UI; one isolated ShadowRoot, native top-layer popup, zero iframe instead of V1 trigger + popup iframes |
+| `dropdown_menu` | Order changes from `items, label` to `label, items`; add `format_func`; `menu_label`, `disabled`, `width` are explicit | Transient original Python item or `None`, replacing the V1 internal content-state dictionary | `on_select`; rejected in forms | **Migrated.** Generated shadcn/Base UI non-modal menu in the instance ShadowRoot; no popup iframe or document mutation |
+| `button` | Rename `text` to `label`; remove `class_name` and arbitrary `**kwargs`; add `size`, `disabled`, `width` | One-rerun `bool` click trigger | `on_click`; rejected in forms | **Migrated.** Generated shadcn Button; no iframe |
+| `breadcrumb` | Accept item mappings or `BreadcrumbItem`; remove `class_name`; add accessible `label`, `width` | Typed transient `BreadcrumbSelection` or `None` | `on_select`; rejected in forms | **Migrated.** Native links and current-page semantics; safe URLs; no iframe |
+| `alert_dialog` | Core arguments remain; confirm/cancel labels become keyword-only; `key` is optional | Rising-edge request returns `None`, `True` for confirm, or `False` for cancel/Escape | `on_decision`; rejected in forms | **Migrated.** Generated shadcn/Base UI modal in a ShadowRoot top layer with focus trap, inert background, stack coordination, and exact cleanup; no modal iframe |
+| `date_picker` | Use `value` and `selection_mode`; add placeholder, bounds, disabled, width | `datetime.date \| None`, or an ordered two-date tuple in range mode | `on_change`; supported in forms | **Migrated.** One shadcn Popover + Calendar host replaces trigger/content iframes; range changes commit only on Apply |
+| `popover` | Keep `label`, text `content`; add `disabled`, `width` | Stateless; returns `None` instead of an internal open-state dictionary | No Python event; form-safe | **Migrated.** Non-modal Base UI popup in the same ShadowRoot top layer |
+| `hover_card` | Keep text-only `label`, `content`; remove `content_type`; add `disabled`, `width` | Stateless `None` | No Python event; form-safe | **Migrated.** Pointer and focus behavior from generated shadcn/Base UI; arbitrary rendered HTML is intentionally not accepted |
+
+## Stateful controls
+
+| V1 export | V2 argument migration | V2 return / state | Callback and form policy | Visual and interaction change |
+|---|---|---|---|---|
+| `checkbox` | V1 `mode/options` groups become one `checkbox(label, value=...)` call per option | Persistent scalar `bool`, not V1's ID-to-boolean mapping | `on_change`; supported in forms | **Adapter required.** Generated shadcn/Base UI Checkbox; group layout belongs to the Streamlit app |
+| `input` | Put `label` first and use `value`; keep `type`, `placeholder`; add disabled, max length, width | Persistent `str`; commits on blur or Enter | `on_change`; supported in forms | **Migrated.** Generated shadcn Input; no iframe |
+| `textarea` | Put `label` first and use `value`; replace arbitrary `**kwargs` with rows, disabled, max length, width | Persistent `str`; commits on blur or Ctrl/Cmd+Enter | `on_change`; supported in forms | **Migrated.** Generated shadcn Textarea; no iframe |
+| `input_otp` | Put `label` first and use `value`; keep max length; add pattern, disabled, width | Persistent `str`; commits on completion or blur | `on_change`; supported in forms | **Migrated.** Generated shadcn Input OTP source |
+| `accordion` | Item mappings or `AccordionItem`; use `value` and `selection_mode`; remove `class_name` | Single item value/`None`, or a list in multiple mode | `on_change`; supported in forms | **Migrated.** Controlled generated shadcn/Base UI Accordion |
+| `collapsible` | Rename V1 `fistItem` to `content`; use `value` for open state; remove `class_name` | Persistent `bool` open state | `on_change`; supported in forms | **Migrated.** Controlled generated shadcn/Base UI Collapsible |
+| `pagination` | Rename camelCase fields to `total_pages`, `page`, `sibling_count`; add label, disabled, width | Persistent 1-based `int` | `on_change`; supported in forms | **Migrated.** Generated shadcn pagination composition |
+| `radio_group` | Put `label` first; use `value` or `index`; add `format_func` | Original selected Python option or `None` | `on_change`; supported in forms | **Migrated.** Generated shadcn/Base UI Radio Group |
+| `slider` | Put `label` first; use scalar or two-item `value`; add disabled, width | Number for one thumb, tuple for a range; commits after interaction | `on_change`; supported in forms | **Migrated.** Generated shadcn/Base UI single/range Slider |
+| `switch` | Put `label` first and use `value`; add disabled, width | Persistent `bool` | `on_change`; supported in forms | **Migrated.** Generated shadcn/Base UI Switch |
+| `tabs` | Keep options; use `value`; add `format_func`, label, orientation, variant, disabled, width | Original selected Python option | `on_change`; supported in forms | **Migrated.** Controlled generated shadcn/Base UI Tabs |
+| `toggle` | Put optional `label` first and use `value`; keep icon; add variant, size, disabled, width | Persistent `bool` | `on_change`; supported in forms | **Migrated.** Generated shadcn/Base UI Toggle |
+| `toggle_group` | Pass options explicitly; use `value` and `selection_mode`; add `format_func` | Original option/`None` in single mode, list in multiple mode | `on_change`; supported in forms | **Migrated.** Generated shadcn/Base UI Toggle Group |
+| `calendar` | V1 had no public value controls; V2 adds value, label, date bounds, disabled, width | `datetime.date \| None` | `on_change`; supported in forms | **Migrated.** Controlled generated shadcn Calendar |
+
+## Display components
+
+| V1 export | V2 argument migration | V2 return / state | Callback and form policy | Visual change |
+|---|---|---|---|---|
+| `alert` | Keep title/description; replace `class_name` with validated `variant`, `width` | Stateless `None` | None | **Migrated.** Generated shadcn Alert; no iframe |
+| `avatar` | `src` is optional; keep `fallback`; add `alt`, `size`, `width` | Stateless `None` | None | **Migrated.** Generated shadcn/Base UI Avatar with safe image sources |
+| `badges` | Keep `(text, variant)` pairs or mappings; remove `class_name`; add `width` | Explicitly stateless `None` | None | **Migrated.** Generated shadcn Badge source |
+| `aspect_ratio` | `src` and `alt` are required; `ratio` defaults to 16:9; replace `class_name` with `width` | Stateless `None` | None | **Migrated.** Generated shadcn/Base UI Aspect Ratio with safe image sources |
+| `card` | Core text remains; add keyword-only footer, size, width | Stateless `None`; it is not a Python context manager | None | **Adapter required** only for V1 `with ui.card(...)` composition. Plain display cards are migrated to generated shadcn Card source |
+| `metric_card` | Use `label`, `value`, optional description/delta; add size, width | Stateless `None` | None | **Migrated.** Dedicated metric presentation over generated shadcn Card source |
+| `link_button` | Rename text to `label`; keep URL/variant; remove `class_name`; add size, disabled, target, width | Stateless `None` | Native navigation only | **Migrated.** Native anchor semantics with scheme validation and `noopener noreferrer` |
+| `progress` | Rename `data` to `value`; replace `class_name` with `label`, `show_value`, `width` | Stateless `None` | None | **Migrated.** Generated shadcn/Base UI Progress |
+| `scroll_area` | Rename `tags` to `items`; replace `class_name` with bounded `height`, `width` | Stateless `None` | None | **Migrated.** Generated shadcn/Base UI Scroll Area |
+| `table` | DataFrame or record iterables remain; V1 `{dataKey,title}` and V2 `{key,label}` columns are both accepted; rename `maxHeight` to `max_height`; add `caption`, `width` | Stateless `None` | None | **Migrated.** Generated shadcn Table with bounded primitive cells |
+
+V2 also adds `badge`, `separator`, and `skeleton`, plus typed descriptors:
+`Choice`, `MenuItem`, `AccordionItem`, `BadgeItem`, `BreadcrumbItem`,
+`BreadcrumbSelection`, and `TableColumn`.
+
+## Removed V1-only surfaces
+
+`element` and the V1 `with ui.card(...)` composition protocol are removed in
+1.0. V2 intentionally renders one independently isolated Streamlit component
+per call, so it does not reproduce the V1 experimental tree serializer.
+
+The following module-level helpers were implementation details of the
+multi-iframe architecture and receive no V2 adapters:
+
+`select_trigger`, `select_options`, `dropdown_menu_trigger`,
+`dropdown_menu_content`, `date_picker_trigger`, `date_picker_content`,
+`popover_trigger`, `popover_content`, `hover_card_trigger`,
+`hover_card_content`, `dialog_layer`, `option_choosen_handler`, and
+`date_choosen_handler`.
+
+Carousel, Command, Dialog, Resizable, and Toast appeared in README catalog
+text but have no stable V1 root wrapper. They are future product candidates,
+not missing V2 parity claims.
+
+## Session state decision
+
+V2 does **not** publish component protocol state at `st.session_state[key]`.
+Every public key is hashed into a private Streamlit-safe mount identity; an
+omitted key is derived from call site, component kind, and normalized identity
+inputs. The package owns a private session registry for server revisions,
+default invalidation, modal requests, and immutable key-to-kind binding.
+
+Application code must:
+
+1. read the function return value;
+2. use the documented no-argument callback when needed;
+3. treat all `ssui_v2_component_*` and
+   `__streamlit_shadcn_ui_v2_runtime_v1__` entries as private;
+4. never reuse a key for a different V2 component kind, including across
+   pages in one Streamlit session.
+
+Mirroring V1's inconsistent raw dictionaries would expose transport state,
+allow forged revisions, and make rerun reconciliation unsafe. A future public
+state API, if needed, must use a separate user-owned key and a new ADR.
+
+## Common migrations
+
+```python
+# V1
+import streamlit_shadcn_ui as ui
+fruit = ui.select("Fruit", ["Apple", "Banana"], key="fruit")
+
+# 1.0
+import streamlit_shadcn_ui as ui
+fruit = ui.select(
+    "Fruit",
+    ["Apple", "Banana"],
+    index=0,
+)
+```
+
+```python
+# V1 grouped checkbox
+values = ui.checkbox(mode="multiple", options=options, key="filters")
+
+# V2 scalar checkboxes
+values = {
+    option["id"]: ui.checkbox(
+        option["label"],
+        key="filters_%s" % option["id"],
+        value=option["default_checked"],
+    )
+    for option in options
+}
+```
+
+Applications that cannot migrate yet should pin the final 0.1.x release. The
+1.0 wheel does not contain `streamlit_shadcn_ui.v1` or the iframe frontend.

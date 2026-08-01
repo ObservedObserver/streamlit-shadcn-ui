@@ -6,7 +6,7 @@ st.header("Calendar")
 with open("docs/components/calendar.md", "r") as f:
     st.markdown(f.read())
     
-calendar_calue = ui.calendar(class_name=None, key="calendar")
-st.write("Calendar value is:", calendar_calue)
+calendar_value = ui.calendar()
+st.write("Calendar value is:", calendar_value)
 
 st.write(ui.calendar)

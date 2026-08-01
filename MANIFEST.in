@@ -1,3 +1,4 @@
-recursive-include streamlit_shadcn_ui/components/packages/frontend/dist *
+recursive-include streamlit_shadcn_ui/frontend_v2/dist *
+include streamlit_shadcn_ui/pyproject.toml
 include LICENSE
 include README.md

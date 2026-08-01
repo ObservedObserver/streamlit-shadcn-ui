@@ -7,12 +7,16 @@ with open("docs/components/radio_group.md", "r") as f:
 
 # Radio Group Component
 radio_options = [
-    {"label": "Option A", "value": "A", "id": "r1"},
-    {"label": "Option B", "value": "B", "id": "r2"},
-    {"label": "Option C", "value": "C", "id": "r3"},
-    {"label": "Option D", "value": "D", "id": "r4"}
+    ui.Choice("A", "Option A"),
+    ui.Choice("B", "Option B"),
+    ui.Choice("C", "Option C"),
+    ui.Choice("D", "Option D"),
 ]
-radio_value = ui.radio_group(options=radio_options, default_value="B", key="radio1")
+radio_value = ui.radio_group(
+    "Choose an option",
+    radio_options,
+    value="B",
+)
 st.write("Selected Radio Option:", radio_value)
 
 st.write(ui.radio_group)

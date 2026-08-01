@@ -6,6 +6,6 @@ link button is a button that can be used to link to other pages, it will open a 
 import streamlit as st
 import streamlit_shadcn_ui as ui
 
-ui.link_button(text="Go To Github", url="https://github.com/ObservedObserver/streamlit-shadcn-ui", key="link_btn")
+ui.link_button("Go To GitHub", "https://github.com/ObservedObserver/streamlit-shadcn-ui")
 
 ```

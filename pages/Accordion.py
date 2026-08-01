@@ -7,10 +7,11 @@ with open("docs/components/accordion.md", "r") as f:
      st.markdown(f.read())
     
 data = [
-    {"trigger": "Is it accessible?", "content": "Yes. It adheres to the WAI-ARIA design pattern."},
-    {"trigger": "Is it styled?", "content": "Yes. It comes with default styles that match the other components' aesthetic."},
-    {"trigger": "Is it animated?", "content": "Yes. It's animated by default, but you can disable it if you prefer."},
+    ui.AccordionItem("accessible", "Is it accessible?", "Yes. It adheres to the WAI-ARIA design pattern."),
+    ui.AccordionItem("styled", "Is it styled?", "Yes. It comes with styles that match the other components."),
+    ui.AccordionItem("animated", "Is it animated?", "Yes. It is animated by default."),
 ]
-ui.accordion(data = data, class_name=None, key="accordion1")
+open_sections = ui.accordion(data)
+st.write("Open sections:", open_sections)
 
 st.write(ui.accordion)

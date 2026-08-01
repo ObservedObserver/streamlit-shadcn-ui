@@ -135,3 +135,17 @@ __pycache__
 
 streamlit_shadcn_ui.egg-info
 .vscode
+
+# Local packaging and browser verification artifacts
+/build/
+/.playwright-cli/
+/output/
+
+# V2 release assets are content-hashed and shipped in wheels/sdists.
+!streamlit_shadcn_ui/frontend_v2/dist/
+!streamlit_shadcn_ui/frontend_v2/dist/**
+
+# Preserve the released V1 rollback artifact even though source builds are
+# independently gated.
+!streamlit_shadcn_ui/components/packages/frontend/dist/
+!streamlit_shadcn_ui/components/packages/frontend/dist/**

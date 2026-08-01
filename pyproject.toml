@@ -1,32 +1,44 @@
 [build-system]
-requires = ["setuptools>=40.6.0", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "streamlit-shadcn-ui"
-version = "0.1.19"
+version = "1.0.0"
 readme = "README.md"
 keywords = ["streamlit", "shadcn", "ui", "components"]
 description = "Using shadcn components in Streamlit"
 authors = [{ name = "Observed Observer", email = "ooer@kanaries.net" }]
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "streamlit >= 0.63",
-    "streamlit_extras >= 0.3.5",
+    "streamlit>=1.60",
 ]
-
-[project.license]
-file = "LICENSE"
+license = "MIT"
+license-files = ["LICENSE"]
 
 [project.urls]
 homepage = "https://github.com/ObservedObserver/streamlit-shadcn-ui"
 repository = "https://github.com/ObservedObserver/streamlit-shadcn-ui"
 
 [tool.setuptools]
-packages = { find = {} }
-include-package-data = true
+include-package-data = false
+
+[tool.setuptools.packages.find]
+include = ["streamlit_shadcn_ui*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+streamlit_shadcn_ui = [
+    "pyproject.toml",
+    "frontend_v2/dist/**/*",
+]

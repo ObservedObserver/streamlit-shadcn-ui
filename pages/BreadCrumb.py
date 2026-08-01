@@ -8,18 +8,16 @@ with open("docs/components/bread_crumb.md", "r") as f:
     st.markdown(f.read())
 
 clicked = ui.breadcrumb(
-    breadcrumb_items=[
-        {"text": "Home", "href": "/"},
-        {"text": "Components", "href": "/components"},
-        {"text": "Breadcrumb", "isCurrentPage": True},
+    items=[
+        ui.BreadcrumbItem("Home", href="/"),
+        ui.BreadcrumbItem("Components", href="/components"),
+        ui.BreadcrumbItem("Breadcrumb", current=True),
     ],
-    class_name="flex gap-2 text-sm",
-    key="breadcrumb1"
 )
 
 if clicked:
     st.write("Clicked breadcrumb item:", clicked)
-    st.info(f"You clicked on: **{clicked['text']}** (index: {clicked['index']})")
+    st.info(f"You clicked on: **{clicked.text}** (index: {clicked.index})")
 
 st.divider()
 
@@ -37,17 +35,13 @@ for i, page in enumerate(pages):
     breadcrumb_items.append({
         "text": page,
         "href": f"/{page.lower()}",
-        "isCurrentPage": i == st.session_state.current_page
+        "current": i == st.session_state.current_page
     })
 
-clicked2 = ui.breadcrumb(
-    breadcrumb_items=breadcrumb_items,
-    class_name="flex gap-2 text-sm",
-    key="breadcrumb2"
-)
+clicked2 = ui.breadcrumb(items=breadcrumb_items, key="breadcrumb2")
 
 if clicked2:
-    st.session_state.current_page = clicked2["index"]
+    st.session_state.current_page = clicked2.index
     st.rerun()
 
 st.write(f"Current page: **{pages[st.session_state.current_page]}**")

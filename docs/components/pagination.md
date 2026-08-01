@@ -1,46 +1,34 @@
 ### Basic Usage
 
-```py
+```python
 import streamlit as st
 import streamlit_shadcn_ui as ui
 
-page_value = ui.pagination(key="pagination1",totalPages=10,initialPage=1)
-
-st.write(page_value)
+page_value = ui.pagination(
+    total_pages=10,
+    page=1,
+)
+st.write("Selected page:", page_value)
 ```
 
 ### Parameters
 
-- `key` (str, optional): Unique identifier for the component
-- `totalPages` (int, default=3): Total number of pages
-- `initialPage` (int, default=1): Initial page to display
-- `siblingCount` (int, default=1): Number of page buttons to show on each side of the active page. This helps limit the number of visible page buttons for large page counts.
+- `total_pages`: Total number of pages.
+- `page` (default `1`): Initial page.
+- `key` (optional): Explicit identity for dynamic or reordered components.
+- `sibling_count` (default `1`): Nearby page buttons shown on each side.
+- `label`: Accessible pagination label.
+- `disabled`: Disables pagination interaction.
+- `on_change`: Streamlit callback invoked after a page change.
+- `width`: `"stretch"`, `"content"`, or a pixel width.
 
-### Example with Large Page Count
+### Large Page Counts
 
-For pagination with many pages (e.g., 100+), use `siblingCount` to limit the number of visible page buttons:
-
-```py
-import streamlit as st
-import streamlit_shadcn_ui as ui
-
-# With siblingCount=1 (default), on page 50 it shows: 1 ... 49 50 51 ... 100
+```python
 page_value = ui.pagination(
-    key="pagination2",
-    totalPages=100,
-    initialPage=1,
-    siblingCount=1
+    total_pages=100,
+    page=1,
+    sibling_count=2,
 )
-
-st.write(f"Current page: {page_value}")
-
-# With siblingCount=2, on page 50 it shows: 1 ... 48 49 50 51 52 ... 100
-page_value2 = ui.pagination(
-    key="pagination3",
-    totalPages=100,
-    initialPage=1,
-    siblingCount=2
-)
-
-st.write(f"Current page: {page_value2}")
+st.write("Current page:", page_value)
 ```

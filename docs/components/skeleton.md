@@ -1,14 +1,26 @@
 ### Basic Usage
 
-```py
+```python
 import streamlit as st
 import streamlit_shadcn_ui as ui
 
-with ui.element("div", key="base_ele_div_l2", className="flex items-center space-x-4"):
-    ui.element("circle", key="skeleton_circle_1",className="h-12 w-12")
-    with ui.element("div", key="base_ele_div_l3", className="space-y-2"):
-        ui.element("rectangle", key="skeleton_rectangle_1",className="h-4 w-[250px]")
-        ui.element("rectangle", key="skeleton_rectangle_2",className="h-4 w-[200px]")
-
-st.write(ui.element)
+columns = st.columns([1, 4])
+with columns[0]:
+    ui.skeleton(
+        skeleton_width=48,
+        skeleton_height=48,
+        shape="circle",
+        width="content",
+    )
+with columns[1]:
+    ui.skeleton(
+        skeleton_width="100%",
+        skeleton_height=16,
+    )
+    ui.skeleton(
+        skeleton_width="80%",
+        skeleton_height=16,
+    )
 ```
+
+`shape` accepts `"rectangle"` or `"circle"`. Dimensions accept pixel numbers or CSS dimensions such as `"80%"` and `"12rem"`.

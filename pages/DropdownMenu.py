@@ -12,7 +12,6 @@ value = ui.dropdown_menu(
     items=[
        "Home", "Components", "DropdownMenu",
     ],
-    key="dropdownmenu1"
 )
 
 st.write(ui.dropdown_menu)

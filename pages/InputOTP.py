@@ -7,7 +7,10 @@ with open("docs/components/input_otp.md", "r") as f:
     st.markdown(f.read())
 
 # Input OTP Component
-otp_value = ui.input_otp(max_length=6, key="otp1")
+otp_value = ui.input_otp(
+    "One-time password",
+    max_length=6,
+)
 st.write("OTP Value:", otp_value)
 
 st.write(ui.input_otp)
