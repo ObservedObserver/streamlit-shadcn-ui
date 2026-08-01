@@ -53,6 +53,7 @@ def button(
             "text": label,
             "variant": variant,
             "size": size,
+            "stretch": width == "stretch",
         },
         width=width,
         callbacks={"on_click_change": on_click or noop_callback},

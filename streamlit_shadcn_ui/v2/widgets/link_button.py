@@ -49,6 +49,7 @@ def link_button(
             "size": enum_value(size, _SIZES, "size"),
             "disabled": boolean(disabled, "disabled"),
             "target": enum_value(target, _TARGETS, "target"),
+            "stretch": width == "stretch",
         },
         width=width,
     )

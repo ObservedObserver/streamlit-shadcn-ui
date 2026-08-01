@@ -118,6 +118,7 @@ export type ButtonEnvelope = {
     text: string
     variant: ButtonVariant
     size: ButtonSize
+    stretch?: boolean
   }
 }
 
@@ -285,6 +286,7 @@ export type LinkButtonEnvelope = {
     size: ButtonSize
     disabled: boolean
     target: "_blank" | "_self"
+    stretch?: boolean
   }
 }
 
@@ -844,7 +846,8 @@ function parseButton(value: Record<string, unknown>): ButtonEnvelope | null {
     typeof props.variant !== "string" ||
     !BUTTON_VARIANTS.has(props.variant as ButtonVariant) ||
     typeof props.size !== "string" ||
-    !BUTTON_SIZES.has(props.size as ButtonSize)
+    !BUTTON_SIZES.has(props.size as ButtonSize) ||
+    (props.stretch !== undefined && typeof props.stretch !== "boolean")
   ) {
     return null
   }
@@ -856,6 +859,9 @@ function parseButton(value: Record<string, unknown>): ButtonEnvelope | null {
       text: props.text,
       variant: props.variant as ButtonVariant,
       size: props.size as ButtonSize,
+      ...(typeof props.stretch === "boolean"
+        ? { stretch: props.stretch }
+        : {}),
     },
   }
 }
@@ -1231,7 +1237,8 @@ function parseLinkButton(
     typeof props.size !== "string" ||
     !BUTTON_SIZES.has(props.size as ButtonSize) ||
     typeof props.disabled !== "boolean" ||
-    (props.target !== "_blank" && props.target !== "_self")
+    (props.target !== "_blank" && props.target !== "_self") ||
+    (props.stretch !== undefined && typeof props.stretch !== "boolean")
   ) {
     return null
   }
@@ -1245,6 +1252,9 @@ function parseLinkButton(
       size: props.size as ButtonSize,
       disabled: props.disabled,
       target: props.target,
+      ...(typeof props.stretch === "boolean"
+        ? { stretch: props.stretch }
+        : {}),
     },
   }
 }

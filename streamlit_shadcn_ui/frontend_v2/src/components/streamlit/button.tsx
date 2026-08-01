@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import type { ButtonEnvelope } from "@/protocol/schema"
 import type { V2RendererArgs } from "@/app"
 
@@ -13,7 +14,10 @@ export function ButtonView({
 }: ButtonViewProps) {
   return (
     <div
-      className="inline-flex p-px"
+      className={cn(
+        "p-px",
+        envelope.props.stretch ? "flex w-full" : "inline-flex"
+      )}
       data-ssui-component="button"
       data-testid="ssui-v2-button"
     >
@@ -24,6 +28,7 @@ export function ButtonView({
         }}
         size={envelope.props.size}
         variant={envelope.props.variant}
+        className={envelope.props.stretch ? "w-full" : undefined}
       >
         {envelope.props.text}
       </Button>

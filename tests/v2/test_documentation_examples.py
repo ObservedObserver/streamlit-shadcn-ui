@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import ast
 import re
 import unittest
 from pathlib import Path
 
+import streamlit_shadcn_ui as public_api
 from streamlit.testing.v1 import AppTest
 
 
@@ -51,15 +53,35 @@ class DocumentationExampleTests(unittest.TestCase):
         self.assertIn("page_title=SEO_TITLE", source)
         self.assertIn("st.text(SEO_DESCRIPTION)", source)
 
-    def test_homepage_full_width_respects_the_expanded_sidebar(self) -> None:
+    def test_homepage_full_width_starts_with_a_collapsed_sidebar(self) -> None:
         source = (_ROOT / "site_pages" / "Homepage.py").read_text(
             encoding="utf-8"
         )
-        self.assertIn('initial_sidebar_state="expanded"', source)
+        self.assertIn('initial_sidebar_state="collapsed"', source)
         self.assertIn('[data-testid="stMainBlockContainer"]', source)
         self.assertIn("padding-inline: 0;", source)
         self.assertNotIn("inline-size: 100vw", source)
         self.assertNotIn("calc(50% - 50vw)", source)
+
+    def test_homepage_showcase_uses_only_public_ui_apis(self) -> None:
+        source = (_ROOT / "site_pages" / "Homepage.py").read_text(
+            encoding="utf-8"
+        )
+        tree = ast.parse(source)
+        used_apis = {
+            node.func.attr
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and isinstance(node.func.value, ast.Name)
+            and node.func.value.id == "ui"
+        }
+
+        self.assertTrue(used_apis)
+        self.assertTrue(used_apis <= set(public_api.__all__))
+        self.assertNotRegex(source, r"\bui\._")
+        self.assertNotIn("homepage_showcase", source)
+        self.assertIn('Public API: {calls}', source)
 
     def test_router_registers_every_documentation_page(self) -> None:
         router_source = (_ROOT / "Home.py").read_text(encoding="utf-8")

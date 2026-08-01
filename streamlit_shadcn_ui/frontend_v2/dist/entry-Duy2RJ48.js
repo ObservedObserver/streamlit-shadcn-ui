@@ -16384,7 +16384,7 @@ function Wf({ envelope: e, setTriggerValue: t }) {
 //#region src/components/streamlit/button.tsx
 function Gf({ envelope: e, setTriggerValue: t }) {
 	return /* @__PURE__ */ (0, Y.jsx)("div", {
-		className: "inline-flex p-px",
+		className: J("p-px", e.props.stretch ? "flex w-full" : "inline-flex"),
 		"data-ssui-component": "button",
 		"data-testid": "ssui-v2-button",
 		children: /* @__PURE__ */ (0, Y.jsx)(Cu, {
@@ -16394,6 +16394,7 @@ function Gf({ envelope: e, setTriggerValue: t }) {
 			},
 			size: e.props.size,
 			variant: e.props.variant,
+			className: e.props.stretch ? "w-full" : void 0,
 			children: e.props.text
 		})
 	});
@@ -23077,24 +23078,25 @@ function Vb({ envelope: e }) {
 	let t = {
 		"data-ssui-component": "link_button",
 		"data-testid": "ssui-v2-link-button"
-	};
+	}, n = e.props.stretch ? "flex w-full p-px" : "inline-flex p-px";
 	return e.props.disabled ? /* @__PURE__ */ (0, Y.jsx)("div", {
-		className: "inline-flex p-px",
+		className: n,
 		...t,
 		children: /* @__PURE__ */ (0, Y.jsx)(Cu, {
 			disabled: !0,
 			size: e.props.size,
 			variant: e.props.variant,
+			className: e.props.stretch ? "w-full" : void 0,
 			children: e.props.text
 		})
 	}) : /* @__PURE__ */ (0, Y.jsx)("div", {
-		className: "inline-flex p-px",
+		className: n,
 		...t,
 		children: /* @__PURE__ */ (0, Y.jsx)("a", {
 			className: J(Su({
 				size: e.props.size,
 				variant: e.props.variant
-			})),
+			}), e.props.stretch && "w-full"),
 			href: e.props.url,
 			rel: e.props.target === "_blank" ? "noopener noreferrer" : void 0,
 			target: e.props.target,
@@ -27867,14 +27869,15 @@ var BT = /* @__PURE__ */ new Set([
 ]);
 function HT(e) {
 	let t = e.props;
-	return !ET(t) || !DT(t.text) || typeof t.disabled != "boolean" || typeof t.variant != "string" || !BT.has(t.variant) || typeof t.size != "string" || !VT.has(t.size) ? null : {
+	return !ET(t) || !DT(t.text) || typeof t.disabled != "boolean" || typeof t.variant != "string" || !BT.has(t.variant) || typeof t.size != "string" || !VT.has(t.size) || t.stretch !== void 0 && typeof t.stretch != "boolean" ? null : {
 		protocolVersion: 1,
 		kind: "button",
 		props: {
 			disabled: t.disabled,
 			text: t.text,
 			variant: t.variant,
-			size: t.size
+			size: t.size,
+			...typeof t.stretch == "boolean" ? { stretch: t.stretch } : {}
 		}
 	};
 }
@@ -28061,7 +28064,7 @@ function iE(e) {
 }
 function aE(e) {
 	let t = e.props;
-	return !ET(t) || !DT(t.text) || !kT(t.url) || typeof t.variant != "string" || !BT.has(t.variant) || typeof t.size != "string" || !VT.has(t.size) || typeof t.disabled != "boolean" || t.target !== "_blank" && t.target !== "_self" ? null : {
+	return !ET(t) || !DT(t.text) || !kT(t.url) || typeof t.variant != "string" || !BT.has(t.variant) || typeof t.size != "string" || !VT.has(t.size) || typeof t.disabled != "boolean" || t.target !== "_blank" && t.target !== "_self" || t.stretch !== void 0 && typeof t.stretch != "boolean" ? null : {
 		protocolVersion: 1,
 		kind: "link_button",
 		props: {
@@ -28070,7 +28073,8 @@ function aE(e) {
 			variant: t.variant,
 			size: t.size,
 			disabled: t.disabled,
-			target: t.target
+			target: t.target,
+			...typeof t.stretch == "boolean" ? { stretch: t.stretch } : {}
 		}
 	};
 }
