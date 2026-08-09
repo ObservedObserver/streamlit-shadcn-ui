@@ -16,6 +16,7 @@ import { CheckboxView } from "@/components/streamlit/checkbox"
 import { CollapsibleView } from "@/components/streamlit/collapsible"
 import { DropdownMenuView } from "@/components/streamlit/dropdown-menu"
 import { DatePickerView } from "@/components/streamlit/date-picker"
+import { ElementsView } from "@/components/streamlit/elements"
 import { HoverCardView } from "@/components/streamlit/hover-card"
 import { CalendarView } from "@/components/streamlit/calendar"
 import { InputOtpView } from "@/components/streamlit/input-otp"
@@ -56,6 +57,14 @@ export function V2App({
   setTriggerValue,
 }: V2AppProps) {
   switch (envelope.kind) {
+    case "elements":
+      return (
+        <ElementsView
+          envelope={envelope}
+          setStateValue={setStateValue}
+          setTriggerValue={setTriggerValue}
+        />
+      )
     case "select":
       return (
         <SelectView

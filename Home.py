@@ -79,6 +79,15 @@ guide_pages = [
     st.Page("pages/Experiment(Cool).py", title="Component Lab"),
 ]
 
+use_case_pages = [
+    st.Page(
+        "pages/Elements.py",
+        title="V2 Elements",
+        icon=":material/account_tree:",
+        url_path="Elements",
+    ),
+]
+
 navigation = st.navigation(
     {
         "Start": [
@@ -88,6 +97,7 @@ navigation = st.navigation(
             legacy_showcase,
         ],
         "Components": component_pages,
+        "Use Cases": use_case_pages,
         "Guides": guide_pages,
     },
     position="sidebar",

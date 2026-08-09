@@ -185,6 +185,183 @@ def prepare_state(
     }
 
 
+def prepare_elements_state(
+    *,
+    key: str,
+    node_defaults: Mapping[str, Mapping[str, Any]],
+    validators: Mapping[str, Callable[[Any], bool]],
+) -> Dict[str, Any]:
+    """Reconcile a keyed element tree without resetting unaffected nodes."""
+
+    kind = "elements"
+    entry = register_kind(key, kind)
+    incoming = _read_state_cell(key, kind)
+    fingerprints = {
+        node_id: _fingerprint(spec.get("value"))
+        for node_id, spec in node_defaults.items()
+    }
+    node_kinds = {
+        node_id: str(spec.get("kind"))
+        for node_id, spec in node_defaults.items()
+    }
+    previous_fingerprints = entry.get("elements_default_fingerprints")
+    previous_kinds = entry.get("elements_node_kinds")
+    previous_server_revisions = entry.get("elements_server_revisions")
+    server_revisions = {
+        node_id: (
+            int(previous_server_revisions.get(node_id, 0))
+            if isinstance(previous_server_revisions, Mapping)
+            and _valid_revision(previous_server_revisions.get(node_id, 0))
+            else 0
+        )
+        for node_id in node_defaults
+    }
+
+    if isinstance(previous_kinds, Mapping):
+        for node_id, node_kind in node_kinds.items():
+            previous_kind = previous_kinds.get(node_id)
+            if previous_kind is not None and previous_kind != node_kind:
+                raise RuntimeError(
+                    "Element key %r changed kind from %r to %r. "
+                    "Use a new key for the replacement node."
+                    % (node_id, previous_kind, node_kind)
+                )
+
+    pending = entry.get("pending_reset")
+    if (
+        isinstance(pending, Mapping)
+        and isinstance(previous_fingerprints, Mapping)
+        and dict(previous_fingerprints) != fingerprints
+    ):
+        pending = None
+        entry["pending_reset"] = None
+
+    if isinstance(pending, Mapping) and incoming is not None:
+        pending_server_revision = pending.get("serverRevision")
+        pending_client_revision = pending.get("clientRevision")
+        if (
+            _valid_revision(pending_server_revision)
+            and _valid_revision(pending_client_revision)
+            and incoming["serverRevision"] < pending_server_revision
+        ):
+            entry["elements_default_fingerprints"] = fingerprints
+            entry["elements_node_kinds"] = node_kinds
+            entry["elements_server_revisions"] = server_revisions
+            return dict(pending)
+        if (
+            incoming["serverRevision"] == pending_server_revision
+            and incoming["clientRevision"] >= pending_client_revision
+        ):
+            entry["pending_reset"] = None
+        else:
+            entry["elements_default_fingerprints"] = fingerprints
+            entry["elements_node_kinds"] = node_kinds
+            entry["elements_server_revisions"] = server_revisions
+            return dict(pending)
+
+    authoritative_revision = int(entry.get("server_revision", 0))
+
+    incoming_value = incoming.get("value") if incoming is not None else None
+    value_is_valid = (
+        isinstance(incoming_value, Mapping)
+        and isinstance(incoming_value.get("nodes"), Mapping)
+        and _valid_revision(incoming_value.get("sequence"))
+    )
+    incoming_nodes = (
+        dict(incoming_value["nodes"]) if value_is_valid else {}
+    )
+    sequence = (
+        int(incoming_value["sequence"]) if value_is_valid else 0
+    )
+    reconciled_nodes: Dict[str, Any] = {}
+
+    for node_id, spec in node_defaults.items():
+        node_kind = node_kinds[node_id]
+        default_value = spec.get("value")
+        validator = validators[node_id]
+        candidate = incoming_nodes.get(node_id)
+        default_changed = (
+            isinstance(previous_fingerprints, Mapping)
+            and node_id in previous_fingerprints
+            and previous_fingerprints[node_id] != fingerprints[node_id]
+        )
+        candidate_is_valid = False
+        if isinstance(candidate, Mapping):
+            try:
+                candidate_is_valid = (
+                    candidate.get("kind") == node_kind
+                    and _valid_revision(candidate.get("clientRevision"))
+                    and _valid_revision(candidate.get("serverRevision"))
+                    and _valid_revision(candidate.get("changeSequence"))
+                    and bool(validator(candidate.get("value")))
+                )
+            except (TypeError, ValueError, OverflowError):
+                candidate_is_valid = False
+
+        if candidate_is_valid and not default_changed:
+            reconciled_nodes[node_id] = {
+                "kind": node_kind,
+                "value": candidate.get("value"),
+                "clientRevision": int(candidate["clientRevision"]),
+                "serverRevision": server_revisions[node_id],
+                "changeSequence": int(candidate["changeSequence"]),
+            }
+            sequence = max(
+                sequence,
+                int(candidate["changeSequence"]),
+            )
+            continue
+
+        candidate_client_revision = (
+            int(candidate.get("clientRevision", 0))
+            if isinstance(candidate, Mapping)
+            and _valid_revision(candidate.get("clientRevision"))
+            else 0
+        )
+        candidate_change_sequence = (
+            int(candidate.get("changeSequence", sequence))
+            if isinstance(candidate, Mapping)
+            and _valid_revision(candidate.get("changeSequence"))
+            else sequence
+        )
+        if default_changed or node_id in incoming_nodes:
+            server_revisions[node_id] += 1
+        reconciled_nodes[node_id] = {
+            "kind": node_kind,
+            "value": default_value,
+            "clientRevision": candidate_client_revision,
+            "serverRevision": server_revisions[node_id],
+            "changeSequence": candidate_change_sequence,
+        }
+
+    reconciled_value = {
+        "nodes": reconciled_nodes,
+        "sequence": sequence,
+    }
+    incoming_client_revision = (
+        int(incoming["clientRevision"]) if incoming is not None else 0
+    )
+    changed = incoming is not None and (
+        not value_is_valid or incoming_value != reconciled_value
+    )
+    if changed:
+        authoritative_revision += 1
+        entry["server_revision"] = authoritative_revision
+
+    state = {
+        "kind": kind,
+        "value": reconciled_value,
+        "clientRevision": incoming_client_revision,
+        "serverRevision": authoritative_revision,
+    }
+    if changed:
+        entry["pending_reset"] = dict(state)
+    entry["elements_default_fingerprints"] = fingerprints
+    entry["elements_node_kinds"] = node_kinds
+    entry["elements_server_revisions"] = server_revisions
+    return state
+
+
 def validate_text(value: str, field: str) -> str:
     if not isinstance(value, str):
         raise TypeError("%s must be a string." % field)

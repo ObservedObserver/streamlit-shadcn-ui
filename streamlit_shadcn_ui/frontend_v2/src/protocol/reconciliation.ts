@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 import type {
   ComponentKind,
@@ -94,7 +94,7 @@ export function useRevisionedState<
     setStateCell,
   ])
 
-  const commit = (value: TValue) => {
+  const commit = useCallback((value: TValue) => {
     if (stateValuesEqual(localRef.current.value, value)) {
       return
     }
@@ -106,7 +106,7 @@ export function useRevisionedState<
     localRef.current = next
     setLocal(next)
     setStateCell("state", next)
-  }
+  }, [setStateCell])
 
   return { commit, state: local }
 }

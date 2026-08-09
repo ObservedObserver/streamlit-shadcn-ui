@@ -190,6 +190,209 @@ class ProtocolStateTests(unittest.TestCase):
                 is_valid_value=lambda value: True,
             )
 
+    def test_elements_preserve_keyed_nodes_across_reordering(self) -> None:
+        defaults = {
+            "card/name": {"kind": "input", "value": "Ada"},
+            "card/enabled": {"kind": "checkbox", "value": True},
+        }
+        validators = {
+            "card/name": lambda value: isinstance(value, str),
+            "card/enabled": lambda value: isinstance(value, bool),
+        }
+        _protocol.prepare_elements_state(
+            key="tree",
+            node_defaults=defaults,
+            validators=validators,
+        )
+        self.st.session_state["tree"] = {
+            "state": {
+                "kind": "elements",
+                "value": {
+                    "nodes": {
+                        "card/name": {
+                            "kind": "input",
+                            "value": "Grace",
+                            "clientRevision": 1,
+                            "serverRevision": 0,
+                            "changeSequence": 1,
+                        },
+                        "card/enabled": {
+                            "kind": "checkbox",
+                            "value": False,
+                            "clientRevision": 1,
+                            "serverRevision": 0,
+                            "changeSequence": 2,
+                        },
+                    },
+                    "sequence": 2,
+                },
+                "clientRevision": 2,
+                "serverRevision": 0,
+            }
+        }
+
+        reordered = _protocol.prepare_elements_state(
+            key="tree",
+            node_defaults={
+                "card/enabled": defaults["card/enabled"],
+                "card/name": defaults["card/name"],
+            },
+            validators=validators,
+        )
+
+        self.assertEqual(
+            reordered["value"]["nodes"]["card/name"]["value"],
+            "Grace",
+        )
+        self.assertIs(
+            reordered["value"]["nodes"]["card/enabled"]["value"],
+            False,
+        )
+        self.assertEqual(reordered["serverRevision"], 0)
+
+    def test_elements_client_cannot_spoof_node_server_revision(self) -> None:
+        defaults = {"name": {"kind": "input", "value": "Ada"}}
+        validators = {"name": lambda value: isinstance(value, str)}
+        _protocol.prepare_elements_state(
+            key="tree",
+            node_defaults=defaults,
+            validators=validators,
+        )
+        self.st.session_state["tree"] = {
+            "state": {
+                "kind": "elements",
+                "value": {
+                    "nodes": {
+                        "name": {
+                            "kind": "input",
+                            "value": "Grace",
+                            "clientRevision": 1,
+                            "serverRevision": 999,
+                            "changeSequence": 1,
+                        }
+                    },
+                    "sequence": 1,
+                },
+                "clientRevision": 1,
+                "serverRevision": 0,
+            }
+        }
+
+        state = _protocol.prepare_elements_state(
+            key="tree",
+            node_defaults=defaults,
+            validators=validators,
+        )
+
+        self.assertEqual(
+            state["value"]["nodes"]["name"]["serverRevision"],
+            0,
+        )
+        self.assertEqual(state["serverRevision"], 1)
+
+    def test_elements_reset_only_the_node_whose_default_changed(self) -> None:
+        validators = {
+            "name": lambda value: isinstance(value, str),
+            "enabled": lambda value: isinstance(value, bool),
+        }
+        _protocol.prepare_elements_state(
+            key="tree",
+            node_defaults={
+                "name": {"kind": "input", "value": "Ada"},
+                "enabled": {"kind": "checkbox", "value": True},
+            },
+            validators=validators,
+        )
+        self.st.session_state["tree"] = {
+            "state": {
+                "kind": "elements",
+                "value": {
+                    "nodes": {
+                        "name": {
+                            "kind": "input",
+                            "value": "Grace",
+                            "clientRevision": 2,
+                            "serverRevision": 0,
+                            "changeSequence": 2,
+                        },
+                        "enabled": {
+                            "kind": "checkbox",
+                            "value": False,
+                            "clientRevision": 1,
+                            "serverRevision": 0,
+                            "changeSequence": 1,
+                        },
+                    },
+                    "sequence": 2,
+                },
+                "clientRevision": 3,
+                "serverRevision": 0,
+            }
+        }
+
+        reset = _protocol.prepare_elements_state(
+            key="tree",
+            node_defaults={
+                "name": {"kind": "input", "value": "Lin"},
+                "enabled": {"kind": "checkbox", "value": True},
+            },
+            validators=validators,
+        )
+
+        self.assertEqual(reset["value"]["nodes"]["name"]["value"], "Lin")
+        self.assertIs(
+            reset["value"]["nodes"]["enabled"]["value"],
+            False,
+        )
+        self.assertEqual(
+            reset["value"]["nodes"]["name"]["serverRevision"],
+            1,
+        )
+        self.assertEqual(reset["serverRevision"], 1)
+
+    def test_elements_prune_removed_node_state(self) -> None:
+        validator = {"name": lambda value: isinstance(value, str)}
+        _protocol.prepare_elements_state(
+            key="tree",
+            node_defaults={"name": {"kind": "input", "value": "Ada"}},
+            validators=validator,
+        )
+        self.st.session_state["tree"] = {
+            "state": {
+                "kind": "elements",
+                "value": {
+                    "nodes": {
+                        "name": {
+                            "kind": "input",
+                            "value": "Grace",
+                            "clientRevision": 1,
+                            "serverRevision": 0,
+                            "changeSequence": 1,
+                        },
+                        "removed": {
+                            "kind": "checkbox",
+                            "value": True,
+                            "clientRevision": 1,
+                            "serverRevision": 0,
+                            "changeSequence": 2,
+                        },
+                    },
+                    "sequence": 2,
+                },
+                "clientRevision": 2,
+                "serverRevision": 0,
+            }
+        }
+
+        state = _protocol.prepare_elements_state(
+            key="tree",
+            node_defaults={"name": {"kind": "input", "value": "Ada"}},
+            validators=validator,
+        )
+
+        self.assertEqual(set(state["value"]["nodes"]), {"name"})
+        self.assertEqual(state["serverRevision"], 1)
+
 
 class ProtocolBoundaryTests(unittest.TestCase):
     def test_text_limit_counts_utf8_bytes(self) -> None:

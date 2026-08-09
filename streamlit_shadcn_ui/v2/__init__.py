@@ -1,5 +1,11 @@
 """Streamlit Components V2 widgets backed by shadcn and Base UI."""
 
+from .elements import (
+    ElementEvent,
+    ElementHandle,
+    ElementsBuilder,
+    elements,
+)
 from .types import (
     AccordionItem,
     BadgeItem,
@@ -9,7 +15,6 @@ from .types import (
     MenuItem,
     TableColumn,
 )
-
 from .widgets import (
     accordion,
     alert,
@@ -54,6 +59,9 @@ __all__ = [
     "BreadcrumbItem",
     "BreadcrumbSelection",
     "Choice",
+    "ElementEvent",
+    "ElementHandle",
+    "ElementsBuilder",
     "MenuItem",
     "TableColumn",
     "accordion",
@@ -71,6 +79,7 @@ __all__ = [
     "collapsible",
     "date_picker",
     "dropdown_menu",
+    "elements",
     "hover_card",
     "input",
     "input_otp",

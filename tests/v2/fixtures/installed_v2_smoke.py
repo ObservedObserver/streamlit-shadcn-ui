@@ -57,8 +57,8 @@ ui.card(
 )
 ui.metric_card(
     "Installed Metric",
-    "16",
-    description="component hosts",
+    "35",
+    description="component kinds",
     key="installed_metric_card",
 )
 ui.aspect_ratio(
@@ -188,6 +188,23 @@ date_picker_value = ui.date_picker(
     value="2026-07-30",
     key="installed_date_picker",
 )
+
+with ui.elements(key="installed_elements") as elements:
+    with elements.card(key="release-card"):
+        with elements.card_header():
+            elements.heading("Installed Elements")
+            elements.text(
+                "Nested React composition is available from the archive.",
+                variant="muted",
+            )
+        with elements.card_content():
+            elements.input(
+                "Installed Elements Input",
+                value="Ready",
+                key="input",
+            )
+        with elements.card_footer():
+            elements.button("Installed Elements Action", key="action")
 
 st.write(
     {

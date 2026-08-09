@@ -1,6 +1,6 @@
 {
   "name": "@streamlit-shadcn-ui/frontend-v2",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.18.0",
@@ -25,6 +25,7 @@
     "test:e2e:wave4": "SSUI_V2_E2E_APP=V2_WAVE4.py SSUI_V2_E2E_SUITE=wave4 playwright test",
     "test:e2e:wave5": "SSUI_V2_E2E_APP=V2_WAVE5.py SSUI_V2_E2E_SUITE=wave5 playwright test",
     "test:e2e:asset-upgrade": "SSUI_V2_E2E_SUITE=asset-upgrade playwright test",
+    "test:e2e:elements": "SSUI_V2_E2E_APP=Home.py SSUI_V2_E2E_SUITE=elements playwright test",
     "test:e2e:performance-comparison": "SSUI_V2_E2E_SUITE=performance-comparison playwright test",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest"

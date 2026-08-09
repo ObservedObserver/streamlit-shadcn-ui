@@ -422,7 +422,7 @@ with st.container(key="showcase_mosaic", gap="large"):
 
             ui.badges(
                 [
-                    ("35 APIs", "default"),
+                    ("36 APIs", "default"),
                     ("0 iframes", "secondary"),
                     ("Native overlays", "outline"),
                 ],
@@ -437,9 +437,9 @@ with st.container(key="showcase_mosaic", gap="large"):
 
         ui.metric_card(
             "Current release",
-            "1.0.3",
+            "1.1.0",
             description="The package root exposes the public V2 API.",
-            delta="35 documented components",
+            delta="36 documented components",
             key="showcase_release",
         )
 
@@ -565,7 +565,7 @@ with st.container(key="showcase_mosaic", gap="large"):
             st.code("pip install streamlit-shadcn-ui", language="bash")
             ui.badges(
                 [
-                    ("1.0.3", "default"),
+                    ("1.1.0", "default"),
                     ("V2 only", "secondary"),
                     ("MIT", "outline"),
                 ],

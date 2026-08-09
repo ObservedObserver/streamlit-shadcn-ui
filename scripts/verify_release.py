@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed checks for the V2-only 1.0 source tree and archives."""
+"""Fail-closed checks for the V2-only 1.x source tree and archives."""
 
 from __future__ import annotations
 
@@ -82,9 +82,9 @@ def _verify_versions() -> str:
             % sorted(versions)
         )
     version = next(iter(versions))
-    if re.fullmatch(r"1\.0\.\d+", version) is None:
+    if re.fullmatch(r"1\.\d+\.\d+", version) is None:
         raise AssertionError(
-            "Release version must be a stable 1.0.x version: %r" % version
+            "Release version must be a stable 1.x version: %r" % version
         )
     return version
 

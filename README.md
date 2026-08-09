@@ -63,6 +63,28 @@ without changing the returned value.
 - Overlays: `popover`, `hover_card`, `alert_dialog`
 - Display: `alert`, `avatar`, `badge`, `badges`, `card`, `metric_card`,
   `aspect_ratio`, `progress`, `scroll_area`, `separator`, `skeleton`, `table`
+- Composition: `elements` creates one nested, stateful React tree from typed
+  Card, layout, content, input, choice, and action nodes
+
+```python
+with ui.elements(key="settings") as el:
+    with el.card(key="account"):
+        with el.card_header():
+            el.heading("Account")
+            el.text("Manage your preferences.", variant="muted")
+        with el.card_content():
+            email = el.input("Email", key="email")
+        with el.card_footer():
+            save = el.button("Save", key="save", stretch=True)
+
+st.write(email.value, save.clicked)
+```
+
+See the [Elements documentation](docs/components/elements.md), the
+[V2 technical assessment](docs/elements-v2-technical-assessment.md), and the
+[independent shadcn homepage-card use case](pages/Elements.py).
+Release changes are recorded in the [changelog](CHANGELOG.md); the complete
+Elements release notes are in [docs/releases/1.1.0.md](docs/releases/1.1.0.md).
 
 The documentation app uses [Home.py](Home.py) as its explicit router. Its
 [product homepage](site_pages/Homepage.py), interactive
@@ -86,9 +108,11 @@ interaction styling. Streamlit provides the surrounding light/dark color
 scheme, language, and direction. The package does not restyle shadcn to look
 like Streamlit.
 
-Each call is an independently isolated V2 component. Precomposed helpers such
-as Card, Popover, and Collapsible accept documented text or data arguments;
-they do not accept arbitrary React children or nested Streamlit elements.
+Ordinary helper calls are independently isolated V2 components. Precomposed
+helpers such as Card, Popover, and Collapsible accept documented text or data
+arguments. `ui.elements` is the opt-in aggregate path: its complete typed tree
+is rendered in one V2 root. Neither path accepts native Streamlit elements as
+React children.
 
 See the [1.0 API decision](docs/adr/011-v2-1.0-python-api.md),
 [architecture plan](docs/v2-production-migration-plan.md), and

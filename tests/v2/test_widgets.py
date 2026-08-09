@@ -55,6 +55,9 @@ class PublicApiContractTests(unittest.TestCase):
                 "BreadcrumbItem",
                 "BreadcrumbSelection",
                 "Choice",
+                "ElementEvent",
+                "ElementHandle",
+                "ElementsBuilder",
                 "MenuItem",
                 "TableColumn",
                 "accordion",
@@ -72,6 +75,7 @@ class PublicApiContractTests(unittest.TestCase):
                 "collapsible",
                 "date_picker",
                 "dropdown_menu",
+                "elements",
                 "hover_card",
                 "input",
                 "input_otp",
@@ -164,8 +168,14 @@ class PublicApiContractTests(unittest.TestCase):
             with self.subTest(widget=name):
                 signature = inspect.signature(widget)
                 key = signature.parameters["key"]
-                self.assertIsNone(key.default)
                 self.assertIs(key.kind, inspect.Parameter.KEYWORD_ONLY)
+                if name == "elements":
+                    self.assertIs(
+                        key.default,
+                        inspect.Parameter.empty,
+                    )
+                else:
+                    self.assertIsNone(key.default)
                 self.assertFalse(
                     any(
                         parameter.kind

@@ -100,7 +100,7 @@ class DocumentationExampleTests(unittest.TestCase):
                     self.assertNotIn(pattern, source)
 
     def test_component_docs_use_current_v2_examples(self) -> None:
-        self.assertEqual(len(_DOC_PATHS), 35)
+        self.assertEqual(len(_DOC_PATHS), 36)
         for path in _DOC_PATHS:
             with self.subTest(path=path.relative_to(_ROOT)):
                 source = path.read_text(encoding="utf-8")

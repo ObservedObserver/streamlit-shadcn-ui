@@ -141,9 +141,13 @@
     "BreadcrumbItem": "typed breadcrumb item",
     "BreadcrumbSelection": "typed breadcrumb action result",
     "Choice": "generic typed choice descriptor",
+    "ElementEvent": "typed ui.elements callback payload",
+    "ElementHandle": "typed ui.elements value and action handle",
+    "ElementsBuilder": "typed V2-only nested tree builder",
     "MenuItem": "generic typed menu action descriptor",
     "TableColumn": "typed table column descriptor",
     "badge": "single-item convenience API",
+    "elements": "single-root nested V2 composition API",
     "separator": "V2-only public display primitive",
     "skeleton": "V2-only public display primitive"
   },

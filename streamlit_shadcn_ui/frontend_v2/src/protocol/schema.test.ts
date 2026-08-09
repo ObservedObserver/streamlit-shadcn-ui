@@ -854,4 +854,104 @@ describe("parseEnvelope", () => {
   ])("rejects malformed Wave 5 input: %s", (_name, envelope) => {
     expect(parseEnvelope(envelope).ok).toBe(false)
   })
+
+  function elementsEnvelope() {
+    return {
+      protocolVersion: 1,
+      kind: "elements",
+      state: {
+        kind: "elements",
+        value: {
+          nodes: {
+            "settings/email": {
+              kind: "input",
+              value: "ada@example.com",
+              clientRevision: 1,
+              serverRevision: 0,
+              changeSequence: 2,
+            },
+          },
+          sequence: 2,
+        },
+        clientRevision: 1,
+        serverRevision: 0,
+      },
+      props: {
+        nodes: [
+          {
+            id: "settings",
+            type: "card",
+            props: { size: "default" },
+            children: [
+              {
+                id: "settings/header",
+                type: "card_header",
+                props: {},
+                children: [
+                  {
+                    id: "settings/header/title",
+                    type: "heading",
+                    props: { text: "Settings", level: 3 },
+                    children: [],
+                  },
+                ],
+              },
+              {
+                id: "settings/content",
+                type: "card_content",
+                props: {},
+                children: [
+                  {
+                    id: "settings/email",
+                    type: "input",
+                    props: {
+                      label: "Email",
+                      placeholder: "",
+                      type: "email",
+                      disabled: false,
+                      maxLength: null,
+                    },
+                    children: [],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    }
+  }
+
+  it("parses a recursive Elements tree into validated leaf envelopes", () => {
+    const parsed = parseEnvelope(elementsEnvelope())
+    expect(parsed.ok).toBe(true)
+    if (!parsed.ok || parsed.envelope.kind !== "elements") {
+      throw new Error("Expected an Elements envelope")
+    }
+    const card = parsed.envelope.props.nodes[0]
+    expect(card?.type).toBe("card")
+    const content = card?.children[1]
+    const input = content?.children[0]
+    expect(input?.type).toBe("leaf")
+    if (input?.type === "leaf") {
+      expect(input.envelope.kind).toBe("input")
+    }
+  })
+
+  it("rejects duplicate node ids and unreferenced state cells", () => {
+    const duplicate = elementsEnvelope()
+    duplicate.props.nodes[0]!.children[1]!.children[0]!.id =
+      "settings/header/title"
+    expect(parseEnvelope(duplicate).ok).toBe(false)
+
+    const extraState = elementsEnvelope()
+    ;(extraState.state.value.nodes as Record<string, unknown>)["forged"] = {
+      kind: "input",
+      value: "forged",
+      clientRevision: 0,
+      serverRevision: 0,
+      changeSequence: 0,
+    }
+    expect(parseEnvelope(extraState).ok).toBe(false)
+  })
 })

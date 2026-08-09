@@ -4,6 +4,7 @@ export const MAX_TEXT_BYTES = 16 * 1024
 export const MAX_ENVELOPE_BYTES = 2 * 1024 * 1024
 
 export type ComponentKind =
+  | "elements"
   | "select"
   | "dropdown_menu"
   | "checkbox"
@@ -517,7 +518,7 @@ export type DatePickerEnvelope = {
   }
 }
 
-export type Envelope =
+export type StandaloneEnvelope =
   | SelectEnvelope
   | DropdownMenuEnvelope
   | CheckboxEnvelope
@@ -552,6 +553,122 @@ export type Envelope =
   | PopoverEnvelope
   | HoverCardEnvelope
   | DatePickerEnvelope
+
+export type ElementsLeafEnvelope =
+  | SelectEnvelope
+  | CheckboxEnvelope
+  | ButtonEnvelope
+  | BadgeEnvelope
+  | ProgressEnvelope
+  | SeparatorEnvelope
+  | AspectRatioEnvelope
+  | LinkButtonEnvelope
+  | InputEnvelope
+  | TextareaEnvelope
+  | RadioGroupEnvelope
+  | SliderEnvelope
+  | SwitchEnvelope
+
+export type ElementsNodeState = {
+  kind: ElementsStatefulKind
+  value: unknown
+  clientRevision: number
+  serverRevision: number
+  changeSequence: number
+}
+
+export type ElementsStateValue = {
+  nodes: Record<string, ElementsNodeState>
+  sequence: number
+}
+
+export type ElementsStatefulKind =
+  | "select"
+  | "checkbox"
+  | "input"
+  | "textarea"
+  | "radio_group"
+  | "slider"
+  | "switch"
+
+type ElementsContainerNode = {
+  id: string
+  children: ElementsNode[]
+  envelope: null
+} & (
+  | {
+      type: "stack"
+      props: {
+        direction: "vertical" | "horizontal"
+        gap: ElementsGap
+        align: "start" | "center" | "end" | "stretch"
+        justify: "start" | "center" | "end" | "between"
+        wrap: boolean
+      }
+    }
+  | {
+      type: "grid"
+      props: {
+        columns: number
+        gap: ElementsGap
+        minColumnWidth: number | null
+      }
+    }
+  | {
+      type: "card"
+      props: { size: "default" | "sm" }
+    }
+  | {
+      type: "card_header" | "card_content" | "card_footer"
+      props: Record<string, never>
+    }
+)
+
+export type ElementsGap = "none" | "xs" | "sm" | "md" | "lg" | "xl"
+
+type ElementsContentNode = {
+  id: string
+  children: []
+  envelope: null
+} & (
+  | {
+      type: "text"
+      props: {
+        text: string
+        variant: "body" | "muted" | "label" | "caption"
+      }
+    }
+  | {
+      type: "heading"
+      props: { text: string; level: 2 | 3 | 4 }
+    }
+  | {
+      type: "code"
+      props: { text: string; language: string }
+    }
+)
+
+export type ElementsLeafNode = {
+  id: string
+  type: "leaf"
+  props: Record<string, never>
+  children: []
+  envelope: ElementsLeafEnvelope
+}
+
+export type ElementsNode =
+  | ElementsContainerNode
+  | ElementsContentNode
+  | ElementsLeafNode
+
+export type ElementsEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "elements"
+  state: StateCell<ElementsStateValue, "elements">
+  props: { nodes: ElementsNode[] }
+}
+
+export type Envelope = StandaloneEnvelope | ElementsEnvelope
 
 export type ProtocolFailure = {
   code: string
@@ -2067,10 +2184,377 @@ function parseDatePicker(
   }
 }
 
+const ELEMENTS_GAPS = new Set<ElementsGap>([
+  "none",
+  "xs",
+  "sm",
+  "md",
+  "lg",
+  "xl",
+])
+const ELEMENTS_STATEFUL_KINDS = new Set<ElementsStatefulKind>([
+  "select",
+  "checkbox",
+  "input",
+  "textarea",
+  "radio_group",
+  "slider",
+  "switch",
+])
+const ELEMENTS_LEAF_KINDS = new Set<ElementsLeafEnvelope["kind"]>([
+  ...ELEMENTS_STATEFUL_KINDS,
+  "button",
+  "badge",
+  "progress",
+  "separator",
+  "aspect_ratio",
+  "link_button",
+])
+
+type ElementsParseContext = {
+  count: number
+  normalizedStates: Record<string, ElementsNodeState>
+  rawStates: Record<string, unknown>
+  seenIds: Set<string>
+}
+
+function isElementsNodeId(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    /^[A-Za-z0-9][A-Za-z0-9_.\/-]{0,511}$/.test(value)
+  )
+}
+
+function isElementsLeafEnvelope(
+  envelope: StandaloneEnvelope
+): envelope is ElementsLeafEnvelope {
+  return ELEMENTS_LEAF_KINDS.has(
+    envelope.kind as ElementsLeafEnvelope["kind"]
+  )
+}
+
+function stateFromElementsLeaf(
+  envelope: ElementsLeafEnvelope
+): StateCell<unknown, ElementsStatefulKind> | null {
+  switch (envelope.kind) {
+    case "select":
+    case "checkbox":
+    case "input":
+    case "textarea":
+    case "radio_group":
+    case "slider":
+    case "switch":
+      return envelope.state as StateCell<unknown, ElementsStatefulKind>
+    default:
+      return null
+  }
+}
+
+function parseElementsNode(
+  value: unknown,
+  context: ElementsParseContext,
+  depth: number,
+  parentType: string | null
+): ElementsNode | null {
+  if (
+    depth > 32 ||
+    context.count >= 1_000 ||
+    !isRecord(value) ||
+    !isElementsNodeId(value.id) ||
+    context.seenIds.has(value.id) ||
+    typeof value.type !== "string" ||
+    !isRecord(value.props) ||
+    !Array.isArray(value.children) ||
+    value.children.length > 1_000
+  ) {
+    return null
+  }
+  context.count += 1
+  context.seenIds.add(value.id)
+
+  const id = value.id
+  const type = value.type
+  const props = value.props
+
+  if (type === "text") {
+    if (
+      value.children.length !== 0 ||
+      !isBoundedText(props.text) ||
+      (props.variant !== "body" &&
+        props.variant !== "muted" &&
+        props.variant !== "label" &&
+        props.variant !== "caption")
+    ) {
+      return null
+    }
+    return {
+      id,
+      type,
+      props: { text: props.text, variant: props.variant },
+      children: [],
+      envelope: null,
+    }
+  }
+  if (type === "heading") {
+    if (
+      value.children.length !== 0 ||
+      !isBoundedText(props.text) ||
+      (props.level !== 2 && props.level !== 3 && props.level !== 4)
+    ) {
+      return null
+    }
+    return {
+      id,
+      type,
+      props: { text: props.text, level: props.level },
+      children: [],
+      envelope: null,
+    }
+  }
+  if (type === "code") {
+    if (
+      value.children.length !== 0 ||
+      !isBoundedText(props.text) ||
+      !isBoundedText(props.language)
+    ) {
+      return null
+    }
+    return {
+      id,
+      type,
+      props: { text: props.text, language: props.language },
+      children: [],
+      envelope: null,
+    }
+  }
+
+  if (ELEMENTS_LEAF_KINDS.has(type as ElementsLeafEnvelope["kind"])) {
+    if (value.children.length !== 0) {
+      return null
+    }
+    const candidate: Record<string, unknown> = {
+      protocolVersion: PROTOCOL_VERSION,
+      kind: type,
+      props,
+    }
+    let changeSequence: number | null = null
+    if (ELEMENTS_STATEFUL_KINDS.has(type as ElementsStatefulKind)) {
+      const rawState = context.rawStates[id]
+      if (
+        !isRecord(rawState) ||
+        rawState.kind !== type ||
+        !isRevision(rawState.clientRevision) ||
+        !isRevision(rawState.serverRevision) ||
+        !isRevision(rawState.changeSequence)
+      ) {
+        return null
+      }
+      changeSequence = rawState.changeSequence
+      candidate.state = {
+        kind: rawState.kind,
+        value: rawState.value,
+        clientRevision: rawState.clientRevision,
+        serverRevision: rawState.serverRevision,
+      }
+    }
+    const parsed = parseKnownEnvelope(candidate)
+    if (!parsed || parsed.kind === "elements" || !isElementsLeafEnvelope(parsed)) {
+      return null
+    }
+    const parsedState = stateFromElementsLeaf(parsed)
+    if (parsedState !== null) {
+      context.normalizedStates[id] = {
+        kind: parsedState.kind,
+        value: parsedState.value,
+        clientRevision: parsedState.clientRevision,
+        serverRevision: parsedState.serverRevision,
+        changeSequence: changeSequence as number,
+      }
+    }
+    return {
+      id,
+      type: "leaf",
+      props: {},
+      children: [],
+      envelope: parsed,
+    }
+  }
+
+  const parsedChildren: ElementsNode[] = []
+  for (const child of value.children) {
+    const parsedChild = parseElementsNode(
+      child,
+      context,
+      depth + 1,
+      type
+    )
+    if (!parsedChild) {
+      return null
+    }
+    parsedChildren.push(parsedChild)
+  }
+
+  if (type === "stack") {
+    if (
+      (props.direction !== "vertical" && props.direction !== "horizontal") ||
+      typeof props.gap !== "string" ||
+      !ELEMENTS_GAPS.has(props.gap as ElementsGap) ||
+      (props.align !== "start" &&
+        props.align !== "center" &&
+        props.align !== "end" &&
+        props.align !== "stretch") ||
+      (props.justify !== "start" &&
+        props.justify !== "center" &&
+        props.justify !== "end" &&
+        props.justify !== "between") ||
+      typeof props.wrap !== "boolean"
+    ) {
+      return null
+    }
+    return {
+      id,
+      type,
+      props: {
+        direction: props.direction,
+        gap: props.gap as ElementsGap,
+        align: props.align,
+        justify: props.justify,
+        wrap: props.wrap,
+      },
+      children: parsedChildren,
+      envelope: null,
+    }
+  }
+  if (type === "grid") {
+    if (
+      !Number.isSafeInteger(props.columns) ||
+      (props.columns as number) < 1 ||
+      (props.columns as number) > 6 ||
+      typeof props.gap !== "string" ||
+      !ELEMENTS_GAPS.has(props.gap as ElementsGap) ||
+      !(
+        props.minColumnWidth === null ||
+        (Number.isSafeInteger(props.minColumnWidth) &&
+          (props.minColumnWidth as number) >= 160 &&
+          (props.minColumnWidth as number) <= 1_200)
+      )
+    ) {
+      return null
+    }
+    return {
+      id,
+      type,
+      props: {
+        columns: props.columns as number,
+        gap: props.gap as ElementsGap,
+        minColumnWidth: props.minColumnWidth as number | null,
+      },
+      children: parsedChildren,
+      envelope: null,
+    }
+  }
+  if (type === "card") {
+    const slotTypes = parsedChildren.map((child) => child.type)
+    if (
+      (props.size !== "default" && props.size !== "sm") ||
+      parsedChildren.some(
+        (child) =>
+          child.type !== "card_header" &&
+          child.type !== "card_content" &&
+          child.type !== "card_footer"
+      ) ||
+      new Set(slotTypes).size !== slotTypes.length
+    ) {
+      return null
+    }
+    return {
+      id,
+      type,
+      props: { size: props.size },
+      children: parsedChildren,
+      envelope: null,
+    }
+  }
+  if (
+    type === "card_header" ||
+    type === "card_content" ||
+    type === "card_footer"
+  ) {
+    if (parentType !== "card" || Object.keys(props).length !== 0) {
+      return null
+    }
+    return {
+      id,
+      type,
+      props: {},
+      children: parsedChildren,
+      envelope: null,
+    }
+  }
+  return null
+}
+
+function parseElements(value: Record<string, unknown>): ElementsEnvelope | null {
+  const props = value.props
+  const state = value.state
+  if (
+    !isRecord(props) ||
+    !Array.isArray(props.nodes) ||
+    props.nodes.length > 1_000 ||
+    !isStateCell(state, "elements") ||
+    !isRecord(state.value) ||
+    !isRecord(state.value.nodes) ||
+    !isRevision(state.value.sequence)
+  ) {
+    return null
+  }
+  const stateValue = state.value as Record<string, unknown>
+  const context: ElementsParseContext = {
+    count: 0,
+    normalizedStates: {},
+    rawStates: stateValue.nodes as Record<string, unknown>,
+    seenIds: new Set<string>(),
+  }
+  const nodes: ElementsNode[] = []
+  for (const node of props.nodes) {
+    const parsed = parseElementsNode(node, context, 1, null)
+    if (!parsed) {
+      return null
+    }
+    nodes.push(parsed)
+  }
+  if (
+    Object.keys(context.normalizedStates).length !==
+      Object.keys(context.rawStates).length ||
+    Object.values(context.normalizedStates).some(
+      (nodeState) =>
+        nodeState.changeSequence > (stateValue.sequence as number)
+    )
+  ) {
+    return null
+  }
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "elements",
+    state: {
+      kind: "elements",
+      value: {
+        nodes: context.normalizedStates,
+        sequence: stateValue.sequence as number,
+      },
+      clientRevision: state.clientRevision,
+      serverRevision: state.serverRevision,
+    },
+    props: { nodes },
+  }
+}
+
 function parseKnownEnvelope(
   value: Record<string, unknown>
 ): Envelope | null {
   switch (value.kind) {
+    case "elements":
+      return parseElements(value)
     case "select":
       return parseSelect(value)
     case "dropdown_menu":

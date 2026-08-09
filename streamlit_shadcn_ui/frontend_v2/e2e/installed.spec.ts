@@ -82,18 +82,28 @@ test("installed distribution renders the complete V2 catalog", async ({
   await expect(page.locator("iframe")).toHaveCount(0)
 
   await expect
-    .poll(async () => (await installedCatalogState(page)).hostCount)
-    .toBe(34)
+    .poll(
+      async () => (await installedCatalogState(page)).hostCount,
+      { timeout: 60_000 }
+    )
+    .toBe(35)
   await expect
-    .poll(async () => (await installedCatalogState(page)).kinds.length)
-    .toBe(34)
+    .poll(
+      async () => (await installedCatalogState(page)).kinds.length,
+      { timeout: 60_000 }
+    )
+    .toBe(35)
 
   const state = await installedCatalogState(page)
   expect(state.invalidRoots).toBe(0)
-  expect(state.kinds).toHaveLength(34)
+  expect(state.kinds).toHaveLength(35)
   expect(state.kinds).toContain("alert-dialog")
   expect(state.kinds).toContain("date-picker")
+  expect(state.kinds).toContain("elements")
   expect(state.kinds).toContain("select")
+  await expect(
+    page.getByRole("heading", { name: "Installed Elements" })
+  ).toBeVisible()
 
   const selectTheme = await page
     .getByRole("combobox", { name: "Installed Select" })
