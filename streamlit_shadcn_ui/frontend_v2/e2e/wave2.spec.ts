@@ -171,6 +171,19 @@ test("Wave 2 renders the complete display catalog in isolated roots", async ({
   await expect(page.getByTestId("ssui-v2-breadcrumb")).toHaveCount(1)
   await expect(page.getByTestId("ssui-v2-card")).toHaveCount(1)
   await expect(page.getByTestId("ssui-v2-metric-card")).toHaveCount(2)
+  const darkMetric = page
+    .getByTestId("ssui-v2-metric-card")
+    .filter({ hasText: "Iframe count" })
+  await expect(darkMetric.locator("[data-slot='card-action']")).toHaveText(
+    "Native"
+  )
+  await expect(darkMetric.locator("[data-slot='badge']")).toHaveAttribute(
+    "data-variant",
+    "outline"
+  )
+  await expect(darkMetric.locator("[data-slot='card-footer']")).toHaveText(
+    "Explicit dark Streamlit tokens"
+  )
   await expect(page.getByTestId("ssui-v2-aspect-ratio")).toHaveCount(1)
   await expect(page.getByTestId("ssui-v2-progress")).toHaveCount(2)
   await expect(page.getByTestId("ssui-v2-separator")).toHaveCount(2)

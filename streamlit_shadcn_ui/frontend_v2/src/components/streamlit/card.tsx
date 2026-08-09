@@ -1,5 +1,6 @@
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -55,26 +56,27 @@ export function MetricCardView({ envelope }: MetricCardViewProps) {
   const { props } = envelope
   return (
     <Card
+      className="@container/card"
       data-ssui-component="metric_card"
       data-testid="ssui-v2-metric-card"
       size={props.size}
     >
       <CardHeader>
         <CardDescription>{props.label}</CardDescription>
-        <CardTitle className="text-2xl font-semibold tracking-tight">
+        <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
           {props.value}
         </CardTitle>
+        {props.delta !== null ? (
+          <CardAction>
+            <Badge variant="outline">{props.delta}</Badge>
+          </CardAction>
+        ) : null}
       </CardHeader>
       {props.description !== null ? (
-        <CardContent>
-          <div className="text-sm text-muted-foreground">
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          <div className="text-muted-foreground">
             {props.description}
           </div>
-        </CardContent>
-      ) : null}
-      {props.delta !== null ? (
-        <CardFooter>
-          <Badge variant="secondary">{props.delta}</Badge>
         </CardFooter>
       ) : null}
     </Card>

@@ -132,6 +132,7 @@ with card_right:
             "Iframe count",
             "0",
             description="Explicit dark Streamlit tokens",
+            delta="Native",
             key="wave2_metric_iframes",
         )
 
