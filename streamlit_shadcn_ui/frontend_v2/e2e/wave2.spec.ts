@@ -171,6 +171,18 @@ test("Wave 2 renders the complete display catalog in isolated roots", async ({
   await expect(page.getByTestId("ssui-v2-breadcrumb")).toHaveCount(1)
   await expect(page.getByTestId("ssui-v2-card")).toHaveCount(1)
   await expect(page.getByTestId("ssui-v2-metric-card")).toHaveCount(2)
+  const defaultMetric = page
+    .getByTestId("ssui-v2-metric-card")
+    .filter({ hasText: "Migrated components" })
+  await expect(defaultMetric.locator("[data-slot='card-content']")).toHaveText(
+    "Wave 1 + Wave 2 kinds"
+  )
+  await expect(defaultMetric.locator("[data-slot='card-footer']")).toHaveCount(
+    0
+  )
+  await expect(defaultMetric.locator("[data-slot='card-action']")).toHaveCount(
+    0
+  )
   const darkMetric = page
     .getByTestId("ssui-v2-metric-card")
     .filter({ hasText: "Iframe count" })
@@ -322,6 +334,13 @@ test("Wave 2 light and explicit dark visuals remain stable", async ({
   await expect(
     page.getByTestId("ssui-v2-table")
   ).toHaveScreenshot("wave2-table-light.png", {
+    animations: "disabled",
+  })
+  await expect(
+    page
+      .getByTestId("ssui-v2-metric-card")
+      .filter({ hasText: "Migrated components" })
+  ).toHaveScreenshot("wave2-metric-default-light.png", {
     animations: "disabled",
   })
   await expect(

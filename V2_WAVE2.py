@@ -133,6 +133,7 @@ with card_right:
             "0",
             description="Explicit dark Streamlit tokens",
             delta="Native",
+            variant="dashboard",
             key="wave2_metric_iframes",
         )
 

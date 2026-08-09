@@ -392,6 +392,7 @@ class PublicApiContractTests(unittest.TestCase):
                 "Revenue",
                 "$42",
                 delta="+5%",
+                variant="dashboard",
                 key="metric",
             )
             public_api.link_button(
@@ -439,6 +440,30 @@ class PublicApiContractTests(unittest.TestCase):
                 call["default"],
                 {"meta": {"protocolVersion": 1, "kind": kind}},
             )
+        self.assertEqual(
+            captured[5]["data"]["props"]["variant"],
+            "dashboard",
+        )
+
+    def test_metric_card_defaults_to_the_stable_layout(self) -> None:
+        captured = {}
+
+        with patch.object(
+            common_module,
+            "mount",
+            side_effect=lambda **kwargs: captured.update(kwargs),
+        ):
+            public_api.metric_card(
+                "Revenue",
+                "$42",
+                description="Compared with last month",
+                key="stable-metric",
+            )
+
+        self.assertEqual(
+            captured["data"]["props"]["variant"],
+            "default",
+        )
 
     def test_breadcrumb_returns_only_a_valid_transient_action(self) -> None:
         items = [
@@ -479,6 +504,13 @@ class PublicApiContractTests(unittest.TestCase):
             )
 
     def test_wave2_boundaries_fail_closed(self) -> None:
+        with self.assertRaisesRegex(ValueError, "variant"):
+            public_api.metric_card(
+                "Revenue",
+                "$42",
+                variant="restyled",
+                key="invalid-metric-variant",
+            )
         with self.assertRaisesRegex(ValueError, "http"):
             public_api.link_button(
                 "Unsafe",

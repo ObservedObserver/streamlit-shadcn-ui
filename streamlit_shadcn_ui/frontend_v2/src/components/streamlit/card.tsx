@@ -54,29 +54,49 @@ export function CardView({ envelope }: CardViewProps) {
 
 export function MetricCardView({ envelope }: MetricCardViewProps) {
   const { props } = envelope
+  const isDashboard = props.variant === "dashboard"
   return (
     <Card
-      className="@container/card"
+      className={isDashboard ? "@container/card" : undefined}
       data-ssui-component="metric_card"
       data-testid="ssui-v2-metric-card"
       size={props.size}
     >
       <CardHeader>
         <CardDescription>{props.label}</CardDescription>
-        <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+        <CardTitle
+          className={
+            isDashboard
+              ? "text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"
+              : "text-2xl font-semibold tracking-tight"
+          }
+        >
           {props.value}
         </CardTitle>
-        {props.delta !== null ? (
+        {isDashboard && props.delta !== null ? (
           <CardAction>
             <Badge variant="outline">{props.delta}</Badge>
           </CardAction>
         ) : null}
       </CardHeader>
       {props.description !== null ? (
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="text-muted-foreground">
-            {props.description}
-          </div>
+        isDashboard ? (
+          <CardFooter className="flex-col items-start gap-1.5 text-sm">
+            <div className="text-muted-foreground">
+              {props.description}
+            </div>
+          </CardFooter>
+        ) : (
+          <CardContent>
+            <div className="text-sm text-muted-foreground">
+              {props.description}
+            </div>
+          </CardContent>
+        )
+      ) : null}
+      {!isDashboard && props.delta !== null ? (
+        <CardFooter>
+          <Badge variant="secondary">{props.delta}</Badge>
         </CardFooter>
       ) : null}
     </Card>

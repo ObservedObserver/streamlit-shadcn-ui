@@ -215,6 +215,7 @@ export type MetricCardEnvelope = {
     value: string
     description: string | null
     delta: string | null
+    variant: "default" | "dashboard"
     size: "default" | "sm"
   }
 }
@@ -1036,12 +1037,18 @@ function parseMetricCard(
   value: Record<string, unknown>
 ): MetricCardEnvelope | null {
   const props = value.props
+  const variant = isRecord(props) && props.variant === undefined
+    ? "default"
+    : isRecord(props)
+      ? props.variant
+      : undefined
   if (
     !isRecord(props) ||
     !isBoundedText(props.label) ||
     !isBoundedText(props.value) ||
     !isNullableBoundedText(props.description) ||
     !isNullableBoundedText(props.delta) ||
+    (variant !== "default" && variant !== "dashboard") ||
     (props.size !== "default" && props.size !== "sm")
   ) {
     return null
@@ -1054,6 +1061,7 @@ function parseMetricCard(
       value: props.value,
       description: props.description,
       delta: props.delta,
+      variant,
       size: props.size,
     },
   }

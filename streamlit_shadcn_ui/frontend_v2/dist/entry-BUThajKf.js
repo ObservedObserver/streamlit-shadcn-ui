@@ -16470,29 +16470,39 @@ function $f({ envelope: e }) {
 	});
 }
 function ep({ envelope: e }) {
-	let { props: t } = e;
+	let { props: t } = e, n = t.variant === "dashboard";
 	return /* @__PURE__ */ (0, Y.jsxs)(Kf, {
-		className: "@container/card",
+		className: n ? "@container/card" : void 0,
 		"data-ssui-component": "metric_card",
 		"data-testid": "ssui-v2-metric-card",
 		size: t.size,
-		children: [/* @__PURE__ */ (0, Y.jsxs)(qf, { children: [
-			/* @__PURE__ */ (0, Y.jsx)(Yf, { children: t.label }),
-			/* @__PURE__ */ (0, Y.jsx)(Jf, {
-				className: "text-2xl font-semibold tabular-nums @[250px]/card:text-3xl",
-				children: t.value
-			}),
-			t.delta === null ? null : /* @__PURE__ */ (0, Y.jsx)(Xf, { children: /* @__PURE__ */ (0, Y.jsx)(If, {
-				variant: "outline",
-				children: t.delta
-			}) })
-		] }), t.description === null ? null : /* @__PURE__ */ (0, Y.jsx)(Qf, {
-			className: "flex-col items-start gap-1.5 text-sm",
-			children: /* @__PURE__ */ (0, Y.jsx)("div", {
-				className: "text-muted-foreground",
+		children: [
+			/* @__PURE__ */ (0, Y.jsxs)(qf, { children: [
+				/* @__PURE__ */ (0, Y.jsx)(Yf, { children: t.label }),
+				/* @__PURE__ */ (0, Y.jsx)(Jf, {
+					className: n ? "text-2xl font-semibold tabular-nums @[250px]/card:text-3xl" : "text-2xl font-semibold tracking-tight",
+					children: t.value
+				}),
+				n && t.delta !== null ? /* @__PURE__ */ (0, Y.jsx)(Xf, { children: /* @__PURE__ */ (0, Y.jsx)(If, {
+					variant: "outline",
+					children: t.delta
+				}) }) : null
+			] }),
+			t.description === null ? null : n ? /* @__PURE__ */ (0, Y.jsx)(Qf, {
+				className: "flex-col items-start gap-1.5 text-sm",
+				children: /* @__PURE__ */ (0, Y.jsx)("div", {
+					className: "text-muted-foreground",
+					children: t.description
+				})
+			}) : /* @__PURE__ */ (0, Y.jsx)(Zf, { children: /* @__PURE__ */ (0, Y.jsx)("div", {
+				className: "text-sm text-muted-foreground",
 				children: t.description
-			})
-		})]
+			}) }),
+			!n && t.delta !== null ? /* @__PURE__ */ (0, Y.jsx)(Qf, { children: /* @__PURE__ */ (0, Y.jsx)(If, {
+				variant: "secondary",
+				children: t.delta
+			}) }) : null
+		]
 	});
 }
 //#endregion
@@ -27985,8 +27995,8 @@ function QT(e) {
 	} : null;
 }
 function $T(e) {
-	let t = e.props;
-	return !DT(t) || !OT(t.label) || !OT(t.value) || !kT(t.description) || !kT(t.delta) || t.size !== "default" && t.size !== "sm" ? null : {
+	let t = e.props, n = DT(t) && t.variant === void 0 ? "default" : DT(t) ? t.variant : void 0;
+	return !DT(t) || !OT(t.label) || !OT(t.value) || !kT(t.description) || !kT(t.delta) || n !== "default" && n !== "dashboard" || t.size !== "default" && t.size !== "sm" ? null : {
 		protocolVersion: 1,
 		kind: "metric_card",
 		props: {
@@ -27994,6 +28004,7 @@ function $T(e) {
 			value: t.value,
 			description: t.description,
 			delta: t.delta,
+			variant: n,
 			size: t.size
 		}
 	};

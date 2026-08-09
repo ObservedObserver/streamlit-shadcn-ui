@@ -5,6 +5,7 @@ from typing import Any, Optional, Union
 from ._common import enum_value, mount_stateless, optional_text
 
 _SIZES = {"default", "sm"}
+_METRIC_VARIANTS = {"default", "dashboard"}
 
 
 def card(
@@ -39,11 +40,12 @@ def metric_card(
     *,
     description: Optional[str] = None,
     delta: Optional[str] = None,
+    variant: str = "default",
     key: Optional[str] = None,
     size: str = "default",
     width: Union[str, int] = "stretch",
 ) -> None:
-    """Render a metric-oriented shadcn Card."""
+    """Render a metric Card with a stable or opt-in dashboard layout."""
 
     mount_stateless(
         key=key,
@@ -53,6 +55,11 @@ def metric_card(
             "value": optional_text(str(value), "value"),
             "description": optional_text(description, "description"),
             "delta": optional_text(delta, "delta"),
+            "variant": enum_value(
+                variant,
+                _METRIC_VARIANTS,
+                "variant",
+            ),
             "size": enum_value(size, _SIZES, "size"),
         },
         width=width,

@@ -99,6 +99,7 @@ function wave2Envelopes() {
         value: "$42",
         description: null,
         delta: "+5%",
+        variant: "dashboard",
         size: "sm",
       },
     },
@@ -530,6 +531,28 @@ describe("parseEnvelope", () => {
     }
   })
 
+  it("preserves protocol compatibility with the default metric variant", () => {
+    const envelope = {
+      protocolVersion: 1,
+      kind: "metric_card",
+      props: {
+        label: "Revenue",
+        value: "$42",
+        description: "Compared with last month",
+        delta: null,
+        size: "default",
+      },
+    }
+
+    expect(parseEnvelope(envelope)).toEqual({
+      ok: true,
+      envelope: {
+        ...envelope,
+        props: { ...envelope.props, variant: "default" },
+      },
+    })
+  })
+
   it.each([
     [
       "two current breadcrumbs",
@@ -541,6 +564,21 @@ describe("parseEnvelope", () => {
             { text: "One", href: null, current: true },
             { text: "Two", href: null, current: true },
           ],
+        },
+      },
+    ],
+    [
+      "invalid metric card variant",
+      {
+        protocolVersion: 1,
+        kind: "metric_card",
+        props: {
+          label: "Revenue",
+          value: "$42",
+          description: null,
+          delta: null,
+          variant: "restyled",
+          size: "default",
         },
       },
     ],

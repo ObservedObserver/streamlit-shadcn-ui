@@ -31,4 +31,13 @@ with cols[2]:
         delta="+19%",
     )
 
+st.subheader("Dashboard variant")
+ui.metric_card(
+    "Total Revenue",
+    "$45,231.89",
+    description="Compared with last month",
+    delta="+20.1%",
+    variant="dashboard",
+)
+
 st.write(ui.metric_card)
