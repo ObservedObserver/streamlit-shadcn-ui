@@ -21,7 +21,7 @@ class ReleaseContractTests(unittest.TestCase):
         )
         self.assertEqual(process.returncode, 0, process.stderr)
         summary = json.loads(process.stdout)
-        self.assertEqual(summary["version"], "1.0.2")
+        self.assertEqual(summary["version"], "1.0.3")
         self.assertEqual(
             summary["architecture"],
             "streamlit-components-v2",

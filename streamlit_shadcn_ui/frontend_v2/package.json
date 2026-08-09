@@ -1,6 +1,6 @@
 {
   "name": "@streamlit-shadcn-ui/frontend-v2",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.18.0",
