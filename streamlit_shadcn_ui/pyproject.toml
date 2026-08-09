@@ -1,6 +1,6 @@
 [project]
 name = "streamlit-shadcn-ui"
-version = "1.0.1"
+version = "1.0.2"
 
 [[tool.streamlit.component.components]]
 name = "v2"
