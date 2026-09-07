@@ -36,6 +36,7 @@ import { SkeletonView } from "@/components/streamlit/skeleton"
 import { SliderView } from "@/components/streamlit/slider"
 import { SwitchView } from "@/components/streamlit/switch"
 import { TableView } from "@/components/streamlit/table"
+import { ChartView } from "@/components/streamlit/chart"
 import { TabsView } from "@/components/streamlit/tabs"
 import { TextareaView } from "@/components/streamlit/textarea"
 import { ToggleGroupView } from "@/components/streamlit/toggle-group"
@@ -137,6 +138,8 @@ export function V2App({
       return <SkeletonView envelope={envelope} />
     case "table":
       return <TableView envelope={envelope} />
+    case "chart":
+      return <ChartView envelope={envelope} />
     case "link_button":
       return <LinkButtonView envelope={envelope} />
     case "input":

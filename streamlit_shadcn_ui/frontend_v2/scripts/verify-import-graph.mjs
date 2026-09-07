@@ -21,6 +21,7 @@ const expectedEdges = {
   "breadcrumb.tsx": '@/components/ui/breadcrumb',
   "button.tsx": '@/components/ui/button',
   "card.tsx": '@/components/ui/card',
+  "chart.tsx": ['@/components/ui/chart', '@/components/ui/card'],
   "checkbox.tsx": '@/components/ui/checkbox',
   "collapsible.tsx": '@/components/ui/collapsible',
   "combobox.tsx": '@/components/ui/combobox',

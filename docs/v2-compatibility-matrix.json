@@ -136,6 +136,12 @@
     }
   },
   "v2Additions": {
+    "line_chart": "stateless shadcn line chart",
+    "area_chart": "stateless shadcn area chart with optional stacking",
+    "bar_chart": "stateless shadcn bar chart with stacking and horizontal layout",
+    "pie_chart": "stateless shadcn pie or donut chart",
+    "radar_chart": "stateless shadcn radar chart",
+    "radial_chart": "stateless shadcn radial bar chart",
     "AccordionItem": "typed precomposed accordion item",
     "BadgeItem": "typed badge collection item",
     "BreadcrumbItem": "typed breadcrumb item",

@@ -48,6 +48,7 @@ component_pages = [
     st.Page("pages/ButtonGroup.py", title="Button Group"),
     st.Page("pages/Calendar.py", title="Calendar"),
     st.Page("pages/Card.py", title="Card"),
+    st.Page("pages/Charts.py", title="Charts"),
     st.Page("pages/Checkbox.py", title="Checkbox"),
     st.Page("pages/Collapsible.py", title="Collapsible"),
     st.Page("pages/Combobox.py", title="Combobox"),

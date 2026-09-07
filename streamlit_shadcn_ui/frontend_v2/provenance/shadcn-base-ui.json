@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "capturedAt": "2026-09-01T08:33:39.306Z",
+  "capturedAt": "2026-09-07T20:06:21.888Z",
   "generator": {
     "name": "shadcn",
     "version": "4.16.0",
@@ -78,6 +78,22 @@
       "url": "https://ui.shadcn.com/r/styles/base-nova/card.json",
       "sha256": "62f890e9a241abb694eb2cdbfe1c2560298352c8a13618de7d973661ebf98a04",
       "primitive": "react"
+    },
+    "chart": {
+      "url": "https://raw.githubusercontent.com/shadcn-ui/ui/705ce5961080264830471ddd885c01b907706068/apps/v4/registry/bases/base/ui/chart.tsx",
+      "sha256": "371ee2f0c9fa80fe6124d35b90b271a00416081e4555d26693cf22cb26fe900a",
+      "primitive": "react",
+      "sources": [
+        {
+          "url": "https://raw.githubusercontent.com/shadcn-ui/ui/705ce5961080264830471ddd885c01b907706068/apps/v4/registry/bases/base/ui/chart.tsx",
+          "sha256": "f0ffc739a4fbb40af1a9e7cfc08d0d8d27e1b79b2c6697506655fd5deb07bd52"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/shadcn-ui/ui/705ce5961080264830471ddd885c01b907706068/apps/v4/registry/styles/style-nova.css",
+          "sha256": "c7fc024e5c432210b1af12a713386306703c9adeffa5b32ae380ed8cc083826e"
+        }
+      ],
+      "capture": "scripts/capture-chart.mjs"
     },
     "checkbox": {
       "url": "https://ui.shadcn.com/r/styles/base-nova/checkbox.json",
@@ -225,5 +241,5 @@
       "primitive": "base-ui"
     }
   },
-  "snapshotRevision": 7
+  "snapshotRevision": 8
 }
