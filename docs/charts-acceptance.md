@@ -6,6 +6,10 @@ Scope: ADR-012's six standalone Python chart functions, their native shadcn
 composition, the Charts documentation page, and packaged frontend assets.
 This change does not publish a PyPI release or deploy the documentation site.
 
+The initial acceptance below used the original grayscale chart tokens. The
+user-approved palette follow-up at the end of this record supersedes those
+color and stylesheet details.
+
 ## Automated checks
 
 | Check | Result |
@@ -119,3 +123,36 @@ Final asset SHA-256 values:
 entry-awplp12d.js  46cdf5c9f36bb17b4c6b8a379252cca78e3203bb432efc1174d6f42fd5790ddb
 style-C_Db7RO2.css 8283ab59e7950b2e29c1f6d63386d98a2aa51ee672a74e1bb71c6858baa7eff4
 ```
+
+## Color palette follow-up
+
+On 2026-09-07 the user explicitly requested a colorful chart palette. Only the
+ten light/dark `--chart-*` values changed, copied from
+[shadcn's official theming example](https://ui.shadcn.com/docs/theming).
+No generated source, React renderer, dependency, Python API, or other theme
+token changed. Both source and compiled CSS were checked for that scope.
+
+| Token | Light | Dark |
+| --- | --- | --- |
+| `--chart-1` | `oklch(0.646 0.222 41.116)` | `oklch(0.488 0.243 264.376)` |
+| `--chart-2` | `oklch(0.6 0.118 184.704)` | `oklch(0.696 0.17 162.48)` |
+| `--chart-3` | `oklch(0.398 0.07 227.392)` | `oklch(0.769 0.188 70.08)` |
+| `--chart-4` | `oklch(0.828 0.189 84.429)` | `oklch(0.627 0.265 303.9)` |
+| `--chart-5` | `oklch(0.769 0.188 70.08)` | `oklch(0.645 0.246 16.439)` |
+
+CSS regression checks still compare every non-chart token with its existing
+neutral value. Browser tests additionally check resolved colors on actual
+chart marks and legend swatches in both themes, including the expected number
+of distinct colors. Radar checks its painted path, not the unpainted group.
+
+Follow-up verification passed: 96 Python tests, 128 frontend unit tests,
+source/CSS/build checks, all nine three-browser regressions, wheel/sdist
+verification, and an installed-wheel AppTest with the new stylesheet hash.
+Independent code review passed after strengthening the color-count assertion.
+The existing GPT-5.6 Sol task also returned PASS for six-family light/dark
+screenshots, matching mark/legend/tooltip colors, unchanged neutral Card
+colors, and zero browser console errors or warnings.
+
+The JavaScript entry is unchanged. The new `style-CpmLPSI0.css` is 120,791 raw
+bytes and 17,693 gzip bytes. Its SHA-256 is
+`7df2030c51a74451741f63f5e522325c30d93156e3b40c8edfc18ec2c100fc6e`.

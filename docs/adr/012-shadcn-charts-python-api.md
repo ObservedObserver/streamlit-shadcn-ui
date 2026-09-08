@@ -241,3 +241,12 @@ three-browser regression coverage, independent Sol browser acceptance, and an
 independent code review with no unresolved accepted findings. Finish with a
 semantic feature commit and PR. Publishing PyPI and updating live documentation
 are separate release work.
+
+## Approved chart palette adjustment
+
+On 2026-09-07, the user explicitly requested colorful shadcn chart colors
+instead of the existing grayscale palette. Use the five light and five dark
+`--chart-*` values from [shadcn's theming documentation](https://ui.shadcn.com/docs/theming).
+This exception is limited to chart colors. The base-nova preset, generated
+components, all other theme tokens, and Python API remain unchanged. Keep
+the existing native Chart config mapping and test both theme palettes.

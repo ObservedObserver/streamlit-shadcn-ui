@@ -2,6 +2,10 @@ Use `line_chart`, `area_chart`, `bar_chart`, `pie_chart`, `radar_chart`, and
 `radial_chart` with records or a pandas DataFrame. Each renders a shadcn Card
 containing the chart, with native shadcn colors, tooltips, and legends.
 
+Charts use the five-color palette from [shadcn's theming documentation](https://ui.shadcn.com/docs/theming),
+with separate light and dark colors. Other components keep the library's
+neutral theme. Series and segments receive colors in their input order.
+
 ```python
 import pandas as pd
 import streamlit_shadcn_ui as ui

@@ -5,6 +5,62 @@ const charts = (page: Page) => page.getByTestId("ssui-v2-chart")
 const named = (page: Page, title: string) =>
   charts(page).filter({ has: page.getByText(title, { exact: true }) })
 
+async function expectChartPalette(page: Page, palette: string[]) {
+  for (const card of await charts(page).all()) {
+    await expect
+      .poll(async () =>
+        card.evaluate((element, colors) => {
+          const probe = document.createElement("span")
+          element.append(probe)
+          const resolve = (color: string) => {
+            probe.style.color = color
+            return getComputedStyle(probe).color
+          }
+          const expected = colors.map(resolve)
+          const tokens = colors.map((_, i) => resolve(`var(--chart-${i + 1})`))
+          probe.remove()
+          const type = element.getAttribute("data-chart-type")!
+          const missingValues =
+            element.querySelector('[data-slot="card-title"]')?.textContent ===
+            "Missing values"
+          const count = missingValues
+            ? 1
+            : type === "pie" || type === "radial"
+              ? 3
+              : 2
+          const selectors: Record<string, string> = {
+            line: ".recharts-line-curve",
+            area: ".recharts-area-area",
+            bar: ".recharts-bar-rectangle path",
+            pie: ".recharts-pie-sector path",
+            radar: ".recharts-radar-polygon path",
+            radial: "path.recharts-radial-bar-sector"
+          }
+          const marks = [...element.querySelectorAll(selectors[type]!)].map(
+            (mark) =>
+              getComputedStyle(mark).getPropertyValue(
+                type === "line" ? "stroke" : "fill"
+              )
+          )
+          const legend = [
+            ...element.querySelectorAll(".recharts-legend-wrapper .shrink-0")
+          ].map((swatch) => getComputedStyle(swatch).backgroundColor)
+          const unique = [...new Set(marks)]
+          return {
+            tokensMatch: JSON.stringify(tokens) === JSON.stringify(expected),
+            marksMatch:
+              unique.length === count &&
+              unique.every((color, i) => color === expected[i]),
+            legendMatches:
+              legend.length === (missingValues ? 0 : count) &&
+              legend.every((color, i) => color === expected[i])
+          }
+        }, palette)
+      )
+      .toEqual({ tokensMatch: true, marksMatch: true, legendMatches: true })
+  }
+}
+
 async function open(page: Page) {
   await page.goto("/")
   await expect(
@@ -211,12 +267,26 @@ test("data changes, legend and tooltip switches, and keyboard navigation", async
 test("themes, narrow width, zoom and accessibility", async ({ page }, info) => {
   await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" })
   await open(page)
+  await expectChartPalette(page, [
+    "oklch(0.646 0.222 41.116)",
+    "oklch(0.6 0.118 184.704)",
+    "oklch(0.398 0.07 227.392)",
+    "oklch(0.828 0.189 84.429)",
+    "oklch(0.769 0.188 70.08)"
+  ])
   const line = named(page, "Line")
   const light = await line.evaluate((e) => getComputedStyle(e).backgroundColor)
   await page.emulateMedia({ colorScheme: "dark" })
   await expect
     .poll(() => line.evaluate((e) => getComputedStyle(e).backgroundColor))
     .not.toBe(light)
+  await expectChartPalette(page, [
+    "oklch(0.488 0.243 264.376)",
+    "oklch(0.696 0.17 162.48)",
+    "oklch(0.769 0.188 70.08)",
+    "oklch(0.627 0.265 303.9)",
+    "oklch(0.645 0.246 16.439)"
+  ])
   await page.setViewportSize({ width: 390, height: 844 })
   for (const card of await charts(page).all()) {
     await card.scrollIntoViewIfNeeded()
