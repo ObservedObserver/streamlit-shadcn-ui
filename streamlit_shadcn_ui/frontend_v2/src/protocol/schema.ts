@@ -19,6 +19,7 @@ export type ComponentKind =
   | "badge"
   | "breadcrumb"
   | "card"
+  | "chart"
   | "metric_card"
   | "aspect_ratio"
   | "progress"
@@ -281,6 +282,24 @@ export type SkeletonEnvelope = {
     shape: "rectangle" | "circle"
     width: CssDimension
     height: CssDimension
+  }
+}
+
+export type ChartType = "line" | "area" | "bar" | "pie" | "radar" | "radial"
+export type ChartEnvelope = {
+  protocolVersion: typeof PROTOCOL_VERSION
+  kind: "chart"
+  props: {
+    chartType: ChartType
+    data: Array<{ category: string } & Record<string, string | number | null>>
+    series: Array<{ key: string; label: string }>
+    title: string | null
+    description: string | null
+    showLegend: boolean
+    showTooltip: boolean
+    stacked: boolean
+    horizontal: boolean
+    donut: boolean
   }
 }
 
@@ -588,6 +607,7 @@ export type StandaloneEnvelope =
   | BadgeEnvelope
   | BreadcrumbEnvelope
   | CardEnvelope
+  | ChartEnvelope
   | MetricCardEnvelope
   | AspectRatioEnvelope
   | ProgressEnvelope
@@ -1529,6 +1549,68 @@ function isTableCellValue(value: unknown): value is TableCellValue {
     typeof value === "boolean" ||
     isFiniteNumber(value)
   )
+}
+
+function parseChart(value: Record<string, unknown>): ChartEnvelope | null {
+  const props = value.props
+  if (
+    !isRecord(props) ||
+    typeof props.chartType !== "string" ||
+    !["line", "area", "bar", "pie", "radar", "radial"].includes(props.chartType) ||
+    !Array.isArray(props.data) || props.data.length < 1 || props.data.length > 1000 ||
+    !Array.isArray(props.series) || props.series.length < 1 || props.series.length > 5 ||
+    !isNullableBoundedText(props.title) || !isNullableBoundedText(props.description) ||
+    typeof props.showLegend !== "boolean" || typeof props.showTooltip !== "boolean" ||
+    typeof props.stacked !== "boolean" || typeof props.horizontal !== "boolean" ||
+    typeof props.donut !== "boolean" ||
+    (props.stacked && props.chartType !== "area" && props.chartType !== "bar") ||
+    (props.horizontal && props.chartType !== "bar") ||
+    (props.donut && props.chartType !== "pie")
+  ) return null
+
+  const segmented = props.chartType === "pie" || props.chartType === "radial"
+  const polar = segmented || props.chartType === "radar"
+  if ((segmented && props.data.length !== props.series.length) ||
+      (props.chartType === "radar" && props.data.length < 3)) return null
+  const series: ChartEnvelope["props"]["series"] = []
+  for (const [i, item] of props.series.entries()) {
+    if (!isRecord(item) || item.key !== `${segmented ? "segment" : "series"}-${i}` ||
+        !isBoundedText(item.label) || !item.label) return null
+    series.push({ key: item.key, label: item.label })
+  }
+  if (segmented && new Set(series.map(s => s.label)).size !== series.length) return null
+  const data: ChartEnvelope["props"]["data"] = []
+  const categories = new Set<string>()
+  const measureKeys = segmented ? ["value"] : series.map(s => s.key)
+  for (const [i, row] of props.data.entries()) {
+    if (!isRecord(row) || !isBoundedText(row.category) || !row.category ||
+        Object.keys(row).length !== measureKeys.length + 1 ||
+        (segmented && row.category !== `segment-${i}`) ||
+        (polar && categories.has(row.category))) return null
+    categories.add(row.category)
+    const normalized: ChartEnvelope["props"]["data"][number] = { category: row.category }
+    for (const key of measureKeys) {
+      const number = row[key]
+      if (number === null && !polar) normalized[key] = null
+      else if (typeof number === "number" && Number.isFinite(number) &&
+               Math.abs(number) <= Number.MAX_SAFE_INTEGER && (!polar || number >= 0)) {
+        normalized[key] = number
+      } else return null
+    }
+    data.push(normalized)
+  }
+  if (measureKeys.some(key => data.every(row => row[key] === null))) return null
+  if (segmented && !data.some(row => (row.value as number) > 0)) return null
+  return {
+    protocolVersion: PROTOCOL_VERSION,
+    kind: "chart",
+    props: {
+      chartType: props.chartType as ChartType, data, series,
+      title: props.title, description: props.description,
+      showLegend: props.showLegend, showTooltip: props.showTooltip,
+      stacked: props.stacked, horizontal: props.horizontal, donut: props.donut,
+    },
+  }
 }
 
 function parseTable(value: Record<string, unknown>): TableEnvelope | null {
@@ -3301,6 +3383,8 @@ function parseKnownEnvelope(
       return parseSkeleton(value)
     case "table":
       return parseTable(value)
+    case "chart":
+      return parseChart(value)
     case "link_button":
       return parseLinkButton(value)
     case "input":

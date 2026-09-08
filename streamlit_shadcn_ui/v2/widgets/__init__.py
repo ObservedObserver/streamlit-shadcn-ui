@@ -9,6 +9,7 @@ from .button import button
 from .calendar import calendar
 from .card import card, metric_card
 from .checkbox import checkbox
+from .chart import area_chart, bar_chart, line_chart, pie_chart, radar_chart, radial_chart
 from .collapsible import collapsible
 from .combobox import combobox
 from .dropdown_menu import dropdown_menu
@@ -40,10 +41,12 @@ __all__ = [
     "alert",
     "alert_dialog",
     "aspect_ratio",
+    "area_chart",
     "avatar",
     "badge",
     "badges",
     "breadcrumb",
+    "bar_chart",
     "button",
     "calendar",
     "card",
@@ -58,12 +61,16 @@ __all__ = [
     "input_otp",
     "link_button",
     "metric_card",
+    "line_chart",
     "number_input",
     "pagination",
     "popover",
+    "pie_chart",
     "progress",
     "radio_group",
+    "radar_chart",
     "scroll_area",
+    "radial_chart",
     "select",
     "separator",
     "skeleton",

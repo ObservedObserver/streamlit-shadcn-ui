@@ -67,6 +67,9 @@ without changing the returned value.
 - Composition: `elements` creates one nested, stateful React tree from typed
   Card, Button Group, Dialog, Empty, Field, Tooltip, Spinner, layout, content,
   input, choice, and action nodes
+- Charts: `line_chart`, `area_chart`, `bar_chart`, `pie_chart`, `radar_chart`,
+  `radial_chart` accept records or DataFrames with native shadcn tooltips and
+  legends. See [Charts](docs/components/charts.md) for options and data limits.
 
 ```python
 with ui.elements(key="settings") as el:

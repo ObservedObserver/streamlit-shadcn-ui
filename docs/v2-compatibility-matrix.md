@@ -13,6 +13,12 @@ tracks additive 1.x APIs, including `ui.elements`, `ui.number_input`,
 `ui.combobox`, and `ui.input_group`. The latter three are also available as
 stateful nodes inside Elements trees.
 
+Charts add six standalone stateless APIs: `line_chart`, `area_chart`,
+`bar_chart`, `pie_chart`, `radar_chart`, and `radial_chart`. They accept records
+or DataFrames, return `None`, and use the generated shadcn Chart with Recharts.
+They do not expose Python callbacks or Elements nodes. See
+[Charts](components/charts.md) for the data contract and supported variants.
+
 V2 is a conceptual catalog migration, not a source-compatible namespace swap.
 Ordinary V2 helper keys are optional and keyword-only. The library derives a
 private, deterministic mount identity when `key` is omitted; dynamic or
