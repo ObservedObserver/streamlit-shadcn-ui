@@ -88,11 +88,11 @@ st.write(email.value, save.clicked)
 See the [Elements documentation](docs/components/elements.md), the
 [V2 technical assessment](docs/elements-v2-technical-assessment.md), and the
 [independent shadcn homepage-card use case](pages/Elements.py).
-Version 1.3.0 adds standalone [Combobox](docs/components/combobox.md) and
-[Input Group](docs/components/input_group.md) controls, six new Elements
-compositions, and loading or help states for Button. Release changes are
-recorded in the [changelog](CHANGELOG.md) and the
-[1.3.0 release notes](docs/releases/1.3.0.md).
+Version 1.4.0 adds six [Charts](docs/components/charts.md) APIs for line, area,
+bar, pie, radar, and radial charts. Pass records or a pandas DataFrame to render
+shadcn Cards with native tooltips, legends, and colorful light/dark palettes.
+Release changes are recorded in the [changelog](CHANGELOG.md) and the
+[1.4.0 release notes](docs/releases/1.4.0.md).
 
 The documentation app uses [Home.py](Home.py) as its explicit router. Its
 [product homepage](site_pages/Homepage.py), interactive

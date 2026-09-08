@@ -17,7 +17,7 @@ st.caption(
 )
 ui.badges(
     items=[
-        ("1.3.0", "default"),
+        ("1.4.0", "default"),
         ("Components V2", "secondary"),
         ("No iframes", "outline"),
     ]

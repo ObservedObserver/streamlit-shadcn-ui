@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.4.0 - 2026-09-08
+
+### Added
+
+- Added `ui.line_chart`, `ui.area_chart`, `ui.bar_chart`, `ui.pie_chart`,
+  `ui.radar_chart`, and `ui.radial_chart` for records and pandas DataFrames.
+- Added stacked area/bar, horizontal bar, and donut variants, with inferred
+  numeric series or explicit field selection and display labels.
+- Charts compose the pinned shadcn Chart and Card components with native
+  tooltips, legends, and responsive sizing. They use the five-color light/dark
+  palettes from shadcn's theming documentation; other components stay neutral.
+- Added a Charts documentation page with executable examples for all six APIs.
+
+### Behavior
+
+- Charts are stateless and return `None`. Hover interactions stay in the browser.
+- Python validates data before mounting, with limits of 1,000 rows and five
+  series or segments. Line, area, and bar charts support missing values.
+- The Python API does not expose raw JavaScript, CSS, formatters, or callbacks.
+  Existing control styles and public API signatures are unchanged.
+
+Full details: [Charts 1.4.0 release notes](docs/releases/1.4.0.md).
+
 ## 1.3.0 - 2026-09-01
 
 ### Added
