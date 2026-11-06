@@ -636,6 +636,7 @@ export type StandaloneEnvelope =
   | DatePickerEnvelope
 
 export type ElementsLeafEnvelope =
+  | AvatarEnvelope
   | SelectEnvelope
   | ComboboxEnvelope
   | CheckboxEnvelope
@@ -683,6 +684,26 @@ type ElementsContainerNode = {
   children: ElementsNode[]
   envelope: null
 } & (
+  | {
+      type: "item"
+      props: {
+        variant: "default" | "outline" | "muted"
+        size: "default" | "sm" | "xs"
+      }
+    }
+  | {
+      type: "item_media"
+      props: { variant: "default" | "icon" | "image" }
+    }
+  | {
+      type:
+        | "item_group"
+        | "item_content"
+        | "item_actions"
+        | "item_header"
+        | "item_footer"
+      props: Record<string, never>
+    }
   | {
       type: "stack"
       props: {
@@ -793,11 +814,24 @@ type ElementsContentNode = {
       props: { text: string; language: string }
     }
   | {
+      type: "item_image"
+      props: { src: string; alt: string }
+    }
+  | {
+      type: "item_separator"
+      props: Record<string, never>
+    }
+  | {
       type: "button_group_separator"
       props: { orientation: "horizontal" | "vertical" }
     }
   | {
-      type: "button_group_text" | "empty_title" | "empty_description"
+      type:
+        | "button_group_text"
+        | "empty_title"
+        | "empty_description"
+        | "item_title"
+        | "item_description"
       props: { text: string }
     }
   | {
@@ -2642,6 +2676,7 @@ const ELEMENTS_STATEFUL_KINDS = new Set<ElementsStatefulKind>([
   "switch",
 ])
 const ELEMENTS_LEAF_KINDS = new Set<ElementsLeafEnvelope["kind"]>([
+  "avatar",
   ...ELEMENTS_STATEFUL_KINDS,
   "button",
   "badge",
@@ -2719,6 +2754,49 @@ function parseElementsNode(
   const type = value.type
   const props = value.props
 
+  if (type === "item_title" || type === "item_description") {
+    if (
+      parentType !== "item_content" ||
+      value.children.length !== 0 ||
+      !isBoundedText(props.text)
+    ) {
+      return null
+    }
+    return {
+      id,
+      type,
+      props: { text: props.text },
+      children: [],
+      envelope: null,
+    }
+  }
+  if (type === "item_image") {
+    if (
+      parentType !== "item_media" ||
+      value.children.length !== 0 ||
+      !isSafeImageSource(props.src) ||
+      !isBoundedText(props.alt)
+    ) {
+      return null
+    }
+    return {
+      id,
+      type,
+      props: { src: props.src, alt: props.alt },
+      children: [],
+      envelope: null,
+    }
+  }
+  if (type === "item_separator") {
+    if (
+      parentType !== "item_group" ||
+      value.children.length !== 0 ||
+      Object.keys(props).length !== 0
+    ) {
+      return null
+    }
+    return { id, type, props: {}, children: [], envelope: null }
+  }
   if (type === "text") {
     if (
       value.children.length !== 0 ||
@@ -2935,6 +3013,89 @@ function parseElementsNode(
     parsedChildren.push(parsedChild)
   }
 
+  if (type === "item") {
+    const slots = parsedChildren.map((child) => child.type)
+    if (
+      (props.variant !== "default" &&
+        props.variant !== "outline" &&
+        props.variant !== "muted") ||
+      (props.size !== "default" &&
+        props.size !== "sm" &&
+        props.size !== "xs") ||
+      slots.some(
+        (slot) =>
+          ![
+            "item_media",
+            "item_content",
+            "item_actions",
+            "item_header",
+            "item_footer",
+          ].includes(slot)
+      ) ||
+      ["item_media", "item_actions", "item_header", "item_footer"].some(
+        (slot) => slots.filter((kind) => kind === slot).length > 1
+      )
+    ) {
+      return null
+    }
+    return {
+      id,
+      type,
+      props: { variant: props.variant, size: props.size },
+      children: parsedChildren,
+      envelope: null,
+    }
+  }
+  if (type === "item_media") {
+    if (
+      parentType !== "item" ||
+      (props.variant !== "default" &&
+        props.variant !== "icon" &&
+        props.variant !== "image")
+    ) {
+      return null
+    }
+    const media = parsedChildren[0]
+    const mediaKind =
+      media?.type === "leaf" ? media.envelope.kind : media?.type
+    if (
+      parsedChildren.length !== 1 ||
+      !mediaKind ||
+      !["avatar", "item_image", "spinner"].includes(mediaKind) ||
+      (props.variant === "image"
+        ? mediaKind !== "item_image"
+        : mediaKind === "item_image")
+    ) {
+      return null
+    }
+    return {
+      id,
+      type,
+      props: { variant: props.variant },
+      children: parsedChildren,
+      envelope: null,
+    }
+  }
+  if (
+    type === "item_group" ||
+    type === "item_content" ||
+    type === "item_actions" ||
+    type === "item_header" ||
+    type === "item_footer"
+  ) {
+    if (
+      Object.keys(props).length !== 0 ||
+      (type !== "item_group" && parentType !== "item") ||
+      (type === "item_group" &&
+        parsedChildren.some(
+          (child) =>
+            child.type !== "item" && child.type !== "item_separator"
+        ))
+    ) {
+      return null
+    }
+    return { id, type, props: {}, children: parsedChildren, envelope: null }
+  }
   if (type === "stack") {
     if (
       (props.direction !== "vertical" && props.direction !== "horizontal") ||

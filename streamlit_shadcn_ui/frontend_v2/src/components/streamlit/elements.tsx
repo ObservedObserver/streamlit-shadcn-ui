@@ -82,6 +82,19 @@ import {
   FieldSeparator,
   FieldSet,
 } from "@/components/ui/field"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  Item,
+  ItemGroup,
+  ItemSeparator,
+  ItemMedia,
+  ItemContent,
+  ItemTitle,
+  ItemDescription,
+  ItemActions,
+  ItemHeader,
+  ItemFooter,
+} from "@/components/ui/item"
 import { Spinner } from "@/components/ui/spinner"
 import {
   Tooltip,
@@ -183,6 +196,15 @@ function renderLeaf(
   mode: "default" | "raw" = "default",
   fieldBinding?: FieldBinding
 ) {
+  if (node.envelope.kind === "avatar") {
+    const { src, fallback, alt, size } = node.envelope.props
+    return (
+      <Avatar size={size} role="img" aria-label={alt}>
+        {src !== null ? <AvatarImage alt={alt} src={src} /> : null}
+        <AvatarFallback>{fallback}</AvatarFallback>
+      </Avatar>
+    )
+  }
   const setStateValue = ((name: string, value: unknown) => {
     setNodeState(node.id, name, value)
   }) as V2RendererArgs["setStateValue"]
@@ -567,7 +589,8 @@ function renderNode(
   node: ElementsNode,
   setNodeState: SetNodeState,
   enqueueEvent: EnqueueEvent,
-  mode: "default" | "raw" = "default"
+  mode: "default" | "raw" = "default",
+  parentType: string | null = null
 ): ReactNode {
   if (node.type === "dialog") {
     return (
@@ -595,19 +618,51 @@ function renderNode(
     mode === "raw" ||
     node.type === "button_group" ||
     node.type === "dialog_footer" ||
-    node.type === "empty_content"
+    node.type === "empty_content" ||
+    node.type.startsWith("item")
   const children = node.children.map((child) => (
     <Fragment key={child.id}>
       {renderNode(
         child,
         setNodeState,
         enqueueEvent,
-        rawChildren ? "raw" : "default"
+        rawChildren ? "raw" : "default",
+        node.type
       )}
     </Fragment>
   ))
 
   switch (node.type) {
+    case "item_group":
+      return <ItemGroup>{children}</ItemGroup>
+    case "item":
+      return (
+        <Item
+          variant={node.props.variant}
+          size={node.props.size}
+          role={parentType === "item_group" ? "listitem" : undefined}
+        >
+          {children}
+        </Item>
+      )
+    case "item_media":
+      return <ItemMedia variant={node.props.variant}>{children}</ItemMedia>
+    case "item_content":
+      return <ItemContent>{children}</ItemContent>
+    case "item_actions":
+      return <ItemActions>{children}</ItemActions>
+    case "item_header":
+      return <ItemHeader>{children}</ItemHeader>
+    case "item_footer":
+      return <ItemFooter>{children}</ItemFooter>
+    case "item_title":
+      return <ItemTitle>{node.props.text}</ItemTitle>
+    case "item_description":
+      return <ItemDescription>{node.props.text}</ItemDescription>
+    case "item_image":
+      return <img src={node.props.src} alt={node.props.alt} />
+    case "item_separator":
+      return <ItemSeparator aria-hidden="true" />
     case "leaf":
       return renderLeaf(node, setNodeState, enqueueEvent, mode)
     case "text":

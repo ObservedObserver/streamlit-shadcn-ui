@@ -60,6 +60,18 @@ class ElementsBuilderTests(unittest.TestCase):
         self.assertEqual(
             public_methods,
             {
+                "avatar",
+                "item",
+                "item_group",
+                "item_separator",
+                "item_media",
+                "item_image",
+                "item_content",
+                "item_title",
+                "item_description",
+                "item_actions",
+                "item_header",
+                "item_footer",
                 "badge",
                 "button",
                 "button_group",
