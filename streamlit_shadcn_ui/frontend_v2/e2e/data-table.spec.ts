@@ -1,4 +1,39 @@
-import { expect, test } from "@playwright/test"
+import { expect, test, type Locator } from "@playwright/test"
+import { readFileSync } from "node:fs"
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+
+const repositoryRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../../.."
+)
+
+async function appearance(locator: Locator) {
+  return locator.evaluate((el) => {
+    const css = getComputedStyle(el)
+    return Object.fromEntries(
+      [
+        "height",
+        "paddingTop",
+        "paddingBottom",
+        "paddingLeft",
+        "paddingRight",
+        "gap",
+        "fontSize",
+        "fontWeight",
+        "lineHeight",
+        "textAlign",
+        "borderRadius",
+        "borderWidth",
+        "borderColor",
+        "backgroundColor",
+        "color",
+        "boxShadow",
+        "opacity"
+      ].map((key) => [key, css[key as keyof CSSStyleDeclaration]])
+    )
+  })
+}
 
 test("local sort, search, paging and visibility preserve native control styles", async ({
   page
@@ -19,6 +54,63 @@ test("local sort, search, paging and visibility preserve native control styles",
     checkboxSize: 16,
     cellPadding: "8px"
   })
+  // Compare directly rendered pinned controls within the same ShadowRoot so
+  // inherited adapter styles are included in the comparison.
+  await page.addScriptTag({
+    type: "module",
+    content: readFileSync(
+      path.join(repositoryRoot, "output/data-table-reference/reference.js"),
+      "utf8"
+    )
+  })
+  await root.evaluate((el) => {
+    const target = document.createElement("div")
+    target.id = "data-table-reference"
+    el.parentElement!.append(target)
+    ;(
+      window as unknown as {
+        mountDataTableReference(target: HTMLElement): void
+      }
+    ).mountDataTableReference(target)
+  })
+  const reference = page.locator("#data-table-reference")
+  await expect(reference.getByRole("textbox")).toBeVisible()
+  const controls: [Locator, Locator][] = [
+    [root.getByRole("textbox"), reference.getByRole("textbox")],
+    [
+      root.getByRole("button", { name: "Columns", exact: true }),
+      reference.getByRole("button", { name: "Columns", exact: true })
+    ],
+    [
+      root.getByRole("button", { name: "Previous", exact: true }),
+      reference.getByRole("button", { name: "Previous", exact: true })
+    ],
+    [
+      root.getByRole("checkbox").first(),
+      reference.getByRole("checkbox").first()
+    ],
+    [root.locator("th").first(), reference.locator("th").first()],
+    [root.locator("td").first(), reference.locator("td").first()]
+  ]
+  for (const [actual, direct] of controls) {
+    expect(await appearance(actual)).toEqual(await appearance(direct))
+  }
+  const actualButton = controls[1][0]
+  const referenceButton = controls[1][1]
+  await actualButton.hover()
+  await page.waitForTimeout(200)
+  const hovered = await appearance(actualButton)
+  await referenceButton.hover()
+  await page.waitForTimeout(200)
+  expect(await appearance(referenceButton)).toEqual(hovered)
+  await page.mouse.move(0, 0)
+  await actualButton.focus()
+  await page.waitForTimeout(200)
+  const focused = await appearance(actualButton)
+  await referenceButton.focus()
+  await page.waitForTimeout(200)
+  expect(await appearance(referenceButton)).toEqual(focused)
+  await reference.evaluate((el) => el.remove())
   await root.getByRole("button", { name: "Sort amount" }).click()
   await expect(root.locator("tbody tr").first()).toHaveAttribute(
     "data-row-id",
@@ -55,6 +147,7 @@ test("page selection survives filtering, unrelated reruns and removes stale IDs"
   await expect(
     page.getByText("Selected: 0,1,2,3", { exact: true })
   ).toBeVisible()
+  await expect(root.getByRole("status")).toContainText("Page 2 of 3")
   await root.getByRole("textbox", { name: "Search rows" }).fill("missing")
   await expect(root.getByText("No results.")).toBeVisible()
   await expect(root.getByRole("status")).toContainText("4 selected")
@@ -109,19 +202,31 @@ test("narrow empty results remain keyboard operable", async ({
   await page.screenshot({ path: testInfo.outputPath("data-table-mobile.png") })
 })
 
-
-test("records example opens details and saves edits back to the table", async ({ page }) => {
+test("records example opens details and saves edits back to the table", async ({
+  page
+}) => {
   await page.goto("/?example=1")
   const table = page.getByTestId("ssui-v2-data-table")
-  await table.getByRole("button", { name: "Actions for row alpha", exact: true }).click()
-  await page.getByRole("menuitem", { name: "Edit details", exact: true }).click()
-  await page.getByRole("button", { name: "Open record editor", exact: true }).click()
+  await table
+    .getByRole("button", { name: "Actions for row alpha", exact: true })
+    .click()
+  await page
+    .getByRole("menuitem", { name: "Edit details", exact: true })
+    .click()
+  await page
+    .getByRole("button", { name: "Open record editor", exact: true })
+    .click()
   const panel = page.getByRole("dialog", { name: "Edit record", exact: true })
-  await panel.getByRole("textbox", { name: "Name", exact: true }).fill("Updated Alpha")
+  await panel
+    .getByRole("textbox", { name: "Name", exact: true })
+    .fill("Updated Alpha")
   await panel.getByRole("textbox", { name: "Name", exact: true }).press("Enter")
   await panel.getByRole("button", { name: "Save record", exact: true }).click()
   await expect(table.getByText("Updated Alpha", { exact: true })).toBeVisible()
   await expect(panel).toBeVisible()
-  await panel.getByRole("button", { name: "Close", exact: true }).first().click()
+  await panel
+    .getByRole("button", { name: "Close", exact: true })
+    .first()
+    .click()
   await expect(panel).toBeHidden()
 })

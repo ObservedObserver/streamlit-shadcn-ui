@@ -25,6 +25,7 @@ an Elements container. Native `st.*` commands cannot be inserted into that tree.
 | Spinner | No separate widget | Yes | Display/status only |
 | Heading, Text, Code, Image | No matching standalone library API | Yes | Display only; Code is plain code text |
 | Table, six Chart families | Yes | Not yet | Standalone display; no Elements child slots |
+| Data Table | Yes | Deferred | Local sorting, search, paging and visibility; revisioned row selection and one-shot row actions |
 | Skeleton, Calendar, Date Picker, Input OTP, Toggle, Toggle Group, Pagination, Breadcrumb, Alert, Alert Dialog, Dropdown Menu, Popover, Hover Card, Aspect Ratio | Yes | Not exposed by the public builder | Standalone contracts apply |
 
 Panel defaults and lifecycle are documented in [Elements](./components/elements.md).
