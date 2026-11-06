@@ -49,6 +49,8 @@ ItemMedia controls the image dimensions, crop, and radius; `el.image` is a
 separate Aspect Ratio component and is not supported in Item media.
 
 ```python
+import streamlit_shadcn_ui as ui
+
 with ui.elements(key="files") as el:
     with el.item(size="xs", variant="muted"):
         with el.item_media(variant="image"):
