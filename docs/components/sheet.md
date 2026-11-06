@@ -49,5 +49,12 @@ Elements container is available. Sheet itself retains the upstream layout and
 does not add an adapter-specific scrolling region. When independent modal requests overlap, the newest modal becomes active and
 the previous one resumes after it closes. Only one modal is active at a time.
 
+RTL direction and keyboard focus are supported, but the pinned preset has
+`rtl: false` and does not mirror the built-in close button. Its fixed top-right
+placement can overlap a right-aligned title. For RTL content, use
+`show_close_button=False` with a labeled footer close button. This retains
+upstream options; the adapter does not override close positioning or title
+padding. RTL browser tests cover direction and focus, not fully mirrored layout.
+
 The source is captured from the repository's pinned shadcn commit and nova CSS.
 No preset, theme, existing control styles, or package versions are changed.
