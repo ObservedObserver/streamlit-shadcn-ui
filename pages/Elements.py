@@ -165,9 +165,32 @@ with ui.elements(key="shadcn-homepage-cards") as el:
                 )
 
 
+    el.heading("Record settings")
+    el.text("Switch panels or collapse details without losing your input.")
+    with el.tabs(key="record-settings", default_value="general"):
+        with el.tab("general", "General"):
+            record_name = el.input("Record name", key="name", value="Experiment A")
+            with el.accordion(key="sections", default_value=["details"]):
+                with el.accordion_item("details", "Record details"):
+                    record_enabled = el.checkbox(
+                        "Record enabled", key="enabled", value=True
+                    )
+        with el.tab("advanced", "Advanced"):
+            with el.collapsible("More record options", key="more"):
+                with el.scroll_area(height=240, label="Advanced record options"):
+                    record_notes = el.textarea("Record notes", key="notes")
+                    for index in range(12):
+                        el.text("Reference entry %d" % (index + 1))
+
+
 st.subheader("Current aggregate result")
 st.json(
     {
+        "record": {
+            "name": record_name.value,
+            "enabled": record_enabled.value,
+            "notes": record_notes.value,
+        },
         "notifications": {
             key: handle.value
             for key, handle in notification_handles.items()
@@ -188,6 +211,7 @@ st.json(
 
 st.status(
     "Elements acceptance: one V2 host, recursive Card composition, stable "
-    "dynamic keys, aggregate values, ordered callbacks, and action batching.",
+    "dynamic keys, aggregate values, ordered callbacks, action batching, "
+    "and nested panels with preserved input values.",
     state="complete",
 )

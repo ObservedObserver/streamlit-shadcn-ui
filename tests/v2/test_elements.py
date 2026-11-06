@@ -60,6 +60,12 @@ class ElementsBuilderTests(unittest.TestCase):
         self.assertEqual(
             public_methods,
             {
+                "accordion",
+                "accordion_item",
+                "collapsible",
+                "scroll_area",
+                "tabs",
+                "tab",
                 "badge",
                 "button",
                 "button_group",

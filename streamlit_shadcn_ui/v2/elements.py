@@ -37,6 +37,7 @@ from .widgets._common import (
     boolean,
     enum_value,
     normalize_choices,
+    optional_text,
     safe_image_src,
     safe_url,
     token_for_value,
@@ -343,6 +344,144 @@ class ElementsBuilder:
             "button_group_text",
             key,
             {"text": validate_text(value, "value")},
+        )
+
+    def tabs(
+        self,
+        *,
+        key: str,
+        default_value: Optional[str] = None,
+        label: str = "Tabs",
+        orientation: str = "horizontal",
+        variant: str = "default",
+    ) -> _ContainerContext:
+        """Compose tab panels with browser-local selection and mounted children."""
+        if key is None:
+            raise ValueError("tabs requires an explicit stable key.")
+        return self._container(
+            "tabs",
+            key,
+            {
+                "defaultValue": optional_text(default_value, "default_value"),
+                "label": validate_text(label, "label"),
+                "orientation": enum_value(
+                    orientation, {"horizontal", "vertical"}, "orientation"
+                ),
+                "variant": enum_value(variant, {"default", "line"}, "variant"),
+            },
+        )
+
+    def tab(
+        self,
+        value: str,
+        label: str,
+        *,
+        disabled: bool = False,
+    ) -> _ContainerContext:
+        self._require_parent("tabs", "tab")
+        return self._container(
+            "tab",
+            value,
+            {
+                "value": validate_text(value, "value"),
+                "label": validate_text(label, "label"),
+                "disabled": boolean(disabled, "disabled"),
+            },
+        )
+
+    def accordion(
+        self,
+        *,
+        key: str,
+        default_value: Optional[Sequence[str]] = None,
+        multiple: bool = False,
+        disabled: bool = False,
+    ) -> _ContainerContext:
+        """Compose expandable items; opening them does not rerun Python."""
+        if key is None:
+            raise ValueError("accordion requires an explicit stable key.")
+        if isinstance(default_value, (str, bytes)):
+            raise TypeError("default_value must be a sequence of item values.")
+        values = [
+            validate_text(value, "default_value") for value in (default_value or [])
+        ]
+        multiple = boolean(multiple, "multiple")
+        if len(values) != len(set(values)) or (not multiple and len(values) > 1):
+            raise ValueError("default_value must be unique and respect multiple.")
+        return self._container(
+            "accordion",
+            key,
+            {
+                "defaultValue": values,
+                "multiple": multiple,
+                "disabled": boolean(disabled, "disabled"),
+            },
+        )
+
+    def accordion_item(
+        self,
+        value: str,
+        label: str,
+        *,
+        disabled: bool = False,
+    ) -> _ContainerContext:
+        self._require_parent("accordion", "accordion_item")
+        return self._container(
+            "accordion_item",
+            value,
+            {
+                "value": validate_text(value, "value"),
+                "label": validate_text(label, "label"),
+                "disabled": boolean(disabled, "disabled"),
+            },
+        )
+
+    def collapsible(
+        self,
+        title: str,
+        *,
+        key: str,
+        default_open: bool = False,
+        disabled: bool = False,
+        trigger_variant: str = "outline",
+        trigger_size: str = "default",
+    ) -> _ContainerContext:
+        if key is None:
+            raise ValueError("collapsible requires an explicit stable key.")
+        return self._container(
+            "collapsible",
+            key,
+            {
+                "title": validate_text(title, "title"),
+                "defaultOpen": boolean(default_open, "default_open"),
+                "disabled": boolean(disabled, "disabled"),
+                "triggerVariant": enum_value(
+                    trigger_variant, _BUTTON_VARIANTS, "trigger_variant"
+                ),
+                "triggerSize": enum_value(trigger_size, _BUTTON_SIZES, "trigger_size"),
+            },
+        )
+
+    def scroll_area(
+        self,
+        *,
+        key: Optional[str] = None,
+        height: int = 240,
+        label: str = "Scrollable content",
+    ) -> _ContainerContext:
+        if (
+            isinstance(height, bool)
+            or not isinstance(height, int)
+            or not 80 <= height <= 10_000
+        ):
+            raise ValueError("height must be between 80 and 10,000.")
+        return self._container(
+            "scroll_area",
+            key,
+            {
+                "height": height,
+                "label": validate_text(label, "label"),
+            },
         )
 
     def dialog(
@@ -1443,6 +1582,24 @@ class ElementsBuilder:
     def _validate_tree_composition(self) -> None:
         def validate(node: _Node, parent: Optional[_Node]) -> None:
             child_types = [child.node_type for child in node.children]
+            if node.node_type in {"tabs", "accordion"}:
+                expected = "tab" if node.node_type == "tabs" else "accordion_item"
+                if not node.children or any(kind != expected for kind in child_types):
+                    raise RuntimeError(
+                        "%s must contain only %s children." % (node.node_type, expected)
+                    )
+                values = [child.props["value"] for child in node.children]
+                defaults = node.props["defaultValue"]
+                if node.node_type == "tabs":
+                    defaults = [] if defaults is None else [defaults]
+                if any(value not in values for value in defaults):
+                    raise ValueError("default_value must reference an existing item.")
+            if node.node_type in {"tab", "accordion_item"}:
+                expected = "tabs" if node.node_type == "tab" else "accordion"
+                if parent is None or parent.node_type != expected:
+                    raise RuntimeError(
+                        "%s must belong to %s." % (node.node_type, expected)
+                    )
             if node.node_type == "button_group" and any(
                 child_type
                 not in {
