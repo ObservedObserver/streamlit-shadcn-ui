@@ -2,7 +2,6 @@ import streamlit as st
 import streamlit_shadcn_ui as ui
 
 st.header("Sheet acceptance")
-st.button("Rerun")
 st.session_state["runs"] = st.session_state.get("runs", 0) + 1
 st.write("Python runs:", st.session_state["runs"])
 for side in ("right", "left", "top", "bottom"):

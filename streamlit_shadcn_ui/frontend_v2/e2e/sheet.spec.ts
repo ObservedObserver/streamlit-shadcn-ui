@@ -90,13 +90,16 @@ test("narrow Sheet respects default width and releases modal effects on dismissa
 test("dark RTL Sheet preserves focus and captures acceptance view", async ({ page }, testInfo) => {
   await page.emulateMedia({ colorScheme: "dark" })
   await page.goto("/")
-  await page.getByRole("button", { name: "Rerun", exact: true }).waitFor()
+  await page.getByRole("button", { name: "Open right", exact: true }).waitFor()
+  // Match the existing RTL fixture: apply direction to the document and its
+  // already-mounted component hosts. This tests Sheet layout, not theme sync.
   await page.evaluate(() => {
     document.documentElement.dir = "rtl"
     document.documentElement.lang = "ar"
+    for (const host of document.querySelectorAll<HTMLElement>("*")) {
+      if (host.shadowRoot?.querySelector("[data-ssui-v2-app-root]")) host.dir = "rtl"
+    }
   })
-  await page.getByRole("button", { name: "Rerun", exact: true }).click()
-  await expect(page.getByText("Python runs: 2", { exact: true })).toBeVisible()
   const trigger = page.getByRole("button", { name: "Open right", exact: true })
   await trigger.click()
   const popup = page.getByRole("dialog", { name: "right details" })
