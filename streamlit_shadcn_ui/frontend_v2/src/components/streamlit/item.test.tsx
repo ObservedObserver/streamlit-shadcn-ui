@@ -157,6 +157,42 @@ describe("Item composition", () => {
     expect(trigger.mock.calls[1]![1][0].nodeId).toBe("ada/manage")
   })
 
+  it("preserves Item slot and list semantics inside a tab panel", async () => {
+    const result = parseEnvelope(
+      raw([
+        node(
+          "tabs",
+          "tabs",
+          { defaultValue: "members", label: "Views", variant: "default" },
+          [
+            node(
+              "tabs/members",
+              "tab",
+              { value: "members", label: "Members", disabled: false },
+              [node("group", "item_group", {}, [row("ada")])]
+            ),
+          ]
+        ),
+      ])
+    )
+    if (!result.ok || result.envelope.kind !== "elements")
+      throw new Error("Invalid fixture")
+    const trigger = vi.fn()
+    const view = render(
+      <ElementsView
+        envelope={result.envelope}
+        setStateValue={vi.fn()}
+        setTriggerValue={trigger}
+      />
+    )
+    expect(view.getByRole("listitem")).toBeTruthy()
+    const button = view.getByRole("button", { name: "Manage" })
+    expect(button.parentElement?.dataset.slot).toBe("item-actions")
+    fireEvent.click(button)
+    await waitFor(() => expect(trigger).toHaveBeenCalledTimes(1))
+    expect(trigger.mock.calls[0]![1][0].nodeId).toBe("ada/manage")
+  })
+
   it("rejects malformed trees and invalid variants at the frontend boundary", () => {
     const malformed = [
       node("orphan", "item_content"),

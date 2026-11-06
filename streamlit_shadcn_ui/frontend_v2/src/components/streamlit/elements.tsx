@@ -64,6 +64,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import {
   Empty,
   EmptyContent,
   EmptyDescription,
@@ -95,6 +105,19 @@ import {
   ItemHeader,
   ItemFooter,
 } from "@/components/ui/item"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { Spinner } from "@/components/ui/spinner"
 import {
   Tooltip,
@@ -490,6 +513,74 @@ function DialogNodeView({
   )
 }
 
+function SheetNodeView({
+  enqueueEvent,
+  node,
+  setNodeState,
+}: {
+  enqueueEvent: EnqueueEvent
+  node: Extract<ElementsNode, { type: "sheet" }>
+  setNodeState: SetNodeState
+}) {
+  const [requested, setRequested] = useState(false)
+  const modalBoundary = useRef<HTMLDivElement>(null)
+  const returnFocus = useRef<HTMLElement | null>(null)
+
+  useLayoutEffect(() => {
+    if (requested) returnFocus.current = preferredReturnFocusElement()
+  }, [requested])
+
+  const active = useExclusiveModalLayer(requested, modalBoundary)
+  const footer = node.children.find((child) => child.type === "sheet_footer")
+  const body = node.children.filter((child) => child.type !== "sheet_footer")
+
+  return (
+    <div
+      data-modal-active={active ? "true" : "false"}
+      data-ssui-component="sheet"
+      data-testid="ssui-v2-sheet"
+      ref={modalBoundary}
+    >
+      <Sheet
+        onOpenChange={(open) => setRequested(open)}
+        open={active}
+      >
+        <SheetTrigger
+          render={
+            <Button
+              disabled={node.props.disabled}
+              size={node.props.triggerSize}
+              variant={node.props.triggerVariant}
+            />
+          }
+        >
+          {node.props.triggerLabel}
+        </SheetTrigger>
+        <SheetContent
+          finalFocus={() =>
+            returnFocus.current?.isConnected ? returnFocus.current : true
+          }
+          side={node.props.side}
+          showCloseButton={node.props.showCloseButton}
+        >
+          <SheetHeader>
+            <SheetTitle>{node.props.title}</SheetTitle>
+            {node.props.description !== null && (
+              <SheetDescription>{node.props.description}</SheetDescription>
+            )}
+          </SheetHeader>
+          {body.map((child) => (
+            <Fragment key={child.id}>
+              {renderNode(child, setNodeState, enqueueEvent)}
+            </Fragment>
+          ))}
+          {footer && renderNode(footer, setNodeState, enqueueEvent)}
+        </SheetContent>
+      </Sheet>
+    </div>
+  )
+}
+
 function TooltipNodeView({
   enqueueEvent,
   node,
@@ -585,6 +676,128 @@ function TooltipNodeView({
   )
 }
 
+// Selection/open state is local, like Dialog. A changed Python default resets it.
+// Hidden panels stay mounted, preserving nested widget and container state.
+function useContainerDefault<T>(initial: T) {
+  const fingerprint = JSON.stringify(initial)
+  const [state, setState] = useState({ fingerprint, value: initial })
+  if (state.fingerprint !== fingerprint) {
+    setState({ fingerprint, value: initial })
+  }
+  return [
+    state.fingerprint === fingerprint ? state.value : initial,
+    (value: T) => setState({ fingerprint, value }),
+  ] as const
+}
+
+type ContainerProps = {
+  node: Extract<ElementsNode, { type: "tabs" | "accordion" | "collapsible" }>
+  setNodeState: SetNodeState
+  enqueueEvent: EnqueueEvent
+}
+
+function InteractiveContainer({
+  node,
+  setNodeState,
+  enqueueEvent,
+}: ContainerProps) {
+  const [value, setValue] = useContainerDefault<
+    string | string[] | boolean | null
+  >(
+    node.type === "collapsible"
+      ? node.props.defaultOpen
+      : node.props.defaultValue
+  )
+  const children = (child: ElementsNode) =>
+    child.children.map((item) => (
+      <Fragment key={item.id}>
+        {renderNode(item, setNodeState, enqueueEvent)}
+      </Fragment>
+    ))
+  if (node.type === "tabs") {
+    const tabs = node.children as Extract<
+      ElementsNode,
+      { type: "tab" | "accordion_item" }
+    >[]
+    const selected = tabs.some((tab) => tab.props.value === value)
+      ? (value as string)
+      : (tabs.find((tab) => !tab.props.disabled)?.props.value ?? null)
+    if (value !== selected) setValue(selected)
+    return (
+      <Tabs
+        value={selected}
+        onValueChange={(next) => setValue(next as string | null)}
+      >
+        <TabsList aria-label={node.props.label} variant={node.props.variant}>
+          {tabs.map((tab) => (
+            <TabsTrigger
+              key={tab.id}
+              value={tab.props.value}
+              disabled={tab.props.disabled}
+            >
+              {tab.props.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        {tabs.map((tab) => (
+          <TabsContent key={tab.id} value={tab.props.value} keepMounted>
+            {children(tab)}
+          </TabsContent>
+        ))}
+      </Tabs>
+    )
+  }
+  if (node.type === "accordion") {
+    const items = node.children as Extract<
+      ElementsNode,
+      { type: "tab" | "accordion_item" }
+    >[]
+    let selected = (Array.isArray(value) ? value : []).filter((item) =>
+      items.some((child) => child.props.value === item)
+    )
+    if (!node.props.multiple) selected = selected.slice(0, 1)
+    if (JSON.stringify(value) !== JSON.stringify(selected)) setValue(selected)
+    return (
+      <Accordion
+        value={selected}
+        onValueChange={(next) => setValue(next as string[])}
+        multiple={node.props.multiple}
+        disabled={node.props.disabled}
+      >
+        {items.map((item) => (
+          <AccordionItem
+            key={item.id}
+            value={item.props.value}
+            disabled={item.props.disabled}
+          >
+            <AccordionTrigger>{item.props.label}</AccordionTrigger>
+            <AccordionContent keepMounted>{children(item)}</AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+    )
+  }
+  return (
+    <Collapsible
+      open={value === true}
+      onOpenChange={setValue}
+      disabled={node.props.disabled}
+    >
+      <CollapsibleTrigger
+        render={
+          <Button
+            variant={node.props.triggerVariant}
+            size={node.props.triggerSize}
+          />
+        }
+      >
+        {node.props.title}
+      </CollapsibleTrigger>
+      <CollapsibleContent keepMounted>{children(node)}</CollapsibleContent>
+    </Collapsible>
+  )
+}
+
 function renderNode(
   node: ElementsNode,
   setNodeState: SetNodeState,
@@ -592,9 +805,31 @@ function renderNode(
   mode: "default" | "raw" = "default",
   parentType: string | null = null
 ): ReactNode {
+  if (
+    node.type === "tabs" ||
+    node.type === "accordion" ||
+    node.type === "collapsible"
+  ) {
+    return (
+      <InteractiveContainer
+        node={node}
+        setNodeState={setNodeState}
+        enqueueEvent={enqueueEvent}
+      />
+    )
+  }
   if (node.type === "dialog") {
     return (
       <DialogNodeView
+        enqueueEvent={enqueueEvent}
+        node={node}
+        setNodeState={setNodeState}
+      />
+    )
+  }
+  if (node.type === "sheet") {
+    return (
+      <SheetNodeView
         enqueueEvent={enqueueEvent}
         node={node}
         setNodeState={setNodeState}
@@ -618,6 +853,7 @@ function renderNode(
     mode === "raw" ||
     node.type === "button_group" ||
     node.type === "dialog_footer" ||
+    node.type === "sheet_footer" ||
     node.type === "empty_content" ||
     node.type.startsWith("item")
   const children = node.children.map((child) => (
@@ -663,6 +899,23 @@ function renderNode(
       return <img src={node.props.src} alt={node.props.alt} />
     case "item_separator":
       return <ItemSeparator aria-hidden="true" />
+    case "tab":
+    case "accordion_item":
+      return null // These typed slots are rendered by their parent container.
+    case "scroll_area":
+      return (
+        <div
+          style={{
+            height: node.props.height,
+            display: "grid",
+            gridTemplateRows: "minmax(0, 1fr)",
+          }}
+        >
+          <ScrollArea aria-label={node.props.label} role="region">
+            {children}
+          </ScrollArea>
+        </div>
+      )
     case "leaf":
       return renderLeaf(node, setNodeState, enqueueEvent, mode)
     case "text":
@@ -747,6 +1000,25 @@ function renderNode(
           {node.props.loading && <Spinner />}
           {node.props.text}
         </DialogClose>
+      )
+    case "sheet_footer":
+      return <SheetFooter>{children}</SheetFooter>
+    case "sheet_close_button":
+      return (
+        <SheetClose
+          render={
+            <Button
+              aria-busy={node.props.loading || undefined}
+              disabled={node.props.disabled || node.props.loading}
+              onClick={() => enqueueEvent(node.id, "click", true)}
+              size={node.props.size}
+              variant={node.props.variant}
+            />
+          }
+        >
+          {node.props.loading && <Spinner />}
+          {node.props.text}
+        </SheetClose>
       )
     case "empty":
       return <Empty>{children}</Empty>

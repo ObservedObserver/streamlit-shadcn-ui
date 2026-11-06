@@ -1,6 +1,7 @@
 # Item acceptance
 
-Validated on 2026-11-06 against the local 1.4.0 source baseline. This change
+Validated on 2026-11-06 after integrating the Sheet and Elements container changes into the local
+1.4.0 source baseline. This change
 adds Elements Item composition and Avatar support; it does not publish a new
 package or update the live documentation repository.
 
@@ -13,16 +14,19 @@ and lets ItemMedia supply its image styling.
 
 Validation completed:
 
-- 100 Python tests passed with `python -m unittest discover -s tests/v2`.
-- 131 frontend tests passed with `vitest run`.
+- 104 Python tests passed with `python -m unittest discover -s tests/v2`.
+- 140 frontend tests passed with `vitest run`.
 - TypeScript, generated-source, import graph, Shadow CSS, production build,
   and distribution checks passed.
-- Three browser runs passed: Chromium, Firefox, and WebKit.
+- All 30 browser checks passed across Chromium, Firefox, and WebKit:
+  Item 3/3, Elements containers 6/6, and Sheet 21/21.
 - The browser suite renders a direct pinned Item/Avatar/Button reference in
   the same ShadowRoot, then compares computed dimensions, padding, gaps,
   typography, borders, colors, opacity and shadow against the Elements
   adapter. Button hover and focus are compared separately; dark tokens and
   RTL are also checked against the reference.
+- A composed Tabs → ItemGroup → Item test preserves list semantics, direct
+  action slots and event routing across the merged renderer.
 - Action IDs stay attached to the correct member after rerun and reordering.
   Disabled buttons, Avatar fallback after image failure, native thumbnail
   decoding and sizing, list semantics, and the 390px layout are covered.
