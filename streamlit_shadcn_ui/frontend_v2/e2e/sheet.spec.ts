@@ -105,6 +105,8 @@ test("dark RTL Sheet preserves focus and captures acceptance view", async ({ pag
   const popup = page.getByRole("dialog", { name: "right details" })
   await expect(popup).toBeVisible()
   await expect.poll(() => popup.evaluate((el) => getComputedStyle(el).direction)).toBe("rtl")
+  await expect(popup).toHaveCSS("opacity", "1")
+  await expect(popup).not.toHaveAttribute("data-starting-style", "")
   await page.screenshot({ path: testInfo.outputPath("sheet-dark-rtl.png") })
   await page.keyboard.press("Tab")
   expect(await popup.evaluate((el) => el.contains((el.getRootNode() as ShadowRoot).activeElement))).toBe(true)
