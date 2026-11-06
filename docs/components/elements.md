@@ -51,7 +51,7 @@ event type, payload, and sequence number. Multiple actions created in the same
 browser task are delivered as one ordered batch.
 
 Available composition primitives include `stack`, `grid`, Card slots, Button
-Group, Dialog, Empty, Field Set, Field Group, Field, and Tooltip. Content nodes
+Group, Dialog, Sheet, Empty, Field Set, Field Group, Field, and Tooltip. Content nodes
 include `heading`, `text`, `code`, `badge`, `separator`, `progress`, `spinner`,
 `image`, and `link_button`. Interactive nodes include `input`, `input_group`,
 `number_input`, `textarea`, `checkbox`, `switch`, `slider`, `radio_group`,

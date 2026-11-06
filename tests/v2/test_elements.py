@@ -75,6 +75,9 @@ class ElementsBuilderTests(unittest.TestCase):
                 "dialog",
                 "dialog_close_button",
                 "dialog_footer",
+                "sheet",
+                "sheet_close_button",
+                "sheet_footer",
                 "empty",
                 "empty_content",
                 "empty_description",
@@ -308,6 +311,50 @@ class ElementsBuilderTests(unittest.TestCase):
                 "button_group",
             ],
         )
+
+    def test_sheet_composition_serializes_sides_and_actions(self) -> None:
+        captured = {}
+        with patch.object(elements_module, "prepare_elements_state",
+                          side_effect=lambda **kwargs: prepared_state(kwargs["node_defaults"])), \
+             patch.object(elements_module, "fail_if_trigger_in_form"), \
+             patch.object(elements_module, "mount",
+                          side_effect=lambda **kwargs: captured.update(kwargs) or {}):
+            with ui.elements(key="sheet-tree") as el:
+                for side in ("top", "right", "bottom", "left"):
+                    with el.sheet("Details", key=side, side=side):
+                        el.input("Name", "Ada", key="name")
+                        with el.sheet_footer():
+                            el.button("Save", key="save")
+                            el.sheet_close_button("Done", key="done")
+        roots = captured["data"]["props"]["nodes"]
+        self.assertEqual([node["props"]["side"] for node in roots],
+                         ["top", "right", "bottom", "left"])
+        self.assertEqual(roots[0]["children"][1]["type"], "sheet_footer")
+        self.assertEqual(roots[0]["children"][1]["children"][1]["type"],
+                         "sheet_close_button")
+
+    def test_sheet_invalid_slots_and_side_fail_before_mount(self) -> None:
+        with patch.object(elements_module, "mount") as mount:
+            with self.assertRaisesRegex(ValueError, "side"):
+                with ui.elements(key="bad-side") as el:
+                    el.sheet("Details", side="center")
+            with self.assertRaisesRegex(RuntimeError, "sheet_footer"):
+                with ui.elements(key="orphan-footer") as el:
+                    with el.sheet_footer():
+                        pass
+            with self.assertRaisesRegex(RuntimeError, "two footers"):
+                with ui.elements(key="two-footers") as el:
+                    with el.sheet("Details"):
+                        with el.sheet_footer():
+                            pass
+                        with el.sheet_footer():
+                            pass
+            with self.assertRaisesRegex(RuntimeError, "buttons"):
+                with ui.elements(key="bad-footer") as el:
+                    with el.sheet("Details"):
+                        with el.sheet_footer():
+                            el.input("Name", key="name")
+            mount.assert_not_called()
 
     def test_p0_composition_rules_fail_before_mount(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "tooltip"):

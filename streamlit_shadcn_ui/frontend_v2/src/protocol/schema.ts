@@ -733,6 +733,23 @@ type ElementsContainerNode = {
       props: Record<string, never>
     }
   | {
+      type: "sheet"
+      props: {
+        side: "top" | "right" | "bottom" | "left"
+        description: string | null
+        disabled: boolean
+        showCloseButton: boolean
+        title: string
+        triggerLabel: string
+        triggerSize: ButtonSize
+        triggerVariant: ButtonVariant
+      }
+    }
+  | {
+      type: "sheet_footer"
+      props: Record<string, never>
+    }
+  | {
       type:
         | "empty"
         | "empty_header"
@@ -802,6 +819,16 @@ type ElementsContentNode = {
     }
   | {
       type: "dialog_close_button"
+      props: {
+        disabled: boolean
+        loading: boolean
+        size: ButtonSize
+        text: string
+        variant: ButtonVariant
+      }
+    }
+  | {
+      type: "sheet_close_button"
       props: {
         disabled: boolean
         loading: boolean
@@ -2837,6 +2864,34 @@ function parseElementsNode(
       envelope: null,
     }
   }
+  if (type === "sheet_close_button") {
+    if (
+      parentType !== "sheet_footer" ||
+      value.children.length !== 0 ||
+      !isBoundedText(props.text) ||
+      typeof props.disabled !== "boolean" ||
+      typeof props.loading !== "boolean" ||
+      typeof props.size !== "string" ||
+      !BUTTON_SIZES.has(props.size as ButtonSize) ||
+      typeof props.variant !== "string" ||
+      !BUTTON_VARIANTS.has(props.variant as ButtonVariant)
+    ) {
+      return null
+    }
+    return {
+      id,
+      type,
+      props: {
+        disabled: props.disabled,
+        loading: props.loading,
+        size: props.size as ButtonSize,
+        text: props.text,
+        variant: props.variant as ButtonVariant,
+      },
+      children: [],
+      envelope: null,
+    }
+  }
   if (type === "field_separator") {
     if (
       (parentType !== "field_group" && parentType !== "field_set") ||
@@ -3100,6 +3155,60 @@ function parseElementsNode(
         (kind) =>
           kind !== "button" &&
           kind !== "dialog_close_button" &&
+          kind !== "link_button"
+      )
+    ) {
+      return null
+    }
+    return {
+      id,
+      type,
+      props: {},
+      children: parsedChildren,
+      envelope: null,
+    }
+  }
+  if (type === "sheet") {
+    if (
+      !["top", "right", "bottom", "left"].includes(props.side as string) ||
+      !isBoundedText(props.title) ||
+      !isNullableBoundedText(props.description) ||
+      !isBoundedText(props.triggerLabel) ||
+      typeof props.disabled !== "boolean" ||
+      typeof props.showCloseButton !== "boolean" ||
+      typeof props.triggerSize !== "string" ||
+      !BUTTON_SIZES.has(props.triggerSize as ButtonSize) ||
+      typeof props.triggerVariant !== "string" ||
+      !BUTTON_VARIANTS.has(props.triggerVariant as ButtonVariant) ||
+      childKinds.filter((kind) => kind === "sheet_footer").length > 1
+    ) {
+      return null
+    }
+    return {
+      id,
+      type,
+      props: {
+        side: props.side as "top" | "right" | "bottom" | "left",
+        description: props.description,
+        disabled: props.disabled,
+        showCloseButton: props.showCloseButton,
+        title: props.title,
+        triggerLabel: props.triggerLabel,
+        triggerSize: props.triggerSize as ButtonSize,
+        triggerVariant: props.triggerVariant as ButtonVariant,
+      },
+      children: parsedChildren,
+      envelope: null,
+    }
+  }
+  if (type === "sheet_footer") {
+    if (
+      parentType !== "sheet" ||
+      Object.keys(props).length !== 0 ||
+      childKinds.some(
+        (kind) =>
+          kind !== "button" &&
+          kind !== "sheet_close_button" &&
           kind !== "link_button"
       )
     ) {

@@ -54,6 +54,7 @@ component_pages = [
     st.Page("pages/Combobox.py", title="Combobox"),
     st.Page("pages/DatePicker.py", title="Date Picker"),
     st.Page("pages/Dialog.py", title="Dialog"),
+    st.Page("pages/Sheet.py", title="Sheet"),
     st.Page("pages/DropdownMenu.py", title="Dropdown Menu"),
     st.Page("pages/Empty.py", title="Empty"),
     st.Page("pages/Field.py", title="Field"),
