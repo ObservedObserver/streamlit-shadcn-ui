@@ -352,7 +352,6 @@ class ElementsBuilder:
         key: str,
         default_value: Optional[str] = None,
         label: str = "Tabs",
-        orientation: str = "horizontal",
         variant: str = "default",
     ) -> _ContainerContext:
         """Compose tab panels with browser-local selection and mounted children."""
@@ -364,9 +363,6 @@ class ElementsBuilder:
             {
                 "defaultValue": optional_text(default_value, "default_value"),
                 "label": validate_text(label, "label"),
-                "orientation": enum_value(
-                    orientation, {"horizontal", "vertical"}, "orientation"
-                ),
                 "variant": enum_value(variant, {"default", "line"}, "variant"),
             },
         )
@@ -546,6 +542,86 @@ class ElementsBuilder:
         self._require_parent("dialog_footer", "dialog_close_button")
         node = self._leaf(
             "dialog_close_button",
+            key,
+            {
+                "disabled": boolean(disabled, "disabled"),
+                "loading": boolean(loading, "loading"),
+                "size": enum_value(size, _BUTTON_SIZES, "size"),
+                "text": validate_text(label, "label"),
+                "variant": enum_value(
+                    variant,
+                    _BUTTON_VARIANTS,
+                    "variant",
+                ),
+            },
+            require_key=True,
+        )
+        return self._register_action(node, key, on_click)
+
+    def sheet(
+        self,
+        title: str,
+        *,
+        key: Optional[str] = None,
+        description: Optional[str] = None,
+        trigger_label: str = "Open sheet",
+        trigger_variant: str = "outline",
+        trigger_size: str = "default",
+        disabled: bool = False,
+        show_close_button: bool = True,
+        side: str = "right",
+    ) -> _ContainerContext:
+        return self._container(
+            "sheet",
+            key,
+            {
+                "side": enum_value(side, {"top", "right", "bottom", "left"}, "side"),
+                "description": (
+                    None
+                    if description is None
+                    else validate_text(description, "description")
+                ),
+                "disabled": boolean(disabled, "disabled"),
+                "showCloseButton": boolean(
+                    show_close_button,
+                    "show_close_button",
+                ),
+                "title": validate_text(title, "title"),
+                "triggerLabel": validate_text(
+                    trigger_label,
+                    "trigger_label",
+                ),
+                "triggerSize": enum_value(
+                    trigger_size,
+                    _BUTTON_SIZES,
+                    "trigger_size",
+                ),
+                "triggerVariant": enum_value(
+                    trigger_variant,
+                    _BUTTON_VARIANTS,
+                    "trigger_variant",
+                ),
+            },
+        )
+
+    def sheet_footer(self, *, key: Optional[str] = None) -> _ContainerContext:
+        self._require_parent("sheet", "sheet_footer")
+        return self._container("sheet_footer", key, {})
+
+    def sheet_close_button(
+        self,
+        label: str,
+        *,
+        key: str,
+        variant: str = "outline",
+        size: str = "default",
+        disabled: bool = False,
+        loading: bool = False,
+        on_click: Optional[ElementCallback] = None,
+    ) -> ElementHandle[None]:
+        self._require_parent("sheet_footer", "sheet_close_button")
+        node = self._leaf(
+            "sheet_close_button",
             key,
             {
                 "disabled": boolean(disabled, "disabled"),
@@ -1639,6 +1715,17 @@ class ElementsBuilder:
                 raise RuntimeError(
                     "dialog_footer children must be buttons or link buttons."
                 )
+            if node.node_type == "sheet":
+                if child_types.count("sheet_footer") > 1:
+                    raise RuntimeError("sheet cannot contain two footers.")
+            if node.node_type == "sheet_footer" and any(
+                child_type
+                not in {"button", "sheet_close_button", "link_button"}
+                for child_type in child_types
+            ):
+                raise RuntimeError(
+                    "sheet_footer children must be buttons or link buttons."
+                )
             if node.node_type == "empty" and (
                 any(
                     child_type not in {"empty_header", "empty_content"}
@@ -1686,6 +1773,7 @@ class ElementsBuilder:
                 "button_group_separator",
                 "button_group_text",
                 "dialog_close_button",
+                "sheet_close_button",
                 "empty_description",
                 "empty_title",
                 "field_separator",
@@ -1696,6 +1784,10 @@ class ElementsBuilder:
                 parent is None or parent.node_type != "dialog"
             ):
                 raise RuntimeError("dialog_footer must belong to dialog.")
+            if node.node_type == "sheet_footer" and (
+                parent is None or parent.node_type != "sheet"
+            ):
+                raise RuntimeError("sheet_footer must belong to sheet.")
             for child in node.children:
                 validate(child, node)
 

@@ -39,6 +39,7 @@ class ContainerTests(unittest.TestCase):
 
     def test_invalid_composition_and_defaults_fail_before_mount(self):
         cases = [
+            lambda el: el.tabs(key="tabs", orientation="vertical"),
             lambda el: el.tab("a", "A"),
             lambda el: el.accordion_item("a", "A"),
             lambda el: el.scroll_area(height=True),

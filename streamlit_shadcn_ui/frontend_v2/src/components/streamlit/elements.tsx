@@ -64,6 +64,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import {
   Empty,
   EmptyContent,
   EmptyDescription,
@@ -481,6 +491,74 @@ function DialogNodeView({
   )
 }
 
+function SheetNodeView({
+  enqueueEvent,
+  node,
+  setNodeState,
+}: {
+  enqueueEvent: EnqueueEvent
+  node: Extract<ElementsNode, { type: "sheet" }>
+  setNodeState: SetNodeState
+}) {
+  const [requested, setRequested] = useState(false)
+  const modalBoundary = useRef<HTMLDivElement>(null)
+  const returnFocus = useRef<HTMLElement | null>(null)
+
+  useLayoutEffect(() => {
+    if (requested) returnFocus.current = preferredReturnFocusElement()
+  }, [requested])
+
+  const active = useExclusiveModalLayer(requested, modalBoundary)
+  const footer = node.children.find((child) => child.type === "sheet_footer")
+  const body = node.children.filter((child) => child.type !== "sheet_footer")
+
+  return (
+    <div
+      data-modal-active={active ? "true" : "false"}
+      data-ssui-component="sheet"
+      data-testid="ssui-v2-sheet"
+      ref={modalBoundary}
+    >
+      <Sheet
+        onOpenChange={(open) => setRequested(open)}
+        open={active}
+      >
+        <SheetTrigger
+          render={
+            <Button
+              disabled={node.props.disabled}
+              size={node.props.triggerSize}
+              variant={node.props.triggerVariant}
+            />
+          }
+        >
+          {node.props.triggerLabel}
+        </SheetTrigger>
+        <SheetContent
+          finalFocus={() =>
+            returnFocus.current?.isConnected ? returnFocus.current : true
+          }
+          side={node.props.side}
+          showCloseButton={node.props.showCloseButton}
+        >
+          <SheetHeader>
+            <SheetTitle>{node.props.title}</SheetTitle>
+            {node.props.description !== null && (
+              <SheetDescription>{node.props.description}</SheetDescription>
+            )}
+          </SheetHeader>
+          {body.map((child) => (
+            <Fragment key={child.id}>
+              {renderNode(child, setNodeState, enqueueEvent)}
+            </Fragment>
+          ))}
+          {footer && renderNode(footer, setNodeState, enqueueEvent)}
+        </SheetContent>
+      </Sheet>
+    </div>
+  )
+}
+
 function TooltipNodeView({
   enqueueEvent,
   node,
@@ -625,7 +703,6 @@ function InteractiveContainer({
     if (value !== selected) setValue(selected)
     return (
       <Tabs
-        orientation={node.props.orientation}
         value={selected}
         onValueChange={(next) => setValue(next as string | null)}
       >
@@ -727,6 +804,15 @@ function renderNode(
       />
     )
   }
+  if (node.type === "sheet") {
+    return (
+      <SheetNodeView
+        enqueueEvent={enqueueEvent}
+        node={node}
+        setNodeState={setNodeState}
+      />
+    )
+  }
   if (node.type === "field") {
     return (
       <FieldNodeView
@@ -744,6 +830,7 @@ function renderNode(
     mode === "raw" ||
     node.type === "button_group" ||
     node.type === "dialog_footer" ||
+    node.type === "sheet_footer" ||
     node.type === "empty_content"
   const children = node.children.map((child) => (
     <Fragment key={child.id}>
@@ -858,6 +945,25 @@ function renderNode(
           {node.props.loading && <Spinner />}
           {node.props.text}
         </DialogClose>
+      )
+    case "sheet_footer":
+      return <SheetFooter>{children}</SheetFooter>
+    case "sheet_close_button":
+      return (
+        <SheetClose
+          render={
+            <Button
+              aria-busy={node.props.loading || undefined}
+              disabled={node.props.disabled || node.props.loading}
+              onClick={() => enqueueEvent(node.id, "click", true)}
+              size={node.props.size}
+              variant={node.props.variant}
+            />
+          }
+        >
+          {node.props.loading && <Spinner />}
+          {node.props.text}
+        </SheetClose>
       )
     case "empty":
       return <Empty>{children}</Empty>

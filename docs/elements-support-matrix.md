@@ -12,6 +12,7 @@ an Elements container. Native `st.*` commands cannot be inserted into that tree.
 | Scroll Area | Yes, string items | `scroll_area` | Supported Elements children; scrolling stays local |
 | Card | Yes | Card header/content/footer slots | Layout only |
 | Dialog | No separate widget | Dialog/footer/close button | Local open state; close button emits an action |
+| Sheet | No separate widget | Sheet/footer/close button | Local open state, four sides, shared modal ownership; close button emits an action |
 | Button Group | No separate widget | Nested groups, buttons, separator, text | Child button actions |
 | Field | No separate widget | Field set/group/field/separator | One supported input per Field; input state and errors |
 | Empty | No separate widget | Header/media/title/description/content | Supported slots; actions in content |

@@ -34,8 +34,7 @@ function raw() {
           {
             defaultValue: null,
             label: "Settings",
-            orientation: "horizontal",
-            variant: "default",
+              variant: "default",
           },
           [
             node(
@@ -163,6 +162,9 @@ it("resets local selection when the Python default changes and recovers after se
 })
 it("rejects malformed typed slots, duplicate values, missing defaults and invalid viewport sizes", () => {
   for (const mutate of [
+    (value: ReturnType<typeof raw>) => {
+      Object.assign(value.props.nodes[0]!.props, { orientation: "vertical" })
+    },
     (value: ReturnType<typeof raw>) => {
       value.props.nodes[0]!.children.push(
         node("bad", "text", { text: "bad", variant: "body" })
