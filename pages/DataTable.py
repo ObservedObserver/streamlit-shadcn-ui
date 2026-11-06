@@ -28,12 +28,18 @@ record = next((row for row in records if row["id"] == active), None)
 if record:
     st.write("Record to edit:", record["name"])
     with ui.elements(key=f"record-editor-{record['id']}") as el:
-        with el.sheet("Edit record", key="details", trigger_label="Open record editor",
-                      description="Save writes this example's session data."):
+        with el.sheet(
+            "Edit record",
+            key="details",
+            trigger_label="Open record editor",
+            description="Save writes this example's session data.",
+        ):
             with el.field("Name"):
                 name = el.input("Name", record["name"], key="name")
             with el.field("Status"):
-                status = el.select("Status", ["Draft", "Ready"], value=record["status"], key="status")
+                status = el.select(
+                    "Status", ["Draft", "Ready"], value=record["status"], key="status"
+                )
             with el.sheet_footer():
                 save = el.button("Save record", key="save")
                 el.sheet_close_button("Close", key="close")
@@ -42,4 +48,6 @@ if record:
         record["status"] = status.value
         st.rerun()
 
-st.markdown((Path(__file__).resolve().parents[1] / "docs/components/data_table.md").read_text())
+st.markdown(
+    (Path(__file__).resolve().parents[1] / "docs/components/data_table.md").read_text()
+)

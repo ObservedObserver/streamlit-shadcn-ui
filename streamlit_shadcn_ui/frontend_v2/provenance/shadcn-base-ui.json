@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "capturedAt": "2026-09-07T20:06:21.888Z",
+  "capturedAt": "2026-11-06T22:41:41.073Z",
   "generator": {
     "name": "shadcn",
     "version": "4.16.0",
@@ -150,6 +150,22 @@
       "sha256": "06014de9816bc5e6836bdb180a4f75763281fa62d560a587f69d64ff9d540ef7",
       "primitive": "react"
     },
+    "item": {
+      "url": "https://raw.githubusercontent.com/shadcn-ui/ui/705ce5961080264830471ddd885c01b907706068/apps/v4/registry/bases/base/ui/item.tsx",
+      "sha256": "66a5f5a818024793f1195c93bfaf11cf4b49ee1188e514eaa6a0243ba116a450",
+      "primitive": "base-ui",
+      "sources": [
+        {
+          "url": "https://raw.githubusercontent.com/shadcn-ui/ui/705ce5961080264830471ddd885c01b907706068/apps/v4/registry/bases/base/ui/item.tsx",
+          "sha256": "901a5260fa629bdb88bb2b56b7addd3188ca24220c78028c97f6364e8272bd58"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/shadcn-ui/ui/705ce5961080264830471ddd885c01b907706068/apps/v4/registry/styles/style-nova.css",
+          "sha256": "c7fc024e5c432210b1af12a713386306703c9adeffa5b32ae380ed8cc083826e"
+        }
+      ],
+      "capture": "scripts/capture-item.mjs"
+    },
     "label": {
       "url": "https://ui.shadcn.com/r/styles/base-nova/label.json",
       "sha256": "5fb122b9665fa5c68e900b07d88d167a43eb1af5d751654dc8d8ba2313073af9",
@@ -189,6 +205,22 @@
       "url": "https://ui.shadcn.com/r/styles/base-nova/separator.json",
       "sha256": "11022cc2607efcaf8394b5b927c1926475624dc0db920557d51ab06e96343032",
       "primitive": "base-ui"
+    },
+    "sheet": {
+      "url": "https://raw.githubusercontent.com/shadcn-ui/ui/705ce5961080264830471ddd885c01b907706068/apps/v4/registry/bases/base/ui/sheet.tsx",
+      "sha256": "0f1e0c0ffb42588c0ef5a26276830a0b75e05f50fe52dbbe7e6e61fc9979fc96",
+      "primitive": "base-ui",
+      "sources": [
+        {
+          "url": "https://raw.githubusercontent.com/shadcn-ui/ui/705ce5961080264830471ddd885c01b907706068/apps/v4/registry/bases/base/ui/sheet.tsx",
+          "sha256": "ce6edeeee08e0002be607f0014013063290fca2ccddace9c6457c5a8fec8c0eb"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/shadcn-ui/ui/705ce5961080264830471ddd885c01b907706068/apps/v4/registry/styles/style-nova.css",
+          "sha256": "c7fc024e5c432210b1af12a713386306703c9adeffa5b32ae380ed8cc083826e"
+        }
+      ],
+      "capture": "scripts/capture-sheet.mjs"
     },
     "skeleton": {
       "url": "https://ui.shadcn.com/r/styles/base-nova/skeleton.json",
@@ -241,5 +273,5 @@
       "primitive": "base-ui"
     }
   },
-  "snapshotRevision": 8
+  "snapshotRevision": 12
 }

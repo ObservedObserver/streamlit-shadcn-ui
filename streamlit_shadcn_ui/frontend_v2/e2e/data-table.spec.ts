@@ -108,3 +108,20 @@ test("narrow empty results remain keyboard operable", async ({
   await root.getByRole("textbox", { name: "Search rows" }).fill("")
   await page.screenshot({ path: testInfo.outputPath("data-table-mobile.png") })
 })
+
+
+test("records example opens details and saves edits back to the table", async ({ page }) => {
+  await page.goto("/?example=1")
+  const table = page.getByTestId("ssui-v2-data-table")
+  await table.getByRole("button", { name: "Actions for row alpha", exact: true }).click()
+  await page.getByRole("menuitem", { name: "Edit details", exact: true }).click()
+  await page.getByRole("button", { name: "Open record editor", exact: true }).click()
+  const panel = page.getByRole("dialog", { name: "Edit record", exact: true })
+  await panel.getByRole("textbox", { name: "Name", exact: true }).fill("Updated Alpha")
+  await panel.getByRole("textbox", { name: "Name", exact: true }).press("Enter")
+  await panel.getByRole("button", { name: "Save record", exact: true }).click()
+  await expect(table.getByText("Updated Alpha", { exact: true })).toBeVisible()
+  await expect(panel).toBeVisible()
+  await panel.getByRole("button", { name: "Close", exact: true }).first().click()
+  await expect(panel).toBeHidden()
+})

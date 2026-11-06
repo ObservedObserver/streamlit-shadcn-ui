@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import {
   createModalLayerCoordinator,
@@ -6,6 +6,18 @@ import {
 } from "@/platform/modal-layer"
 
 describe("ModalLayerCoordinator v1", () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    // Release restores document styles across two timer turns. Complete that
+    // lifecycle before Vitest tears down the document for this test file.
+    vi.runAllTimers()
+    vi.useRealTimers()
+    document.body.replaceChildren()
+  })
+
   it("keeps only the newest independent modal active", () => {
     const coordinator = createModalLayerCoordinator()
     const first = vi.fn()

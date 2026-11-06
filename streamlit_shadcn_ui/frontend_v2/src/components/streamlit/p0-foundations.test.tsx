@@ -451,3 +451,59 @@ describe("P0 Elements renderers", () => {
     await waitFor(() => expect(setTriggerValueMock).toHaveBeenCalledTimes(1))
   })
 })
+
+
+describe("Sheet composition", () => {
+  function sheetEnvelope(): ElementsEnvelope {
+    const base = p0ElementsEnvelope()
+    const dialog = base.props.nodes.find((node) => node.type === "dialog")!
+    // The serialized Sheet structure mirrors Dialog with an explicit side.
+    const raw = JSON.parse(JSON.stringify(dialog).replaceAll("dialog", "sheet"))
+    raw.props.side = "left"
+    const parsed = parseEnvelope({ ...base, props: { nodes: [raw] },
+      state: { ...base.state, value: { nodes: {}, sequence: 0 } } })
+    if (!parsed.ok || parsed.envelope.kind !== "elements") throw new Error("Invalid Sheet")
+    return parsed.envelope
+  }
+
+  it("rejects invalid side and mixed footer parents", () => {
+    const envelope = sheetEnvelope()
+    const raw = JSON.parse(JSON.stringify(envelope))
+    raw.props.nodes[0].props.side = "center"
+    expect(parseEnvelope(raw).ok).toBe(false)
+    raw.props.nodes[0].props.side = "right"
+    raw.props.nodes[0].children[1].type = "dialog_footer"
+    expect(parseEnvelope(raw).ok).toBe(false)
+  })
+
+  it("uses the shared overlay and releases modal effects on unmount", async () => {
+    const view = renderInShell(<ElementsView envelope={sheetEnvelope()}
+      setStateValue={vi.fn()} setTriggerValue={vi.fn()} />)
+    const user = userEvent.setup()
+    await user.click(view.getByRole("button", { name: "Open confirmation" }))
+    await waitFor(() => expect(view.root.getByRole("dialog")).not.toBeNull())
+    expect(view.root.getByRole("dialog").getAttribute("data-side")).toBe("left")
+    view.unmount()
+    expect(document.body.style.overflow).not.toBe("hidden")
+    expect(view.shadowRoot.querySelector("[data-slot=sheet-content]")).toBeNull()
+  })
+
+  it("activates a newer Sheet then resumes the previous Dialog", async () => {
+    const sheet = sheetEnvelope()
+    const dialog = p0ElementsEnvelope().props.nodes.find((node) => node.type === "dialog")!
+    const second = JSON.parse(JSON.stringify(sheet.props.nodes[0]).replaceAll("confirm", "queued"))
+    second.props.triggerLabel = "Open queued sheet"
+    second.props.title = "Queued sheet"
+    const envelope = { ...sheet, props: { nodes: [dialog, second] } }
+    const view = renderInShell(<ElementsView envelope={envelope}
+      setStateValue={vi.fn()} setTriggerValue={vi.fn()} />)
+    fireEvent.click(view.getByRole("button", { name: "Open confirmation" }))
+    await waitFor(() => expect(view.root.getByRole("dialog")).not.toBeNull())
+    fireEvent.click(view.getByRole("button", { name: "Open queued sheet", hidden: true }))
+    await waitFor(() => expect(view.root.getByRole("dialog", { name: "Queued sheet" })).not.toBeNull())
+    expect(view.shadowRoot.querySelectorAll("[data-slot=sheet-content][data-open]").length).toBe(1)
+    fireEvent.click(within(view.root.getByRole("dialog", { name: "Queued sheet" })).getByRole("button", { name: "Done" }))
+    await waitFor(() => expect(view.root.getByRole("dialog", { name: "Confirm run" })).not.toBeNull())
+  })
+
+})

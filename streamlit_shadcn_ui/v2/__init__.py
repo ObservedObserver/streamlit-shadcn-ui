@@ -65,14 +65,13 @@ from .widgets import (
 )
 
 __all__ = [
-    "DataTableAction",
-    "DataTableResult",
-    "data_table",
     "AccordionItem",
     "BadgeItem",
     "BreadcrumbItem",
     "BreadcrumbSelection",
     "Choice",
+    "DataTableAction",
+    "DataTableResult",
     "ElementEvent",
     "ElementHandle",
     "ElementsBuilder",
@@ -94,6 +93,7 @@ __all__ = [
     "checkbox",
     "collapsible",
     "combobox",
+    "data_table",
     "date_picker",
     "dropdown_menu",
     "elements",

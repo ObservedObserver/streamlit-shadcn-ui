@@ -5,7 +5,13 @@ import math
 from typing import Any, Callable, Iterable, Mapping, Optional, Union
 
 from .._component import get_result_value, mount, noop_callback, private_component_key
-from .._protocol import metadata_cell, prepare_state, register_kind, validate_envelope, validate_text
+from .._protocol import (
+    metadata_cell,
+    prepare_state,
+    register_kind,
+    validate_envelope,
+    validate_text,
+)
 from .._streamlit_compat import fail_if_trigger_in_form
 from ._common import boolean, enum_value
 
@@ -40,18 +46,25 @@ def _cell(value: Any) -> Any:
         return validate_text(value, "table cell")
     if isinstance(value, (int, float)):
         if abs(value) > 9_007_199_254_740_991 or not math.isfinite(value):
-            raise ValueError("Numeric cells must be finite and within JavaScript's safe range; use text for larger values.")
+            raise ValueError(
+                "Numeric cells must be finite and within JavaScript's safe range; use text for larger values."
+            )
         return value
     raise TypeError("Cells must be text, finite numbers, booleans, or None.")
 
 
 def _selection(value: Any) -> bool:
-    return (isinstance(value, list) and len(value) <= 1000
-            and all(isinstance(item, str) for item in value)
-            and len(value) == len(set(value)))
+    return (
+        isinstance(value, list)
+        and len(value) <= 1000
+        and all(isinstance(item, str) for item in value)
+        and len(value) == len(set(value))
+    )
 
 
-def _action(raw: Any, ids: Mapping[str, RowId], actions: list[dict]) -> Optional[DataTableAction]:
+def _action(
+    raw: Any, ids: Mapping[str, RowId], actions: list[dict]
+) -> Optional[DataTableAction]:
     if not isinstance(raw, Mapping):
         return None
     row, action = raw.get("rowId"), raw.get("actionId")
@@ -79,8 +92,14 @@ def data_table(
     if not isinstance(key, str) or not key:
         raise ValueError("data_table requires a nonempty key.")
     row_id = validate_text(row_id, "row_id")
-    selection_mode = enum_value(selection_mode, {"none", "single", "multiple"}, "selection_mode")
-    if isinstance(page_size, bool) or not isinstance(page_size, int) or not 1 <= page_size <= 100:
+    selection_mode = enum_value(
+        selection_mode, {"none", "single", "multiple"}, "selection_mode"
+    )
+    if (
+        isinstance(page_size, bool)
+        or not isinstance(page_size, int)
+        or not 1 <= page_size <= 100
+    ):
         raise ValueError("page_size must be an integer from 1 to 100.")
     if on_select is not None and not callable(on_select):
         raise TypeError("on_select must be callable.")
@@ -101,7 +120,9 @@ def data_table(
         if token in ids:
             raise ValueError("Row IDs must be unique.")
         ids[token] = record[row_id]
-    raw_columns = list(columns) if columns is not None else list(records[0]) if records else []
+    raw_columns = (
+        list(columns) if columns is not None else list(records[0]) if records else []
+    )
     if len(raw_columns) > 50:
         raise ValueError("Data Table supports up to 50 columns.")
     normalized_columns = []
@@ -113,13 +134,29 @@ def data_table(
         name = validate_text(raw.get("key"), "column key")
         if not name or name in [c["key"] for c in normalized_columns]:
             raise ValueError("Column keys must be nonempty and unique.")
-        normalized_columns.append({"key": name, "label": validate_text(raw.get("label", name), "column label")})
-    rows = [{"id": token, "cells": [_cell(record.get(c["key"])) for c in normalized_columns]}
-            for token, record in zip(ids, records)]
+        normalized_columns.append(
+            {
+                "key": name,
+                "label": validate_text(raw.get("label", name), "column label"),
+            }
+        )
+    rows = [
+        {
+            "id": token,
+            "cells": [_cell(record.get(c["key"])) for c in normalized_columns],
+        }
+        for token, record in zip(ids, records)
+    ]
     for i in range(len(normalized_columns)):
-        kinds = {"boolean" if isinstance(row["cells"][i], bool) else "number"
-                 if isinstance(row["cells"][i], (int, float)) else "text"
-                 for row in rows if row["cells"][i] is not None}
+        kinds = {
+            "boolean"
+            if isinstance(row["cells"][i], bool)
+            else "number"
+            if isinstance(row["cells"][i], (int, float))
+            else "text"
+            for row in rows
+            if row["cells"][i] is not None
+        }
         if len(kinds) > 1:
             raise ValueError("Each column must contain one scalar type, plus None.")
     normalized_actions = []
@@ -129,8 +166,13 @@ def data_table(
         action_id = validate_text(raw.get("id"), "action id")
         if not action_id or action_id in [a["id"] for a in normalized_actions]:
             raise ValueError("Action IDs must be nonempty and unique.")
-        normalized_actions.append({"id": action_id, "label": validate_text(raw.get("label", action_id), "action label"),
-                                   "disabled": boolean(raw.get("disabled", False), "action disabled")})
+        normalized_actions.append(
+            {
+                "id": action_id,
+                "label": validate_text(raw.get("label", action_id), "action label"),
+                "disabled": boolean(raw.get("disabled", False), "action disabled"),
+            }
+        )
     if len(normalized_actions) > 20:
         raise ValueError("Data Table supports up to 20 actions.")
     if normalized_actions:
@@ -138,28 +180,58 @@ def data_table(
     defaults = [_id_token(item) for item in selected_ids]
     if len(set(defaults)) != len(defaults) or any(item not in ids for item in defaults):
         raise ValueError("selected_ids must be unique IDs in data.")
-    if (selection_mode == "none" and defaults) or (selection_mode == "single" and len(defaults) > 1):
+    if (selection_mode == "none" and defaults) or (
+        selection_mode == "single" and len(defaults) > 1
+    ):
         raise ValueError("selected_ids does not match selection_mode.")
     mount_key = private_component_key(key=key, kind="data_table", identity={})
-    state = prepare_state(key=mount_key, kind="data_table", default_value=defaults, is_valid_value=_selection)
-    cleaned = [item for item in state["value"] if item in ids] if selection_mode != "none" else []
+    state = prepare_state(
+        key=mount_key,
+        kind="data_table",
+        default_value=defaults,
+        is_valid_value=_selection,
+    )
+    cleaned = (
+        [item for item in state["value"] if item in ids]
+        if selection_mode != "none"
+        else []
+    )
     if selection_mode == "single":
         cleaned = cleaned[:1]
     if cleaned != state["value"]:
         entry = register_kind(mount_key, "data_table")
         revision = max(entry.get("server_revision", 0), state["serverRevision"]) + 1
         entry["server_revision"] = revision
-        entry["pending_reset"] = {"value": cleaned, "clientRevision": state["clientRevision"]}
+        entry["pending_reset"] = {
+            "value": cleaned,
+            "clientRevision": state["clientRevision"],
+        }
         state = {**state, "value": cleaned, "serverRevision": revision}
-    envelope = validate_envelope({"protocolVersion": 1, "kind": "data_table", "state": state,
-                                 "props": {"columns": normalized_columns, "rows": rows,
-                                           "pageSize": page_size, "selectionMode": selection_mode,
-                                           "actions": normalized_actions}})
+    envelope = validate_envelope(
+        {
+            "protocolVersion": 1,
+            "kind": "data_table",
+            "state": state,
+            "props": {
+                "columns": normalized_columns,
+                "rows": rows,
+                "pageSize": page_size,
+                "selectionMode": selection_mode,
+                "actions": normalized_actions,
+            },
+        }
+    )
     callbacks = {"on_state_change": on_select or noop_callback}
     if normalized_actions:
         callbacks["on_action_change"] = noop_callback
-    result = mount(key=mount_key, data=envelope,
-                   default={"meta": metadata_cell("data_table"), "state": state},
-                   width=width, callbacks=callbacks)
-    return DataTableResult([ids[item] for item in state["value"]],
-                           _action(get_result_value(result, "action"), ids, normalized_actions))
+    result = mount(
+        key=mount_key,
+        data=envelope,
+        default={"meta": metadata_cell("data_table"), "state": state},
+        width=width,
+        callbacks=callbacks,
+    )
+    return DataTableResult(
+        [ids[item] for item in state["value"]],
+        _action(get_result_value(result, "action"), ids, normalized_actions),
+    )

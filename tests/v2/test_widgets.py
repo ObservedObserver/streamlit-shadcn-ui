@@ -55,6 +55,8 @@ class PublicApiContractTests(unittest.TestCase):
                 "BreadcrumbItem",
                 "BreadcrumbSelection",
                 "Choice",
+                "DataTableAction",
+                "DataTableResult",
                 "ElementEvent",
                 "ElementHandle",
                 "ElementsBuilder",
@@ -76,6 +78,7 @@ class PublicApiContractTests(unittest.TestCase):
                 "checkbox",
                 "collapsible",
                 "combobox",
+                "data_table",
                 "date_picker",
                 "dropdown_menu",
                 "elements",
@@ -210,7 +213,7 @@ class PublicApiContractTests(unittest.TestCase):
                 signature = inspect.signature(widget)
                 key = signature.parameters["key"]
                 self.assertIs(key.kind, inspect.Parameter.KEYWORD_ONLY)
-                if name == "elements":
+                if name in {"elements", "data_table"}:
                     self.assertIs(
                         key.default,
                         inspect.Parameter.empty,
