@@ -76,6 +76,7 @@ component_pages = [
     st.Page("pages/Spinner.py", title="Spinner"),
     st.Page("pages/Switch.py", title="Switch"),
     st.Page("pages/Table.py", title="Table"),
+    st.Page("pages/DataTable.py", title="Data Table"),
     st.Page("pages/Tabs.py", title="Tabs"),
     st.Page("pages/TextArea.py", title="Textarea"),
     st.Page("pages/Toggle.py", title="Toggle"),

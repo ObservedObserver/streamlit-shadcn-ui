@@ -35,6 +35,7 @@
   "dependencies": {
     "@base-ui/react": "1.6.0",
     "@streamlit/component-v2-lib": "0.2.0",
+    "@tanstack/react-table": "9.3.1",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "date-fns": "4.4.0",

@@ -6,6 +6,7 @@ from .elements import (
     ElementsBuilder,
     elements,
 )
+from .widgets.data_table import DataTableAction, DataTableResult
 from .types import (
     AccordionItem,
     BadgeItem,
@@ -16,6 +17,7 @@ from .types import (
     TableColumn,
 )
 from .widgets import (
+    data_table,
     area_chart,
     bar_chart,
     line_chart,
@@ -63,6 +65,9 @@ from .widgets import (
 )
 
 __all__ = [
+    "DataTableAction",
+    "DataTableResult",
+    "data_table",
     "AccordionItem",
     "BadgeItem",
     "BreadcrumbItem",

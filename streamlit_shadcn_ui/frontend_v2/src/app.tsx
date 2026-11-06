@@ -1,3 +1,4 @@
+import { DataTableView } from "@/components/streamlit/data-table"
 import type { FrontendRendererArgs } from "@streamlit/component-v2-lib"
 
 import { AlertView } from "@/components/streamlit/alert"
@@ -136,6 +137,8 @@ export function V2App({
       return <SeparatorView envelope={envelope} />
     case "skeleton":
       return <SkeletonView envelope={envelope} />
+    case "data_table":
+      return <DataTableView envelope={envelope} setStateValue={setStateValue} setTriggerValue={setTriggerValue} />
     case "table":
       return <TableView envelope={envelope} />
     case "chart":
