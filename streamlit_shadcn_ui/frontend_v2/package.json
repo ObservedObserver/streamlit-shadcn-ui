@@ -30,7 +30,9 @@
     "test:e2e:p0": "SSUI_V2_E2E_APP=V2_P0.py SSUI_V2_E2E_SUITE=p0 playwright test",
     "test:e2e:performance-comparison": "SSUI_V2_E2E_SUITE=performance-comparison playwright test",
     "test:unit": "vitest run",
-    "test:unit:watch": "vitest"
+    "test:unit:watch": "vitest",
+    "capture:item": "node scripts/capture-item.mjs",
+    "test:e2e:item": "node scripts/build-item-reference.mjs && SSUI_V2_E2E_APP=tests/v2/fixtures/item.py SSUI_V2_E2E_SUITE=item playwright test"
   },
   "dependencies": {
     "@base-ui/react": "1.6.0",

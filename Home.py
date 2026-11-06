@@ -62,6 +62,7 @@ component_pages = [
     st.Page("pages/Input.py", title="Input"),
     st.Page("pages/InputGroup.py", title="Input Group"),
     st.Page("pages/InputOTP.py", title="Input OTP"),
+    st.Page("pages/Item.py", title="Item"),
     st.Page("pages/LinkButton.py", title="Link Button"),
     st.Page("pages/MetricCard.py", title="Metric Card"),
     st.Page("pages/NumberInput.py", title="Number Input"),

@@ -294,6 +294,113 @@ class ElementsBuilder:
         self._require_parent("card", "card_footer")
         return self._container("card_footer", key, {})
 
+    def item_group(self, *, key: Optional[str] = None) -> _ContainerContext:
+        """Group Item rows and optional Item separators."""
+        return self._container("item_group", key, {})
+
+    def item(
+        self,
+        *,
+        key: Optional[str] = None,
+        variant: str = "default",
+        size: str = "default",
+    ) -> _ContainerContext:
+        """Compose an Item from media, content, actions, header and footer slots."""
+        return self._container(
+            "item",
+            key,
+            {
+                "variant": enum_value(
+                    variant, {"default", "outline", "muted"}, "variant"
+                ),
+                "size": enum_value(size, {"default", "sm", "xs"}, "size"),
+            },
+        )
+
+    def item_media(
+        self,
+        *,
+        key: Optional[str] = None,
+        variant: str = "default",
+    ) -> _ContainerContext:
+        self._require_parent("item", "item_media")
+        return self._container(
+            "item_media",
+            key,
+            {
+                "variant": enum_value(
+                    variant, {"default", "icon", "image"}, "variant"
+                ),
+            },
+        )
+
+    def item_image(
+        self, src: str, *, alt: str, key: Optional[str] = None
+    ) -> None:
+        """Render a native image with ItemMedia's default image sizing."""
+        self._require_parent("item_media", "item_image")
+        self._leaf(
+            "item_image",
+            key,
+            {"src": safe_image_src(src), "alt": validate_text(alt, "alt")},
+        )
+
+    def item_content(self, *, key: Optional[str] = None) -> _ContainerContext:
+        self._require_parent("item", "item_content")
+        return self._container("item_content", key, {})
+
+    def item_actions(self, *, key: Optional[str] = None) -> _ContainerContext:
+        self._require_parent("item", "item_actions")
+        return self._container("item_actions", key, {})
+
+    def item_header(self, *, key: Optional[str] = None) -> _ContainerContext:
+        self._require_parent("item", "item_header")
+        return self._container("item_header", key, {})
+
+    def item_footer(self, *, key: Optional[str] = None) -> _ContainerContext:
+        self._require_parent("item", "item_footer")
+        return self._container("item_footer", key, {})
+
+    def item_title(self, value: str, *, key: Optional[str] = None) -> None:
+        self._require_parent("item_content", "item_title")
+        self._leaf("item_title", key, {"text": validate_text(value, "value")})
+
+    def item_description(
+        self, value: str, *, key: Optional[str] = None
+    ) -> None:
+        self._require_parent("item_content", "item_description")
+        self._leaf(
+            "item_description", key, {"text": validate_text(value, "value")}
+        )
+
+    def item_separator(self, *, key: Optional[str] = None) -> None:
+        self._require_parent("item_group", "item_separator")
+        self._leaf("item_separator", key, {})
+
+    def avatar(
+        self,
+        src: Optional[str] = None,
+        fallback: str = "?",
+        *,
+        key: Optional[str] = None,
+        alt: Optional[str] = None,
+        size: str = "default",
+    ) -> None:
+        """Render the pinned Avatar directly, including within Item media."""
+        normalized_fallback = validate_text(fallback, "fallback")
+        self._leaf(
+            "avatar",
+            key,
+            {
+                "src": None if src is None else safe_image_src(src),
+                "fallback": normalized_fallback,
+                "alt": normalized_fallback
+                if alt is None
+                else validate_text(alt, "alt"),
+                "size": enum_value(size, {"sm", "default", "lg"}, "size"),
+            },
+        )
+
     def button_group(
         self,
         label: str,
@@ -1658,6 +1765,70 @@ class ElementsBuilder:
     def _validate_tree_composition(self) -> None:
         def validate(node: _Node, parent: Optional[_Node]) -> None:
             child_types = [child.node_type for child in node.children]
+            if node.node_type == "item_group" and any(
+                kind not in {"item", "item_separator"} for kind in child_types
+            ):
+                raise RuntimeError(
+                    "item_group children must be items or item separators."
+                )
+            if node.node_type == "item" and any(
+                kind
+                not in {
+                    "item_media",
+                    "item_content",
+                    "item_actions",
+                    "item_header",
+                    "item_footer",
+                }
+                for kind in child_types
+            ):
+                raise RuntimeError("item children must use typed Item slots.")
+            if node.node_type == "item_media" and (
+                len(child_types) != 1
+                or child_types[0] not in {"avatar", "item_image", "spinner"}
+                or (
+                    node.props["variant"] == "image"
+                    and child_types[0] != "item_image"
+                )
+                or (
+                    node.props["variant"] != "image"
+                    and child_types[0] == "item_image"
+                )
+            ):
+                raise RuntimeError(
+                    "item_media requires one avatar or spinner, or one "
+                    "item_image with variant='image'."
+                )
+            if node.node_type == "item":
+                for slot in {
+                    "item_media",
+                    "item_actions",
+                    "item_header",
+                    "item_footer",
+                }:
+                    if child_types.count(slot) > 1:
+                        raise RuntimeError(
+                            "item accepts at most one %s." % slot
+                        )
+            item_parents = {
+                "item_media": "item",
+                "item_content": "item",
+                "item_actions": "item",
+                "item_header": "item",
+                "item_footer": "item",
+                "item_title": "item_content",
+                "item_description": "item_content",
+                "item_separator": "item_group",
+                "item_image": "item_media",
+            }
+            required_parent = item_parents.get(node.node_type)
+            if required_parent and (
+                parent is None or parent.node_type != required_parent
+            ):
+                raise RuntimeError(
+                    "%s must belong to %s."
+                    % (node.node_type, required_parent)
+                )
             if node.node_type in {"tabs", "accordion"}:
                 expected = "tab" if node.node_type == "tabs" else "accordion_item"
                 if not node.children or any(kind != expected for kind in child_types):

@@ -20,10 +20,12 @@ an Elements container. Native `st.*` commands cannot be inserted into that tree.
 | Input, Input Group, Number Input, Textarea, Checkbox, Switch, Slider, Radio Group, Select, Combobox | Yes | Yes | Value handles and optional change callbacks |
 | Button, Link Button | Yes | Yes | Button action handle/callback; links navigate |
 | Badge, Separator, Progress | Yes | Yes | Display only |
+| Item | No separate widget | Typed Item/group/media/content/title/description/actions/header/footer/separator slots | Child action events; image media uses native `item_image` |
+| Avatar | Yes | `avatar` | Display only, with image-failure fallback |
 | Spinner | No separate widget | Yes | Display/status only |
 | Heading, Text, Code, Image | No matching standalone library API | Yes | Display only; Code is plain code text |
 | Table, six Chart families | Yes | Not yet | Standalone display; no Elements child slots |
-| Avatar, Skeleton, Calendar, Date Picker, Input OTP, Toggle, Toggle Group, Pagination, Breadcrumb, Alert, Alert Dialog, Dropdown Menu, Popover, Hover Card, Aspect Ratio | Yes | Not exposed by the public builder | Standalone contracts apply |
+| Skeleton, Calendar, Date Picker, Input OTP, Toggle, Toggle Group, Pagination, Breadcrumb, Alert, Alert Dialog, Dropdown Menu, Popover, Hover Card, Aspect Ratio | Yes | Not exposed by the public builder | Standalone contracts apply |
 
 Panel defaults and lifecycle are documented in [Elements](./components/elements.md).
 A local panel navigation event never triggers Python by itself. A child input

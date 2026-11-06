@@ -50,10 +50,12 @@ receive the decoded Python value; action callbacks receive the node identity,
 event type, payload, and sequence number. Multiple actions created in the same
 browser task are delivered as one ordered batch.
 
-Available composition primitives include `stack`, `grid`, Card slots, Button
-Group, Dialog, Sheet, Empty, Field Set, Field Group, Field, and Tooltip. Content nodes
+Available composition primitives include `stack`, `grid`, Card slots, Item
+slots and groups, Button Group, Dialog, Sheet, Empty, Field Set, Field Group,
+Field, and Tooltip. Content nodes
 include `heading`, `text`, `code`, `badge`, `separator`, `progress`, `spinner`,
-`image`, and `link_button`. Interactive nodes include `input`, `input_group`,
+`image`, `avatar`, and `link_button`. Item media supports a native `item_image`
+thumbnail without the Aspect Ratio wrapper. See [Item](./item.md). Interactive nodes include `input`, `input_group`,
 `number_input`, `textarea`, `checkbox`, `switch`, `slider`, `radio_group`,
 `select`, `combobox`, and `button`.
 

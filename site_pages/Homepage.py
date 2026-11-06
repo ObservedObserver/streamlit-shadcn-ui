@@ -439,7 +439,7 @@ with st.container(key="showcase_mosaic", gap="large"):
             "Current release",
             "1.4.0",
             description="The package root exposes the public V2 API.",
-            delta="46 documented components",
+            delta="48 documented components",
             key="showcase_release",
         )
 
