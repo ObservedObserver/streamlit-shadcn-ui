@@ -26,6 +26,7 @@ export type ComponentKind =
   | "separator"
   | "skeleton"
   | "table"
+  | "data_table"
   | "link_button"
   | "input"
   | "input_group"
@@ -304,6 +305,21 @@ export type ChartEnvelope = {
 }
 
 export type TableCellValue = string | number | boolean | null
+
+export type DataTableCell = string | number | boolean | null
+export type DataTableRow = { id: string; cells: DataTableCell[] }
+export type DataTableEnvelope = {
+  protocolVersion: 1
+  kind: "data_table"
+  state: StateCell<string[], "data_table">
+  props: {
+    columns: { key: string; label: string }[]
+    rows: DataTableRow[]
+    pageSize: number
+    selectionMode: "none" | "single" | "multiple"
+    actions: { id: string; label: string; disabled: boolean }[]
+  }
+}
 
 export type TableEnvelope = {
   protocolVersion: typeof PROTOCOL_VERSION
@@ -614,6 +630,7 @@ export type StandaloneEnvelope =
   | SeparatorEnvelope
   | SkeletonEnvelope
   | TableEnvelope
+  | DataTableEnvelope
   | LinkButtonEnvelope
   | InputEnvelope
   | InputGroupEnvelope
@@ -1702,6 +1719,49 @@ function parseChart(value: Record<string, unknown>): ChartEnvelope | null {
       stacked: props.stacked, horizontal: props.horizontal, donut: props.donut,
     },
   }
+}
+
+function parseDataTable(value: Record<string, unknown>): DataTableEnvelope | null {
+  const props = value.props
+  const state = parseStateCell(value.state, "data_table", (candidate): candidate is string[] =>
+    Array.isArray(candidate) && candidate.length <= 1000 && candidate.every(isBoundedText) &&
+    new Set(candidate).size === candidate.length)
+  if (!state || !isRecord(props) || !Array.isArray(props.columns) || props.columns.length > 50 ||
+      !Array.isArray(props.rows) || props.rows.length > 1000 ||
+      !Array.isArray(props.actions) || props.actions.length > 20 ||
+      typeof props.pageSize !== "number" || !Number.isInteger(props.pageSize) || props.pageSize < 1 || props.pageSize > 100 ||
+      !["none", "single", "multiple"].includes(props.selectionMode as string)) return null
+  const columns: DataTableEnvelope["props"]["columns"] = []
+  for (const column of props.columns) {
+    if (!isRecord(column) || !isBoundedText(column.key) || !column.key || !isBoundedText(column.label) ||
+        columns.some((c) => c.key === column.key)) return null
+    columns.push({ key: column.key, label: column.label })
+  }
+  const rows: DataTableRow[] = []
+  const ids = new Set<string>()
+  for (const row of props.rows) {
+    if (!isRecord(row) || !isBoundedText(row.id) || !((row.id.startsWith("s:") && row.id.length > 2) || /^i:-?\d+$/.test(row.id)) || ids.has(row.id) ||
+        !Array.isArray(row.cells) || row.cells.length !== columns.length || !row.cells.every((cell) =>
+          cell === null || typeof cell === "boolean" || isBoundedText(cell) ||
+          (typeof cell === "number" && Number.isFinite(cell) && Math.abs(cell) <= Number.MAX_SAFE_INTEGER))) return null
+    ids.add(row.id)
+    rows.push({ id: row.id, cells: row.cells as DataTableCell[] })
+  }
+  for (let i = 0; i < columns.length; i++) {
+    if (new Set(rows.map((r) => r.cells[i]).filter((c) => c !== null).map((c) => typeof c)).size > 1) return null
+  }
+  const actions: DataTableEnvelope["props"]["actions"] = []
+  for (const action of props.actions) {
+    if (!isRecord(action) || !isBoundedText(action.id) || !action.id || !isBoundedText(action.label) ||
+        typeof action.disabled !== "boolean" || actions.some((a) => a.id === action.id)) return null
+    actions.push({ id: action.id, label: action.label, disabled: action.disabled })
+  }
+  if (state.value.some((id) => !ids.has(id)) ||
+      (props.selectionMode === "none" && state.value.length > 0) ||
+      (props.selectionMode === "single" && state.value.length > 1)) return null
+  return { protocolVersion: 1, kind: "data_table", state,
+    props: { columns, rows, pageSize: props.pageSize,
+      selectionMode: props.selectionMode as DataTableEnvelope["props"]["selectionMode"], actions } }
 }
 
 function parseTable(value: Record<string, unknown>): TableEnvelope | null {
@@ -3808,6 +3868,8 @@ function parseKnownEnvelope(
       return parseSeparator(value)
     case "skeleton":
       return parseSkeleton(value)
+    case "data_table":
+      return parseDataTable(value)
     case "table":
       return parseTable(value)
     case "chart":

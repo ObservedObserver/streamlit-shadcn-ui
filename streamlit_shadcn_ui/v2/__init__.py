@@ -6,6 +6,7 @@ from .elements import (
     ElementsBuilder,
     elements,
 )
+from .widgets.data_table import DataTableAction, DataTableResult
 from .types import (
     AccordionItem,
     BadgeItem,
@@ -16,6 +17,7 @@ from .types import (
     TableColumn,
 )
 from .widgets import (
+    data_table,
     area_chart,
     bar_chart,
     line_chart,
@@ -68,6 +70,8 @@ __all__ = [
     "BreadcrumbItem",
     "BreadcrumbSelection",
     "Choice",
+    "DataTableAction",
+    "DataTableResult",
     "ElementEvent",
     "ElementHandle",
     "ElementsBuilder",
@@ -89,6 +93,7 @@ __all__ = [
     "checkbox",
     "collapsible",
     "combobox",
+    "data_table",
     "date_picker",
     "dropdown_menu",
     "elements",

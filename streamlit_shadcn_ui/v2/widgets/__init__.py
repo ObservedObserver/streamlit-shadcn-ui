@@ -1,3 +1,4 @@
+from .data_table import data_table
 from .accordion import accordion
 from .alert import alert
 from .alert_dialog import alert_dialog
@@ -37,6 +38,7 @@ from .toggle import toggle
 from .toggle_group import toggle_group
 
 __all__ = [
+    "data_table",
     "accordion",
     "alert",
     "alert_dialog",

@@ -28,6 +28,7 @@
     "test:e2e:asset-upgrade": "SSUI_V2_E2E_SUITE=asset-upgrade playwright test",
     "test:e2e:elements": "SSUI_V2_E2E_APP=Home.py SSUI_V2_E2E_SUITE=elements playwright test",
     "test:e2e:p0": "SSUI_V2_E2E_APP=V2_P0.py SSUI_V2_E2E_SUITE=p0 playwright test",
+    "test:e2e:data-table": "node scripts/build-data-table-reference.mjs && SSUI_V2_E2E_APP=tests/v2/fixtures/data_table.py SSUI_V2_E2E_SUITE=data-table playwright test",
     "test:e2e:performance-comparison": "SSUI_V2_E2E_SUITE=performance-comparison playwright test",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
@@ -37,6 +38,7 @@
   "dependencies": {
     "@base-ui/react": "1.6.0",
     "@streamlit/component-v2-lib": "0.2.0",
+    "@tanstack/react-table": "9.3.1",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "date-fns": "4.4.0",
