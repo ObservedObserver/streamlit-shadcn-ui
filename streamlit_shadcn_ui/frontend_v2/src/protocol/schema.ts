@@ -717,6 +717,36 @@ type ElementsContainerNode = {
       }
     }
   | {
+      type: "tabs"
+      props: {
+        defaultValue: string | null
+        label: string
+        variant: "default" | "line"
+      }
+    }
+  | {
+      type: "tab" | "accordion_item"
+      props: { value: string; label: string; disabled: boolean }
+    }
+  | {
+      type: "accordion"
+      props: { defaultValue: string[]; multiple: boolean; disabled: boolean }
+    }
+  | {
+      type: "collapsible"
+      props: {
+        title: string
+        defaultOpen: boolean
+        disabled: boolean
+        triggerVariant: ButtonVariant
+        triggerSize: ButtonSize
+      }
+    }
+  | {
+      type: "scroll_area"
+      props: { height: number; label: string }
+    }
+  | {
       type: "dialog"
       props: {
         description: string | null
@@ -2988,6 +3018,133 @@ function parseElementsNode(
       return null
     }
     parsedChildren.push(parsedChild)
+  }
+
+  if (type === "tabs") {
+    if (
+      !isBoundedText(props.label) ||
+      !(props.defaultValue === null || isBoundedText(props.defaultValue)) ||
+      "orientation" in props ||
+      (props.variant !== "default" && props.variant !== "line") ||
+      !parsedChildren.length ||
+      parsedChildren.some((child) => child.type !== "tab")
+    )
+      return null
+    const values = parsedChildren.map(
+      (child) =>
+        (child as Extract<ElementsNode, { type: "tab" | "accordion_item" }>)
+          .props.value
+    )
+    if (
+      new Set(values).size !== values.length ||
+      (props.defaultValue !== null && !values.includes(props.defaultValue))
+    )
+      return null
+    return {
+      id,
+      type,
+      props: {
+        defaultValue: props.defaultValue,
+        label: props.label,
+        variant: props.variant,
+      },
+      children: parsedChildren,
+      envelope: null,
+    }
+  }
+  if (type === "tab" || type === "accordion_item") {
+    if (
+      parentType !== (type === "tab" ? "tabs" : "accordion") ||
+      !isBoundedText(props.value) ||
+      !props.value ||
+      !isBoundedText(props.label) ||
+      typeof props.disabled !== "boolean"
+    )
+      return null
+    return {
+      id,
+      type,
+      props: {
+        value: props.value,
+        label: props.label,
+        disabled: props.disabled,
+      },
+      children: parsedChildren,
+      envelope: null,
+    }
+  }
+  if (type === "accordion") {
+    if (
+      !Array.isArray(props.defaultValue) ||
+      !props.defaultValue.every(isBoundedText) ||
+      typeof props.multiple !== "boolean" ||
+      typeof props.disabled !== "boolean" ||
+      (!props.multiple && props.defaultValue.length > 1) ||
+      !parsedChildren.length ||
+      parsedChildren.some((child) => child.type !== "accordion_item")
+    )
+      return null
+    const values = parsedChildren.map(
+      (child) =>
+        (child as Extract<ElementsNode, { type: "tab" | "accordion_item" }>)
+          .props.value
+    )
+    if (
+      new Set(values).size !== values.length ||
+      new Set(props.defaultValue).size !== props.defaultValue.length ||
+      props.defaultValue.some((value) => !values.includes(value))
+    )
+      return null
+    return {
+      id,
+      type,
+      props: {
+        defaultValue: props.defaultValue,
+        multiple: props.multiple,
+        disabled: props.disabled,
+      },
+      children: parsedChildren,
+      envelope: null,
+    }
+  }
+  if (type === "collapsible") {
+    if (
+      !isBoundedText(props.title) ||
+      typeof props.defaultOpen !== "boolean" ||
+      typeof props.disabled !== "boolean" ||
+      !BUTTON_VARIANTS.has(props.triggerVariant as ButtonVariant) ||
+      !BUTTON_SIZES.has(props.triggerSize as ButtonSize)
+    )
+      return null
+    return {
+      id,
+      type,
+      props: {
+        title: props.title,
+        defaultOpen: props.defaultOpen,
+        disabled: props.disabled,
+        triggerVariant: props.triggerVariant as ButtonVariant,
+        triggerSize: props.triggerSize as ButtonSize,
+      },
+      children: parsedChildren,
+      envelope: null,
+    }
+  }
+  if (type === "scroll_area") {
+    if (
+      !Number.isSafeInteger(props.height) ||
+      (props.height as number) < 80 ||
+      (props.height as number) > 10_000 ||
+      !isBoundedText(props.label)
+    )
+      return null
+    return {
+      id,
+      type,
+      props: { height: props.height as number, label: props.label },
+      children: parsedChildren,
+      envelope: null,
+    }
   }
 
   if (type === "stack") {

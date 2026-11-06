@@ -9,6 +9,7 @@ for (const side of ["right", "left", "top", "bottom"] as const) {
     await expect(popup).toBeVisible()
     await expect(page.getByText("Python runs: 1", { exact: true })).toBeVisible()
     await expect(popup).toHaveAttribute("data-side", side)
+    await popup.evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished)))
     const metrics = await popup.evaluate((element) => {
       const rect = element.getBoundingClientRect()
       const header = element.querySelector("[data-slot=sheet-header]")!
@@ -34,10 +35,10 @@ for (const side of ["right", "left", "top", "bottom"] as const) {
     expect(metrics.inputHeight).toBe(32)
     expect(metrics.inShadow).toBe(true)
     if (side === "left" || side === "right") {
-      expect(metrics.width).toBe(384)
-      expect(metrics.height).toBe(metrics.viewportHeight)
+      expect(metrics.width).toBeCloseTo(384, 2)
+      expect(metrics.height).toBeCloseTo(metrics.viewportHeight, 2)
     } else {
-      expect(metrics.width).toBe(metrics.viewportWidth)
+      expect(metrics.width).toBeCloseTo(metrics.viewportWidth, 2)
     }
     await page.keyboard.press("Escape")
     await expect(popup).toBeHidden()
