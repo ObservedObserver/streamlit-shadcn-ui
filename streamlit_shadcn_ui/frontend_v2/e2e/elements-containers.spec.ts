@@ -52,6 +52,9 @@ test("nested controls retain drafts across hide, rerun and reorder with native k
   await page.getByRole("button", { name: "Rerun", exact: true }).click()
   await page.getByRole("checkbox", { name: "Reverse panels" }).focus()
   await page.keyboard.press("Space")
+  // Wait for Python's reordered tree. The selected tab is already Advanced
+  // before this rerun, so that attribute alone can acknowledge the old tree.
+  await expect(root.getByRole("tab").first()).toHaveText("Advanced")
   await expect(root.getByRole("tab", { name: "Advanced" })).toHaveAttribute(
     "aria-selected",
     "true"
