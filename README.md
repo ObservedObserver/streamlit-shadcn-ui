@@ -6,12 +6,12 @@
 
 shadcn components for Streamlit, implemented on Streamlit Components V2.
 
-Version 1.0 is a V2-only release: it uses checked-in shadcn source backed by
+The 1.x package uses checked-in shadcn source backed by
 Base UI, React 19, Tailwind CSS 4, and Streamlit's isolated Shadow DOM runtime.
 Components render without an iframe. Anchored and modal overlays stay in their
 own component ShadowRoot and use the browser top layer, so Select, Combobox,
 Dropdown Menu, Popover, Hover Card, Date Picker, Alert Dialog, and Elements
-Dialog or Tooltip are not clipped by the Streamlit layout.
+Dialog, Sheet, or Tooltip are not clipped by the Streamlit layout.
 
 ## Installation
 
@@ -20,6 +20,18 @@ pip install streamlit-shadcn-ui
 ```
 
 Python 3.10 or newer and Streamlit 1.60 or newer are required.
+
+The verified host combination for the 1.5.0 component changes is Streamlit
+1.60.0 with Starlette 1.3.1. When using Streamlit 1.60, pin that tested
+Starlette version:
+
+```sh
+pip install "streamlit==1.60.0" "starlette==1.3.1" streamlit-shadcn-ui
+```
+
+Fresh resolution with Starlette 1.10.0 caused intermittent component-asset
+serving errors during acceptance. Other host combinations need separate
+verification; see the [release notes](docs/releases/1.5.0.md).
 
 ## Quick start
 
@@ -61,12 +73,15 @@ without changing the returned value.
 - Date and navigation: `calendar`, `date_picker`, `tabs`, `accordion`,
   `collapsible`
 - Overlays: `popover`, `hover_card`, `alert_dialog`; Elements also provides
-  Dialog and Tooltip composition
+  Dialog, Sheet, and Tooltip composition
 - Display: `alert`, `avatar`, `badge`, `badges`, `card`, `metric_card`,
   `aspect_ratio`, `progress`, `scroll_area`, `separator`, `skeleton`, `table`
+- Records: `data_table` adds local sorting, search, pagination, column
+  visibility, stable row selection, and one-shot row actions
 - Composition: `elements` creates one nested, stateful React tree from typed
-  Card, Button Group, Dialog, Empty, Field, Tooltip, Spinner, layout, content,
-  input, choice, and action nodes
+  Card, Button Group, Dialog, Sheet, Empty, Field, Item, Avatar, Tooltip,
+  Spinner, Tabs, Accordion, Collapsible, Scroll Area, layout, content, input,
+  choice, and action nodes
 - Charts: `line_chart`, `area_chart`, `bar_chart`, `pie_chart`, `radar_chart`,
   `radial_chart` accept records or DataFrames with native shadcn tooltips and
   legends. See [Charts](docs/components/charts.md) for options and data limits.
@@ -88,11 +103,16 @@ st.write(email.value, save.clicked)
 See the [Elements documentation](docs/components/elements.md), the
 [V2 technical assessment](docs/elements-v2-technical-assessment.md), and the
 [independent shadcn homepage-card use case](pages/Elements.py).
-Version 1.4.0 adds six [Charts](docs/components/charts.md) APIs for line, area,
-bar, pie, radar, and radial charts. Pass records or a pandas DataFrame to render
-shadcn Cards with native tooltips, legends, and colorful light/dark palettes.
+Version 1.5.0 adds four component groups: nested
+[Elements containers](docs/components/elements.md#nested-panels-and-scroll-regions),
+[Item](docs/components/item.md), [Sheet](docs/components/sheet.md), and
+[Data Table](docs/components/data_table.md). The records example combines a
+Data Table with a Sheet editor and saves edits back to the table. Data Table
+supports up to 1,000 local rows and remains a standalone widget. See the
+[composition matrix](docs/elements-support-matrix.md) for widget and Elements
+support.
 Release changes are recorded in the [changelog](CHANGELOG.md) and the
-[1.4.0 release notes](docs/releases/1.4.0.md).
+[1.5.0 release notes](docs/releases/1.5.0.md).
 
 The documentation app uses [Home.py](Home.py) as its explicit router. Its
 [product homepage](site_pages/Homepage.py), interactive
@@ -157,7 +177,7 @@ Use Node 22.20.0 and the pnpm version pinned in the frontend manifest.
 ./scripts/frontend_v2.sh            # watch the V2 frontend build
 ./scripts/dev.sh                    # run the documentation app
 ./scripts/verify_v2_release_source.sh
-python3 -m pytest tests/v2 -q
+python3 -m unittest discover -s tests/v2
 ```
 
 The Python implementation lives in `streamlit_shadcn_ui/v2`, generated and
