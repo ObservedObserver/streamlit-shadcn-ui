@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+from importlib.metadata import version
+
 import streamlit as st
 
 import streamlit_shadcn_ui as ui
 
 
+package_version = version("streamlit-shadcn-ui")
 SEO_TITLE = "Streamlit Shadcn UI"
 SEO_DESCRIPTION = (
     "A Streamlit component library for building beautiful apps easily. "
@@ -437,7 +440,7 @@ with st.container(key="showcase_mosaic", gap="large"):
 
         ui.metric_card(
             "Current release",
-            "1.4.0",
+            package_version,
             description="The package root exposes the public V2 API.",
             delta="49 documented components",
             key="showcase_release",
@@ -565,7 +568,7 @@ with st.container(key="showcase_mosaic", gap="large"):
             st.code("pip install streamlit-shadcn-ui", language="bash")
             ui.badges(
                 [
-                    ("1.4.0", "default"),
+                    (package_version, "default"),
                     ("V2 only", "secondary"),
                     ("MIT", "outline"),
                 ],

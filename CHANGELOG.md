@@ -1,5 +1,40 @@
 # Changelog
 
+## 1.5.0 - 2026-11-07
+
+### Added
+
+- Added Tabs, Accordion, Collapsible, and Scroll Area containers to Elements.
+  Supported child controls keep their values while panels are hidden;
+  navigation and expansion stay in the browser.
+- Added Elements Item groups and typed media, content, title, description,
+  action, header, footer, and separator slots, plus Avatar and native image
+  media composition.
+- Added Elements Sheet with four sides, title and description, footer actions,
+  explicit close controls, and shared modal focus, Escape, and scroll locking.
+- Added `ui.data_table` with local sorting, search, pagination, column
+  visibility, row selection, and typed one-shot row actions. A records example
+  opens a Sheet editor and saves edits back to the table.
+
+### Behavior and limits
+
+- Data Table preserves selection across reruns and data reorder, prunes removed
+  row IDs, and tracks column state by stable keys. It supports up to 1,000
+  local rows, 50 columns, and 20 actions. Elements embedding, remote pagination,
+  and editable cells are deferred.
+- Elements Tabs supports horizontal navigation only. Sheet keeps the pinned
+  close-icon placement; RTL titles may overlap it. RTL applications can hide
+  that icon and use a footer close button.
+- Adapters preserve the pinned shadcn defaults, including inherited control
+  styles. There are no cosmetic control overrides.
+- Before the 1.5.0 version bump, integrated component acceptance passed 110
+  Python tests, 147 frontend tests, and 45 browser cases across Chromium,
+  Firefox, and WebKit. The verified host uses Streamlit
+  1.60.0 with Starlette 1.3.1. Starlette 1.10.0 caused intermittent asset-serving
+  errors under Streamlit 1.60; the tested host constraint must be preserved.
+
+Full details and publication status: [1.5.0 release notes](docs/releases/1.5.0.md).
+
 ## 1.4.0 - 2026-09-08
 
 ### Added

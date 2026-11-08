@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+from importlib.metadata import version
+
 import streamlit as st
 
 import streamlit_shadcn_ui as ui
+
+
+package_version = version("streamlit-shadcn-ui")
 
 
 st.set_page_config(
@@ -17,11 +22,12 @@ st.caption(
 )
 ui.badges(
     items=[
-        ("1.4.0", "default"),
+        (package_version, "default"),
         ("Components V2", "secondary"),
         ("No iframes", "outline"),
     ]
 )
+st.caption(f"Installed package: streamlit-shadcn-ui {package_version}")
 
 st.subheader("1. Install")
 st.code("pip install streamlit-shadcn-ui", language="bash")
